@@ -29,7 +29,7 @@ impl dyn Payoff {
         }
         let mut mean = runnning_sum / number_of_paths as f64;
         mean *= (-r * expiry).exp();
-        return mean;
+        mean
     }
 }
 

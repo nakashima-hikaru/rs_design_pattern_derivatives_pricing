@@ -12,21 +12,21 @@ fn simple_montecarlo1(
 ) -> f64 {
     let variance = vol * vol * expiry;
     let root_variance = variance.sqrt();
-    let ito_correlation: f64 = -0.5 * variance;
+    let ito_correlation = -0.5 * variance;
     let moved_spot = spot * (r * expiry + ito_correlation).exp();
-    let mut this_spot: f64;
+    let mut this_spot;
     let mut running_sum = 0.0;
     let mut rng = SeedableRng::from_entropy();
     for _i in 0..number_of_paths {
-        let this_gaussian: f64 = get_one_gaussian_by_box_muller(&mut rng);
+        let this_gaussian = get_one_gaussian_by_box_muller(&mut rng);
         this_spot = moved_spot * (root_variance * this_gaussian).exp();
-        let mut this_payoff: f64 = this_spot - strike;
+        let mut this_payoff = this_spot - strike;
         this_payoff = if this_payoff > 0.0 { this_payoff } else { 0.0 };
         running_sum += this_payoff;
     }
-    let mut mean: f64 = running_sum / number_of_paths as f64;
+    let mut mean = running_sum / number_of_paths as f64;
     mean *= (-r * expiry).exp();
-    return mean;
+    mean
 }
 
 fn main() {

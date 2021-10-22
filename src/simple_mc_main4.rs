@@ -24,7 +24,7 @@ fn main() {
     let number_of_paths = text_io::read!();
 
     println!("\n0 for call, otherwise put\n");
-    let option_type: u32 = text_io::read!();
+    let option_type = text_io::read!();
     let the_payoff_ptr;
     match option_type {
         0 => {

@@ -8,11 +8,10 @@ pub fn get_one_gaussian_by_simmulation(rng: &mut SmallRng) -> f64 {
         result += rng.gen::<f64>();
     }
     result -= 6.0;
-    return result;
+    result
 }
 
 pub fn get_one_gaussian_by_box_muller(rng: &mut SmallRng) -> f64 {
-    let result;
     let mut x;
     let mut y;
     let mut size_squared;
@@ -24,6 +23,5 @@ pub fn get_one_gaussian_by_box_muller(rng: &mut SmallRng) -> f64 {
             break;
         }
     }
-    result = x * (-2.0 * size_squared.ln() / size_squared).sqrt();
-    return result;
+    x * (-2.0 * size_squared.ln() / size_squared).sqrt()
 }
