@@ -1,4 +1,4 @@
-use crate::chapter3::payoff2;
+use crate::chapter3::payoff2::Payoff;
 
 pub struct PayoffDoubleDigital {
     lower_level: f64,
@@ -15,7 +15,7 @@ impl PayoffDoubleDigital {
     }
 }
 
-impl payoff2::Payoff for PayoffDoubleDigital {
+impl Payoff for PayoffDoubleDigital {
     fn forward_value(&self, spot: f64) -> f64 {
         if spot <= self.lower_level {
             return 0.0;

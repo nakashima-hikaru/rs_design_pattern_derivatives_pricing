@@ -1,6 +1,6 @@
 mod chapter1;
 use crate::chapter1::random1::get_one_gaussian_by_box_muller;
-use rand;
+use rand::SeedableRng;
 
 fn simple_montecarlo1(
     expiry: f64,
@@ -16,7 +16,7 @@ fn simple_montecarlo1(
     let moved_spot = spot * (r * expiry + ito_correlation).exp();
     let mut this_spot: f64;
     let mut running_sum = 0.0;
-    let mut rng: rand::rngs::SmallRng = rand::SeedableRng::from_entropy();
+    let mut rng = SeedableRng::from_entropy();
     for _i in 0..number_of_paths {
         let this_gaussian: f64 = get_one_gaussian_by_box_muller(&mut rng);
         this_spot = moved_spot * (root_variance * this_gaussian).exp();

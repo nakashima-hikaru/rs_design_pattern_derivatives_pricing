@@ -1,7 +1,8 @@
+use rand::rngs::SmallRng;
 use rand::Rng;
 
 #[allow(dead_code)]
-pub fn get_one_gaussian_by_simmulation(rng: &mut rand::rngs::SmallRng) -> f64 {
+pub fn get_one_gaussian_by_simmulation(rng: &mut SmallRng) -> f64 {
     let mut result: f64 = 0.0;
     for _j in 0..12 {
         result += rng.gen::<f64>();
@@ -10,7 +11,7 @@ pub fn get_one_gaussian_by_simmulation(rng: &mut rand::rngs::SmallRng) -> f64 {
     return result;
 }
 
-pub fn get_one_gaussian_by_box_muller(rng: &mut rand::rngs::SmallRng) -> f64 {
+pub fn get_one_gaussian_by_box_muller(rng: &mut SmallRng) -> f64 {
     let result;
     let mut x;
     let mut y;

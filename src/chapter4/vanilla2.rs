@@ -1,14 +1,14 @@
 use std::rc::Rc;
 
-use crate::chapter4::payoff3;
+use crate::chapter4::payoff3::Payoff;
 
 pub struct VanillaOption {
     expiry: f64,
-    the_payoff_ptr: Rc<dyn payoff3::Payoff>,
+    the_payoff_ptr: Rc<dyn Payoff>,
 }
 
 impl VanillaOption {
-    pub fn new(the_payoff_ptr: Rc<dyn payoff3::Payoff>, expiry: f64) -> Self {
+    pub fn new(the_payoff_ptr: Rc<dyn Payoff>, expiry: f64) -> Self {
         VanillaOption {
             the_payoff_ptr: the_payoff_ptr.clone(),
             expiry,
@@ -39,9 +39,10 @@ impl Drop for VanillaOption {
 
 #[test]
 fn main() {
-    let payoff1 = payoff3::PayoffCall::new(105.0);
+    use crate::chapter4::payoff3::PayoffCall;
+    let payoff1 = PayoffCall::new(105.0);
     let mut option1 = VanillaOption::new(Rc::new(payoff1), 30.0);
-    let payoff2 = payoff3::PayoffCall::new(110.0);
+    let payoff2 = PayoffCall::new(110.0);
     let option2 = VanillaOption::new(Rc::new(payoff2), 315.0);
     option1.clone_from(&option2);
 }

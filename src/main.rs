@@ -4,7 +4,6 @@ mod chapter3;
 mod chapter4;
 
 fn main() {
-
     /* input */
 
     /* pricing */

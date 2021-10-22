@@ -1,9 +1,8 @@
 mod chapter1;
 mod chapter3;
+use crate::chapter3::double_digital::PayoffDoubleDigital;
+use crate::chapter3::payoff2::Payoff;
 fn main() {
-    use crate::chapter3::double_digital;
-    use crate::chapter3::payoff2;
-
     println!("\nEnter expiry\n");
     let expiry = text_io::read!();
 
@@ -25,16 +24,10 @@ fn main() {
     println!("\nNumber of paths\n");
     let number_of_paths = text_io::read!();
 
-    let the_payoff = double_digital::PayoffDoubleDigital::new(low, up);
+    let the_payoff = PayoffDoubleDigital::new(low, up);
 
-    let result = <dyn payoff2::Payoff>::simple_montecarlo2(
-        &the_payoff,
-        expiry,
-        spot,
-        vol,
-        r,
-        number_of_paths,
-    );
+    let result =
+        <dyn Payoff>::simple_montecarlo2(&the_payoff, expiry, spot, vol, r, number_of_paths);
 
     println!("the price is {} \n", result);
 }

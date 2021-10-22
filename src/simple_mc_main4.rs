@@ -1,9 +1,10 @@
 mod chapter1;
 mod chapter3;
+use crate::chapter3::payoff2::Payoff;
+use crate::chapter3::payoff2::PayoffCall;
+use crate::chapter3::payoff2::PayoffPut;
+use std::rc::Rc;
 fn main() {
-    use crate::chapter3::payoff2;
-    use std::rc::Rc;
-
     println!("\nEnter expiry\n");
     let expiry = text_io::read!();
 
@@ -27,14 +28,14 @@ fn main() {
     let the_payoff_ptr;
     match option_type {
         0 => {
-            the_payoff_ptr = Rc::new(payoff2::PayoffCall::new(strike)) as Rc<dyn payoff2::Payoff>;
+            the_payoff_ptr = Rc::new(PayoffCall::new(strike)) as Rc<dyn Payoff>;
         }
         _ => {
-            the_payoff_ptr = Rc::new(payoff2::PayoffPut::new(strike)) as Rc<dyn payoff2::Payoff>;
+            the_payoff_ptr = Rc::new(PayoffPut::new(strike)) as Rc<dyn Payoff>;
         }
     };
 
-    let result = <dyn payoff2::Payoff>::simple_montecarlo2(
+    let result = <dyn Payoff>::simple_montecarlo2(
         the_payoff_ptr.as_ref(),
         expiry,
         spot,

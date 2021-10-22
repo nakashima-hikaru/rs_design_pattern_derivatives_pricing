@@ -2,17 +2,16 @@
 name = "rust_design_pattern_derivative_pricing"
 version = "0.1.0"
 edition = "2021"
+default-run = "rust_design_pattern_derivative_pricing"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 text_io = "0.1.9"
-proconio = "0.4.3"
 rand = { version = "0.8.4", default_features = false, features = ["small_rng"] }
 mersenne_twister = "1.1.1"
 libc = "0.2.102"
 rand_distr = "0.4.2"
-nalgebra = "0.29.0"
 
 [[bin]]
 name = "simple-mc-main1"

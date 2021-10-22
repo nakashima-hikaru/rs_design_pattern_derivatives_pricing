@@ -1,5 +1,6 @@
 use crate::chapter1::random1::get_one_gaussian_by_box_muller;
 use crate::chapter2::payoff1::Payoff;
+use rand::SeedableRng;
 
 #[allow(dead_code)]
 pub fn simple_montecarlo2(
@@ -17,7 +18,7 @@ pub fn simple_montecarlo2(
     let mut this_spot: f64;
     let mut runnning_sum = 0.0;
     let seed: [u8; 32] = [13; 32];
-    let mut rng: rand::rngs::SmallRng = rand::SeedableRng::from_seed(seed);
+    let mut rng = SeedableRng::from_seed(seed);
     for _i in 0..number_of_paths {
         let this_gaussian: f64 = get_one_gaussian_by_box_muller(&mut rng);
         this_spot = moved_spot * (root_variance * this_gaussian).exp();
