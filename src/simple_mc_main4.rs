@@ -3,6 +3,7 @@ mod chapter3;
 use crate::chapter3::payoff2::Payoff;
 use crate::chapter3::payoff2::PayoffCall;
 use crate::chapter3::payoff2::PayoffPut;
+use crate::chapter3::simple_mc2::simple_montecarlo2;
 use std::rc::Rc;
 fn main() {
     println!("\nEnter expiry\n");
@@ -35,7 +36,7 @@ fn main() {
         }
     };
 
-    let result = <dyn Payoff>::simple_montecarlo2(
+    let result = simple_montecarlo2(
         the_payoff_ptr.as_ref(),
         expiry,
         spot,

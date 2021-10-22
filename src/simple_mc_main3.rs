@@ -1,8 +1,8 @@
 mod chapter1;
 mod chapter3;
-use crate::chapter3::payoff2::Payoff;
 use crate::chapter3::payoff2::PayoffCall;
 use crate::chapter3::payoff2::PayoffPut;
+use crate::chapter3::simple_mc2::simple_montecarlo2;
 
 fn main() {
     println!("\nEnter expiry\n");
@@ -25,11 +25,9 @@ fn main() {
 
     let call_payoff = PayoffCall::new(strike);
     let put_payoff = PayoffPut::new(strike);
-    let result_call =
-        <dyn Payoff>::simple_montecarlo2(&call_payoff, expiry, spot, vol, r, number_of_paths);
+    let result_call = simple_montecarlo2(&call_payoff, expiry, spot, vol, r, number_of_paths);
 
-    let result_put =
-        <dyn Payoff>::simple_montecarlo2(&put_payoff, expiry, spot, vol, r, number_of_paths);
+    let result_put = simple_montecarlo2(&put_payoff, expiry, spot, vol, r, number_of_paths);
     println!(
         "the prices are {} for the call and {} for the put\n",
         result_call, result_put
