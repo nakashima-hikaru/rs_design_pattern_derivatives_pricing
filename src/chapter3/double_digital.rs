@@ -16,7 +16,7 @@ impl PayoffDoubleDigital {
 }
 
 impl Payoff for PayoffDoubleDigital {
-    fn forward_value(&self, spot: f64) -> f64 {
+    fn value(&self, spot: f64) -> f64 {
         let mut result = 1.0;
         if spot <= self.lower_level {
             result = 0.0;

@@ -1,5 +1,7 @@
+/// difference from payoff2:
+/// define clone-method for deep copy implemention.
 pub trait Payoff {
-    fn forward_value(&self, spot: f64) -> f64;
+    fn value(&self, spot: f64) -> f64;
 }
 
 pub struct PayoffCall {
@@ -13,8 +15,14 @@ impl PayoffCall {
 }
 
 impl Payoff for PayoffCall {
-    fn forward_value(&self, spot: f64) -> f64 {
+    fn value(&self, spot: f64) -> f64 {
         (spot - self.strike).max(0.0)
+    }
+}
+
+impl Clone for PayoffCall {
+    fn clone(&self) -> Self {
+        Self::new(self.strike)
     }
 }
 pub struct PayoffPut {
@@ -28,14 +36,8 @@ impl PayoffPut {
 }
 
 impl Payoff for PayoffPut {
-    fn forward_value(&self, spot: f64) -> f64 {
+    fn value(&self, spot: f64) -> f64 {
         (self.strike - spot).max(0.0)
-    }
-}
-
-impl Clone for PayoffCall {
-    fn clone(&self) -> Self {
-        Self::new(self.strike)
     }
 }
 

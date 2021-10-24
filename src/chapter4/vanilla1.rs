@@ -1,3 +1,5 @@
+/// オプションの情報をexpiryとPayoffの情報として設計し直した。
+/// Payoffはポインタとして保持する。
 use crate::chapter3::payoff2::Payoff;
 use std::rc::Rc;
 pub struct VanillaOption {
@@ -14,6 +16,6 @@ impl VanillaOption {
         self.expiry
     }
     pub fn option_payoff(&self, spot: f64) -> f64 {
-        self.the_payoff.forward_value(spot)
+        self.the_payoff.value(spot)
     }
 }
