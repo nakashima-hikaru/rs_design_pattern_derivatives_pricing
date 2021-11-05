@@ -1,6 +1,5 @@
-use std::rc::Rc;
-
 use crate::chapter4::payoff3::Payoff;
+use std::rc::Rc;
 
 pub struct VanillaOption {
     expiry: f64,
