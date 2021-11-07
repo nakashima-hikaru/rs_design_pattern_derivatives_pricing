@@ -1,7 +1,6 @@
 mod chapter1;
 mod chapter3;
-use crate::chapter3::double_digital::PayoffDoubleDigital;
-use crate::chapter3::simple_mc2::simple_montecarlo2;
+use crate::chapter3::{double_digital::PayoffDoubleDigital, simple_mc2::simple_montecarlo2};
 fn main() {
     println!("\nEnter expiry\n");
     let expiry = text_io::read!();

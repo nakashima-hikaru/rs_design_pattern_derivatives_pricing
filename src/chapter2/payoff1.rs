@@ -34,7 +34,6 @@ impl Payoff {
 
     #[allow(dead_code)]
     pub fn value(&self, spot: f64) -> f64 {
-        #[allow(unreachable_patterns)]
         match self.the_option_type {
             OptionType::Call => (spot - self.strike).max(0.0),
             OptionType::Put => (self.strike - spot).max(0.0),

@@ -4,7 +4,6 @@ mod chapter4;
 use crate::chapter3::double_digital;
 use crate::chapter4::simple_mc3::simple_montecarlo3;
 use crate::chapter4::vanilla1::VanillaOption;
-use std::rc::Rc;
 
 fn main() {
     println!("\nEnter expiry\n");
@@ -28,7 +27,7 @@ fn main() {
     println!("\nNumber of paths\n");
     let number_of_paths = text_io::read!();
 
-    let the_payoff_ptr = Rc::new(double_digital::PayoffDoubleDigital::new(low, up));
+    let the_payoff_ptr = &double_digital::PayoffDoubleDigital::new(low, up);
     let the_option = VanillaOption::new(the_payoff_ptr, expiry);
 
     let result = simple_montecarlo3(&the_option, spot, vol, r, number_of_paths);

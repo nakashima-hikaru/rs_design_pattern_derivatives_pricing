@@ -1,9 +1,10 @@
-/// difference from payoff2:
-/// define clone-method for deep copy implemention.
+/// payoff2.rsとの違い: Clone traitを実装した。
+
 pub trait Payoff {
     fn value(&self, spot: f64) -> f64;
 }
 
+#[derive(Clone)]
 pub struct PayoffCall {
     strike: f64,
 }
@@ -20,11 +21,7 @@ impl Payoff for PayoffCall {
     }
 }
 
-impl Clone for PayoffCall {
-    fn clone(&self) -> Self {
-        Self::new(self.strike)
-    }
-}
+#[derive(Clone)]
 pub struct PayoffPut {
     strike: f64,
 }
@@ -38,11 +35,5 @@ impl PayoffPut {
 impl Payoff for PayoffPut {
     fn value(&self, spot: f64) -> f64 {
         (self.strike - spot).max(0.0)
-    }
-}
-
-impl Clone for PayoffPut {
-    fn clone(&self) -> Self {
-        Self::new(self.strike)
     }
 }

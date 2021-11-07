@@ -1,8 +1,9 @@
 mod chapter1;
 mod chapter3;
-use crate::chapter3::payoff2::PayoffCall;
-use crate::chapter3::payoff2::PayoffPut;
-use crate::chapter3::simple_mc2::simple_montecarlo2;
+use crate::chapter3::{
+    payoff2::{PayoffCall, PayoffPut},
+    simple_mc2::simple_montecarlo2,
+};
 
 fn main() {
     println!("\nEnter expiry\n");

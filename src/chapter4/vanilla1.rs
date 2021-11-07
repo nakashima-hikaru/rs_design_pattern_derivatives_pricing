@@ -1,15 +1,17 @@
 /// オプションの情報をexpiryとPayoffの情報として設計し直した。
-/// Payoffはポインタとして保持する。
+/// Payoffはtraitなのでそのままメンバ変数にすることはできない。
+/// よってメンバ変数としてポインタや参照を用いる。
+/// 欠点
+/// ・VanillaOption-structの外部で定義されているPayoff-structのオブジェクトをメンバに持っているため、
+/// VanillaOptionオブジェクトは外部でのPayoffの変更の影響を受けてしまう。
 use crate::chapter3::payoff2::Payoff;
-use std::rc::Rc;
-pub struct VanillaOption {
+pub struct VanillaOption<'a> {
     expiry: f64,
-    the_payoff: Rc<dyn Payoff>,
+    the_payoff: &'a dyn Payoff,
 }
 
-#[allow(dead_code)] // ?
-impl VanillaOption {
-    pub fn new(the_payoff: Rc<dyn Payoff>, expiry: f64) -> Self {
+impl<'a> VanillaOption<'a> {
+    pub fn new(the_payoff: &'a dyn Payoff, expiry: f64) -> Self {
         VanillaOption { the_payoff, expiry }
     }
     pub fn get_expiry(&self) -> f64 {

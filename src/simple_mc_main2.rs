@@ -1,8 +1,9 @@
 mod chapter1;
 mod chapter2;
-use crate::chapter2::payoff1::OptionType;
-use crate::chapter2::payoff1::Payoff;
-use crate::chapter2::simple_mc::simple_montecarlo2;
+use crate::chapter2::{
+    payoff1::{OptionType, Payoff},
+    simple_mc::simple_montecarlo2,
+};
 
 fn main() {
     println!("\nEnter expiry\n");
