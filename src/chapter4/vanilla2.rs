@@ -4,7 +4,7 @@
 /// ・Assignment (Clone trait)
 /// a=b=cのような用法、自己代入を考慮して戻り値が&VanillaOptionであることに注意。
 /// ・Construction (Copy trait)
-/// ・Destruvtion (Copy traitを実装する場合は不要)
+/// ・Destruction (Copy traitを実装する場合は不要)
 /// 欠点
 /// ・同様のstructを定義するたびに毎回同様のコードを書く必要がある。
 use crate::chapter4::payoff3::Payoff;

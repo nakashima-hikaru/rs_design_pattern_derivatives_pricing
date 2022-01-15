@@ -4,3 +4,7 @@ pub mod simple_mc4;
 
 pub mod vanilla1;
 pub mod vanilla2;
+
+pub mod parameters;
+pub mod payoff_bridge;
+pub mod vanilla3;
