@@ -1,6 +1,6 @@
+use super::vanilla3;
 /// vanilla2.rsからメンバ変数expiryとメソッドget_expiryを取り除いた。
 use crate::chapter4::payoff3::Payoff;
-
 #[derive(Clone, Copy)]
 pub struct PayoffBridge<'a> {
     the_payoff_ptr: &'a dyn Payoff,

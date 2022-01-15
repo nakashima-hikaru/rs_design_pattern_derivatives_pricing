@@ -47,3 +47,7 @@ path = "src/vanilla_main3.rs"
 [[bin]]
 name = "vanilla-main4"
 path = "src/vanilla_main4.rs"
+
+[[bin]]
+name = "stats-main1"
+path = "src/stats_main1.rs"
