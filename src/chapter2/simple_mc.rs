@@ -2,7 +2,6 @@ use crate::chapter1::random1::get_one_gaussian_by_box_muller;
 use crate::chapter2::payoff1::Payoff;
 use rand::SeedableRng;
 
-#[allow(dead_code)]
 pub fn simple_montecarlo2(
     the_payoff: &Payoff,
     expiry: f64,

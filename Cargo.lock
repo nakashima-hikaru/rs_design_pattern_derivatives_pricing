@@ -149,7 +149,6 @@ dependencies = [
 name = "rust_design_pattern_derivative_pricing"
 version = "0.1.0"
 dependencies = [
- "libc",
  "mersenne_twister",
  "rand 0.8.4",
  "rand_distr",

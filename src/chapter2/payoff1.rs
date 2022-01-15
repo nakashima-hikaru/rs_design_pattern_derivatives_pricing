@@ -11,20 +11,17 @@
 /// というのは、「新しい種類のオプションの追加」という変更の影響を限定的にしたいからだ。
 
 #[derive(Debug)]
-#[allow(dead_code)]
 pub enum OptionType {
     Call,
     Put,
 }
 
-#[allow(dead_code)]
 pub struct Payoff {
     strike: f64,
     the_option_type: OptionType,
 }
 
 impl Payoff {
-    #[allow(dead_code)]
     pub fn new(strike: f64, the_option_type: OptionType) -> Payoff {
         Payoff {
             strike,

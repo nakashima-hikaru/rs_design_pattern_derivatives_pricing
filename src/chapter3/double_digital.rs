@@ -6,7 +6,6 @@ pub struct PayoffDoubleDigital {
 }
 
 impl PayoffDoubleDigital {
-    #[allow(dead_code)]
     pub fn new(lower_level: f64, upper_level: f64) -> Self {
         PayoffDoubleDigital {
             lower_level,

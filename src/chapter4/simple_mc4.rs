@@ -2,7 +2,6 @@ use crate::chapter1::random1::get_one_gaussian_by_box_muller;
 use crate::chapter4::vanilla2::VanillaOption;
 use rand::SeedableRng;
 
-#[allow(dead_code)]
 pub fn simple_montecarlo3(
     the_option: &VanillaOption,
     spot: f64,

@@ -10,7 +10,6 @@ default-run = "rust_design_pattern_derivative_pricing"
 text_io = "0.1.9"
 rand = { version = "0.8.4", default_features = false, features = ["small_rng"] }
 mersenne_twister = "1.1.1"
-libc = "0.2.102"
 rand_distr = "0.4.2"
 
 [[bin]]
@@ -40,3 +39,11 @@ path = "src/vanilla_main1.rs"
 [[bin]]
 name = "vanilla-main2"
 path = "src/vanilla_main2.rs"
+
+[[bin]]
+name = "vanilla-main3"
+path = "src/vanilla_main3.rs"
+
+[[bin]]
+name = "vanilla-main4"
+path = "src/vanilla_main4.rs"

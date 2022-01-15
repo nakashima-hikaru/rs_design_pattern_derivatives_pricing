@@ -6,7 +6,7 @@
 /// ・Construction (Copy trait)
 /// ・Destruction (Copy traitを実装する場合は不要)
 /// 欠点
-/// ・同様のstructを定義するたびに毎回同様のコードを書く必要がある。
+/// ・VanillaOptionと同様のstructを定義するたびに毎回newやget_expiryなどの同じコードを書く必要がある。
 use crate::chapter4::payoff3::Payoff;
 
 #[derive(Clone, Copy)]
@@ -17,7 +17,7 @@ pub struct VanillaOption<'a> {
 
 impl<'a> VanillaOption<'a> {
     pub fn new(the_payoff_ptr: &'a dyn Payoff, expiry: f64) -> Self {
-        VanillaOption {
+        Self {
             the_payoff_ptr: the_payoff_ptr.clone(),
             expiry,
         }

@@ -6,3 +6,4 @@ launch.json
 tasks.json
 *.code-workspace
 .DS_Store
+*.idea

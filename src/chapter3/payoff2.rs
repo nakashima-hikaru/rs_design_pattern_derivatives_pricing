@@ -20,13 +20,11 @@ pub struct PayoffPut {
     strike: f64,
 }
 impl PayoffCall {
-    #[allow(dead_code)]
     pub fn new(strike: f64) -> Self {
         Self { strike }
     }
 }
 impl PayoffPut {
-    #[allow(dead_code)]
     pub fn new(strike: f64) -> Self {
         Self { strike }
     }
