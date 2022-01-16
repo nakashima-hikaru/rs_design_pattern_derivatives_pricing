@@ -20,15 +20,6 @@ pub struct StatisticsMean {
     paths_done: u32,
 }
 
-impl StatisticsMean {
-    pub fn new(running_sum: f64, paths_done: u32) -> StatisticsMean {
-        StatisticsMean {
-            running_sum,
-            paths_done,
-        }
-    }
-}
-
 impl StatisticsMC for StatisticsMean {
     fn dump_one_result(&mut self, result: f64) {
         self.paths_done += 1;
