@@ -10,8 +10,15 @@
 /// 参照を利用することで、わざわざBridgeパターンを使う必要がない。
 
 pub trait StatisticsMC {
+    fn box_clone(&self) -> Box<dyn StatisticsMC>;
     fn dump_one_result(&mut self, result: f64);
     fn get_results_so_far(&self) -> Vec<Vec<f64>>;
+}
+
+impl Clone for Box<dyn StatisticsMC> {
+    fn clone(&self) -> Box<dyn StatisticsMC> {
+        self.box_clone()
+    }
 }
 
 #[derive(Clone, Default)]
@@ -21,6 +28,9 @@ pub struct StatisticsMean {
 }
 
 impl StatisticsMC for StatisticsMean {
+    fn box_clone(&self) -> Box<dyn StatisticsMC> {
+        Box::new((*self).clone())
+    }
     fn dump_one_result(&mut self, result: f64) {
         self.paths_done += 1;
         self.running_sum += result;
