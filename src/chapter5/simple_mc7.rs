@@ -17,7 +17,7 @@ pub fn simple_montecarlo5(
     let variance = vol.integral_square(0.0, expiry);
     let root_variance = variance.sqrt();
     let ito_correlation = -0.5 * variance;
-    let moved_spot = spot * (r.integral(0.0, expiry) * expiry + ito_correlation).exp();
+    let moved_spot = spot * (r.integral(0.0, expiry) + ito_correlation).exp();
     let discounting = (-r.integral(0.0, expiry)).exp();
     let mut this_spot;
     let mut rng = SeedableRng::from_entropy();

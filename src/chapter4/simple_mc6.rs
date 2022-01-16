@@ -17,7 +17,7 @@ pub fn simple_montecarlo4(
     let variance = vol.integral_square(0.0, expiry);
     let root_variance = variance.sqrt();
     let ito_correlation = -0.5 * variance;
-    let moved_spot = spot * (r.integral(0.0, expiry) * expiry + ito_correlation).exp();
+    let moved_spot = spot * (r.integral(0.0, expiry) + ito_correlation).exp();
     let mut this_spot;
     let mut runnning_sum = 0.0;
     let mut rng = SeedableRng::from_entropy();
