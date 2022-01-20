@@ -1,4 +1,3 @@
-use super::vanilla3;
 /// vanilla2.rsからメンバ変数expiryとメソッドget_expiryを取り除いた。
 use crate::chapter4::payoff3::Payoff;
 #[derive(Clone, Copy)]
