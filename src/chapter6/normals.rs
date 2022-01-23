@@ -1,7 +1,7 @@
-const one_over_root_two_pi: f64 = 0.398942280401433;
+const ONE_OVER_ROOT_TWO_PI: f64 = 0.398942280401433;
 
 pub fn normal_density(x: f64) -> f64 {
-    one_over_root_two_pi * (-x * x / 2.0).exp()
+    ONE_OVER_ROOT_TWO_PI * (-x * x / 2.0).exp()
 }
 
 pub fn inverse_cumulative_normal(u: f64) -> f64 {
@@ -62,7 +62,7 @@ pub fn cumulative_normal(x: f64) -> f64 {
         if x > 7.0 {
             result = 1.0 - cumulative_normal(-x);
         } else {
-            let mut tmp = 1.0 / (1.0 + 0.2316419 * x.abs());
+            let tmp = 1.0 / (1.0 + 0.2316419 * x.abs());
             result = 1.0
                 - normal_density(x)
                     * (tmp * (a[0] + tmp * (a[1] + tmp * (a[2] + tmp * (a[3] + tmp * a[4])))));
