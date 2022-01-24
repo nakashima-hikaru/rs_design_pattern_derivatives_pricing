@@ -4,8 +4,8 @@ use crate::chapter5::mc_statistics::StatisticsMC;
 pub struct ConvergenceTable {
     inner: Box<dyn StatisticsMC>,
     results_so_far: Vec<Vec<f64>>,
-    stopping_point: u32,
-    paths_done: u32,
+    stopping_point: u64,
+    paths_done: u64,
 }
 
 impl ConvergenceTable {

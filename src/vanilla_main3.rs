@@ -25,7 +25,7 @@ fn main() {
     let r: f64 = text_io::read!();
 
     println!("\nNumber of paths\n");
-    let number_of_paths: u32 = text_io::read!();
+    let number_of_paths: u64 = text_io::read!();
 
     let the_payoff = &PayoffCall::new(strike);
     let the_option = VanillaOption::new(the_payoff as &dyn Payoff, expiry);

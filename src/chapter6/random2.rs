@@ -11,28 +11,37 @@ use crate::chapter6::normals::inverse_cumulative_normal;
 /// 累積関数の逆関数を通して一様乱数を正規乱数に変換するため、[0,1]区間から0,1は除いてサンプリングする。
 
 pub trait RandomBase {
-    fn get_dimensionality(&self) -> u32;
+    // fn box_clone(&self) -> Box<dyn RandomBase>;
+    fn box_clone(&self) -> Box<dyn RandomBase>;
+    fn get_dimensionality(&self) -> u64;
     fn get_uniforms(&mut self, variates: &mut [f64]);
-    fn skip(&mut self, number_of_paths: u32);
-    fn set_seed(&mut self, seed: u32);
+    fn skip(&mut self, number_of_paths: u64);
+    fn set_seed(&mut self, seed: u64);
     fn reset(&mut self);
     fn get_gaussians(&mut self, variates: &mut [f64]) {
         self.get_uniforms(variates);
+
         for i in 0..self.get_dimensionality() {
             let x = variates[i as usize];
             variates[i as usize] = inverse_cumulative_normal(x);
         }
     }
-    fn reset_dimensionality(&mut self, new_dimensionality: u32);
+    fn reset_dimensionality(&mut self, new_dimensionality: u64);
+}
+
+impl Clone for Box<dyn RandomBase> {
+    fn clone(&self) -> Self {
+        self.box_clone()
+    }
 }
 
 #[derive(Clone)]
 pub struct RandomBaseField {
-    pub dimensionality: u32,
+    pub dimensionality: u64,
 }
 
 impl RandomBaseField {
-    pub fn new(dimensionality: u32) -> RandomBaseField {
+    pub fn new(dimensionality: u64) -> RandomBaseField {
         RandomBaseField { dimensionality }
     }
 }

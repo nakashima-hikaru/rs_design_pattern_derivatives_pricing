@@ -11,7 +11,7 @@ pub fn simple_montecarlo4(
     spot: f64,
     vol: &dyn ParametersInner,
     r: &dyn ParametersInner,
-    number_of_paths: u32,
+    number_of_paths: u64,
 ) -> f64 {
     let expiry = the_option.get_expiry();
     let variance = vol.integral_square(0.0, expiry);

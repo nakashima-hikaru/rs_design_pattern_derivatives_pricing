@@ -24,7 +24,7 @@ impl Clone for Box<dyn StatisticsMC> {
 #[derive(Clone, Default)]
 pub struct StatisticsMean {
     running_sum: f64,
-    paths_done: u32,
+    paths_done: u64,
 }
 
 impl StatisticsMC for StatisticsMean {

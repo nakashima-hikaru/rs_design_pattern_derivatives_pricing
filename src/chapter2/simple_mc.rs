@@ -8,7 +8,7 @@ pub fn simple_montecarlo2(
     spot: f64,
     vol: f64,
     r: f64,
-    number_of_paths: u32,
+    number_of_paths: u64,
 ) -> f64 {
     let variance = vol * vol * expiry;
     let root_variance = variance.sqrt();

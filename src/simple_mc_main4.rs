@@ -27,7 +27,7 @@ fn main() {
     println!("\n0 for call, otherwise put\n");
     let option_type = text_io::read!();
     let the_payoff_ptr = match option_type {
-        0u32 => &PayoffCall::new(strike) as *const dyn Payoff,
+        0 => &PayoffCall::new(strike) as *const dyn Payoff,
         _ => &PayoffPut::new(strike) as *const dyn Payoff,
     };
     unsafe {

@@ -7,7 +7,7 @@ pub fn simple_montecarlo3(
     spot: f64,
     vol: f64,
     r: f64,
-    number_of_paths: u32,
+    number_of_paths: u64,
 ) -> f64 {
     let expiry = the_option.get_expiry();
     let variance = vol * vol * expiry;

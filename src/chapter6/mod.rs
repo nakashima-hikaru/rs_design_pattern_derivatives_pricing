@@ -1,3 +1,4 @@
-pub mod normals;
-pub mod park_miller;
-pub mod random2;
+mod anti_thetic;
+mod normals;
+mod park_miller;
+mod random2;
