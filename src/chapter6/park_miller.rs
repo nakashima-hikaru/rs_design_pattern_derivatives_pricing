@@ -7,35 +7,38 @@ use crate::chapter6::random2::RandomBaseField;
 
 #[derive(Clone, Copy)]
 struct ParkMiller {
-    seed: u64,
+    seed: i64,
 }
 
 impl ParkMiller {
-    const A: u64 = 16807;
-    const M: u64 = 2147483647;
-    const Q: u64 = 127773;
-    const R: u64 = 2836;
-    pub fn new(mut seed: u64) -> ParkMiller {
+    const A: i64 = 16807;
+    const M: i64 = 2147483647;
+    const Q: i64 = 127773;
+    const R: i64 = 2836;
+    pub fn new(mut seed: i64) -> ParkMiller {
         if seed == 0 {
             seed = 1;
         }
         ParkMiller { seed }
     }
-    pub fn set_seed(&mut self, seed: u64) {
+    pub fn set_seed(&mut self, seed: i64) {
         self.seed = seed;
         if self.seed == 0 {
             self.seed = 1;
         }
     }
     pub fn max(&self) -> u64 {
-        ParkMiller::M - 1
+        (ParkMiller::M - 1) as u64
     }
     pub fn min(&self) -> u64 {
         1
     }
-    pub fn get_one_random_integer(&mut self) -> u64 {
-        let k: u64 = self.seed / ParkMiller::Q;
-        self.seed = ParkMiller::A * (self.seed - k * ParkMiller::Q) - ParkMiller::R * k;
+    pub fn get_one_random_integer(&mut self) -> i64 {
+        let k = self.seed / ParkMiller::Q;
+        self.seed = ParkMiller::A * (self.seed - k * ParkMiller::Q) - k * ParkMiller::R;
+        if self.seed < 0 {
+            self.seed += ParkMiller::M;
+        }
         self.seed
     }
 }
@@ -50,7 +53,7 @@ struct RandomParkMiller {
 
 impl RandomParkMiller {
     pub fn new(dimensionality: u64, seed: u64) -> RandomParkMiller {
-        let inner_generator = ParkMiller::new(seed);
+        let inner_generator = ParkMiller::new(seed as i64);
         RandomParkMiller {
             random_base: RandomBaseField::new(dimensionality),
             inner_generator,
@@ -81,21 +84,21 @@ impl RandomBase for RandomParkMiller {
     }
     fn set_seed(&mut self, seed: u64) {
         self.initial_seed = seed;
-        self.inner_generator.set_seed(seed);
+        self.inner_generator.set_seed(seed as i64);
     }
     fn reset(&mut self) {
-        self.inner_generator.set_seed(self.initial_seed);
+        self.inner_generator.set_seed(self.initial_seed as i64);
     }
     fn reset_dimensionality(&mut self, new_dimensionality: u64) {
         self.random_base.dimensionality = new_dimensionality;
-        self.inner_generator.set_seed(self.initial_seed);
+        self.inner_generator.set_seed(self.initial_seed as i64);
     }
 }
 
 #[test]
 fn test_distribution() {
-    let n = 100;
-    let mut x = RandomParkMiller::new(n, 333);
+    let n = 100000;
+    let mut x = RandomParkMiller::new(n, 25435344);
     let mut v = Vec::<f64>::with_capacity(n as usize);
     for _i in 0..n {
         v.push(0.0);

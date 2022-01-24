@@ -11,7 +11,6 @@ use crate::chapter6::normals::inverse_cumulative_normal;
 /// 累積関数の逆関数を通して一様乱数を正規乱数に変換するため、[0,1]区間から0,1は除いてサンプリングする。
 
 pub trait RandomBase {
-    // fn box_clone(&self) -> Box<dyn RandomBase>;
     fn box_clone(&self) -> Box<dyn RandomBase>;
     fn get_dimensionality(&self) -> u64;
     fn get_uniforms(&mut self, variates: &mut [f64]);
