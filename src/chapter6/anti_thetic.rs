@@ -2,7 +2,7 @@ use crate::chapter6::random2::RandomBase;
 use crate::chapter6::random2::RandomBaseField;
 
 #[derive(Clone)]
-struct AntiThetic {
+pub struct AntiThetic {
     random_base: RandomBaseField,
     inner_generator: Box<dyn RandomBase>,
     odd_even: bool,
@@ -68,3 +68,26 @@ impl<'a> RandomBase for AntiThetic {
         self.odd_even = true;
     }
 }
+
+// #[test]
+// fn test_distribution() {
+//     let n = 100000;
+//     let random_base = RandomBaseField::new(n);
+//     let mut x = AntiThetic::new(random_base, 25435344);
+//     let mut v = Vec::<f64>::with_capacity(n as usize);
+//     for _i in 0..n {
+//         v.push(0.0);
+//     }
+
+//     x.get_gaussians(&mut v.as_mut_slice());
+//     let mut mean = 0.0;
+//     let mut variant = 0.0;
+//     for u in v {
+//         mean += u;
+//         variant += u * u;
+//     }
+//     mean /= n as f64;
+//     variant /= n as f64;
+//     x.reset_dimensionality(50);
+//     println!("{}, {}", mean, variant);
+// }

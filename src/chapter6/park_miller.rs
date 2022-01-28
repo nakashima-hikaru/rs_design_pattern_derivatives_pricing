@@ -44,7 +44,7 @@ impl ParkMiller {
 }
 
 #[derive(Clone)]
-struct RandomParkMiller {
+pub struct RandomParkMiller {
     random_base: RandomBaseField,
     inner_generator: ParkMiller,
     initial_seed: u64,

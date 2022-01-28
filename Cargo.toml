@@ -55,3 +55,7 @@ path = "src/stats_main1.rs"
 [[bin]]
 name = "stats-main2"
 path = "src/stats_main2.rs"
+
+[[bin]]
+name = "random-main3"
+path = "src/random_main3.rs"
