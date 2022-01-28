@@ -113,5 +113,6 @@ fn test_distribution() {
     }
     mean /= n as f64;
     variant /= n as f64;
+    x.reset_dimensionality(50);
     println!("{}, {}", mean, variant);
 }
