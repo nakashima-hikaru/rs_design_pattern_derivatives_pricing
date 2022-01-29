@@ -2,10 +2,10 @@ extern crate num;
 
 pub mod chapter1;
 pub mod chapter2;
-mod chapter3;
-mod chapter4;
-mod chapter5;
-mod chapter6;
+pub mod chapter3;
+pub mod chapter4;
+pub mod chapter5;
+pub mod chapter6;
 pub mod random_main3;
 pub mod simple_mc_main1;
 pub mod simple_mc_main2;

@@ -15,8 +15,4 @@ impl<'a> PayoffBridge<'a> {
     pub fn value(&self, spot: f64) -> f64 {
         self.the_payoff_ptr.value(spot)
     }
-
-    pub fn option_payoff(&self, spot: f64) -> f64 {
-        self.the_payoff_ptr.value(spot)
-    }
 }

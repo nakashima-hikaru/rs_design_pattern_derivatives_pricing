@@ -1,7 +1,9 @@
-mod chapter1;
-mod chapter2;
-mod chapter3;
-mod chapter4;
+pub mod chapter1;
+pub mod chapter2;
+pub mod chapter3;
+pub mod chapter4;
+pub mod chapter5;
+pub mod chapter6;
 
 #[cfg(test)]
 mod tests {}

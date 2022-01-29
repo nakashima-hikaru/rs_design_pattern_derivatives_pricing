@@ -29,6 +29,7 @@ impl ParkMiller {
     pub fn max(&self) -> u64 {
         (ParkMiller::M - 1) as u64
     }
+    #[allow(dead_code)]
     pub fn min(&self) -> u64 {
         1
     }

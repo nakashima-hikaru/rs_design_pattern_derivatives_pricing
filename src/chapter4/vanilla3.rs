@@ -23,11 +23,6 @@ impl<'a> VanillaOption<'a> {
     pub fn option_payoff(&self, spot: f64) -> f64 {
         self.the_payoff.value(spot)
     }
-
-    #[cfg(test)]
-    fn change_the_payoff(&mut self, new_payoff: &'a dyn Payoff) {
-        self.the_payoff = PayoffBridge::new(new_payoff);
-    }
 }
 
 #[test]
@@ -40,14 +35,9 @@ fn test_payoff_copy() {
     let put_payoff = payoff3::PayoffPut::new(strike + 1.0);
     let call_option = VanillaOption::new(&call_payoff, expiry);
     let mut copied_call_option = call_option;
-    copied_call_option.change_the_payoff(&put_payoff);
-    println!(
-        "{} {}",
-        call_option.the_payoff.option_payoff(spot),
-        copied_call_option.the_payoff.option_payoff(spot)
-    );
+    copied_call_option.the_payoff = PayoffBridge::new(&put_payoff);
     assert_ne!(
-        call_option.the_payoff.option_payoff(spot),
-        copied_call_option.the_payoff.option_payoff(spot)
+        call_option.the_payoff.value(spot),
+        copied_call_option.the_payoff.value(spot)
     );
 }
