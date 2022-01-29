@@ -39,10 +39,6 @@ impl<'a> RandomBase for AntiThetic {
             self.odd_even = true;
         }
     }
-    fn set_seed(&mut self, seed: u64) {
-        self.inner_generator.set_seed(seed);
-        self.odd_even = true;
-    }
     fn skip(&mut self, mut number_of_paths: u64) {
         if number_of_paths == 0 {
             return;
@@ -57,14 +53,18 @@ impl<'a> RandomBase for AntiThetic {
             self.get_uniforms(&mut tmp);
         }
     }
+    fn set_seed(&mut self, seed: u64) {
+        self.inner_generator.set_seed(seed);
+        self.odd_even = true;
+    }
+    fn reset(&mut self) {
+        self.inner_generator.reset();
+        self.odd_even = true;
+    }
     fn reset_dimensionality(&mut self, new_dimensionality: u64) {
         self.dimensionality = new_dimensionality;
         self.next_variates.resize(new_dimensionality as usize, 0.0);
         self.inner_generator
             .reset_dimensionality(new_dimensionality);
-    }
-    fn reset(&mut self) {
-        self.inner_generator.reset();
-        self.odd_even = true;
     }
 }
