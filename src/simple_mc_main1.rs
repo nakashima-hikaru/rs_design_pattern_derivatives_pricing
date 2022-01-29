@@ -1,5 +1,4 @@
 use crate::chapter1::random1::get_one_gaussian_by_box_muller;
-use rand::SeedableRng;
 
 pub fn simple_montecarlo1(
     expiry: f64,
@@ -15,9 +14,8 @@ pub fn simple_montecarlo1(
     let moved_spot = spot * (r * expiry + ito_correlation).exp();
     let mut this_spot;
     let mut running_sum = 0.0;
-    let mut rng = SeedableRng::from_entropy();
     for _i in 0..number_of_paths {
-        let this_gaussian = get_one_gaussian_by_box_muller(&mut rng);
+        let this_gaussian = get_one_gaussian_by_box_muller();
         this_spot = moved_spot * (root_variance * this_gaussian).exp();
         let mut this_payoff = this_spot - strike;
         this_payoff = if this_payoff > 0.0 { this_payoff } else { 0.0 };

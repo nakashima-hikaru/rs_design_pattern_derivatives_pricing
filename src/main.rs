@@ -1,5 +1,3 @@
-extern crate num;
-
 pub mod chapter1;
 pub mod chapter2;
 pub mod chapter3;
@@ -17,6 +15,7 @@ pub mod vanilla_main1;
 pub mod vanilla_main2;
 pub mod vanilla_main3;
 pub mod vanilla_main4;
+
 use std::str::FromStr;
 
 #[derive(Debug)]
@@ -38,8 +37,6 @@ enum EntryPoints {
 impl FromStr for EntryPoints {
     type Err = &'static str;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        println!("{:?}", s);
-        println!("{:?}", 1);
         match s {
             "simple-mc-main1" => Ok(EntryPoints::SimpleMcMain1),
             "simple-mc-main2" => Ok(EntryPoints::SimpleMcMain2),

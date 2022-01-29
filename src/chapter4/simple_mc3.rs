@@ -1,6 +1,5 @@
 use super::super::chapter1::random1::get_one_gaussian_by_box_muller;
 use crate::chapter4::vanilla1::VanillaOption;
-use rand::SeedableRng;
 
 pub fn simple_montecarlo3(
     the_option: &VanillaOption,
@@ -16,9 +15,8 @@ pub fn simple_montecarlo3(
     let moved_spot = spot * (r * expiry + ito_correlation).exp();
     let mut this_spot;
     let mut running_sum = 0.0;
-    let mut rng = SeedableRng::from_entropy();
     for _i in 0..number_of_paths {
-        let this_gaussian = get_one_gaussian_by_box_muller(&mut rng);
+        let this_gaussian = get_one_gaussian_by_box_muller();
         this_spot = moved_spot * (root_variance * this_gaussian).exp();
         let this_payoff = the_option.option_payoff(this_spot);
         running_sum += this_payoff;

@@ -1,6 +1,5 @@
 use crate::chapter1::random1::get_one_gaussian_by_box_muller;
 use crate::chapter2::payoff1::Payoff;
-use rand::SeedableRng;
 
 pub fn simple_montecarlo2(
     the_payoff: &Payoff,
@@ -16,10 +15,8 @@ pub fn simple_montecarlo2(
     let moved_spot = spot * (r * expiry + ito_correlation).exp();
     let mut this_spot;
     let mut running_sum = 0.0;
-    let seed: [u8; 32] = [13; 32];
-    let mut rng = SeedableRng::from_seed(seed);
     for _i in 0..number_of_paths {
-        let this_gaussian = get_one_gaussian_by_box_muller(&mut rng);
+        let this_gaussian = get_one_gaussian_by_box_muller();
         this_spot = moved_spot * (root_variance * this_gaussian).exp();
         let this_payoff = the_payoff.value(this_spot);
         running_sum += this_payoff;
