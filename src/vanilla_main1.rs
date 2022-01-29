@@ -1,11 +1,8 @@
-mod chapter1;
-mod chapter3;
-mod chapter4;
 use crate::chapter3::double_digital;
 use crate::chapter4::simple_mc3::simple_montecarlo3;
 use crate::chapter4::vanilla1::VanillaOption;
 
-fn main() {
+pub fn main() {
     println!("\nEnter expiry\n");
     let expiry = text_io::read!();
 

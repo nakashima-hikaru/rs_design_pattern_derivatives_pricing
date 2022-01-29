@@ -1,21 +1,21 @@
 use crate::chapter6::random2::RandomBase;
-use crate::chapter6::random2::RandomBaseField;
 
 #[derive(Clone)]
 pub struct AntiThetic {
-    random_base: RandomBaseField,
+    dimensionality: u64,
     inner_generator: Box<dyn RandomBase>,
     odd_even: bool,
     next_variates: Vec<f64>,
 }
 
 impl<'a> AntiThetic {
-    pub fn new(random_base: RandomBaseField, inner_generator: Box<dyn RandomBase>) -> AntiThetic {
+    pub fn new(inner_generator: Box<dyn RandomBase>) -> AntiThetic {
+        let dimensionality = inner_generator.get_dimensionality();
         AntiThetic {
-            random_base,
+            dimensionality,
             inner_generator,
             odd_even: true,
-            next_variates: Vec::<f64>::with_capacity(random_base.dimensionality as usize),
+            next_variates: Vec::<f64>::with_capacity(dimensionality as usize),
         }
     }
 }
@@ -25,7 +25,7 @@ impl<'a> RandomBase for AntiThetic {
         Box::new(self.clone())
     }
     fn get_dimensionality(&self) -> u64 {
-        self.random_base.dimensionality
+        self.dimensionality
     }
     fn get_uniforms(&mut self, variates: &mut [f64]) {
         if self.odd_even {
@@ -58,7 +58,7 @@ impl<'a> RandomBase for AntiThetic {
         }
     }
     fn reset_dimensionality(&mut self, new_dimensionality: u64) {
-        self.random_base.dimensionality = new_dimensionality;
+        self.dimensionality = new_dimensionality;
         self.next_variates.resize(new_dimensionality as usize, 0.0);
         self.inner_generator
             .reset_dimensionality(new_dimensionality);
@@ -68,26 +68,3 @@ impl<'a> RandomBase for AntiThetic {
         self.odd_even = true;
     }
 }
-
-// #[test]
-// fn test_distribution() {
-//     let n = 100000;
-//     let random_base = RandomBaseField::new(n);
-//     let mut x = AntiThetic::new(random_base, 25435344);
-//     let mut v = Vec::<f64>::with_capacity(n as usize);
-//     for _i in 0..n {
-//         v.push(0.0);
-//     }
-
-//     x.get_gaussians(&mut v.as_mut_slice());
-//     let mut mean = 0.0;
-//     let mut variant = 0.0;
-//     for u in v {
-//         mean += u;
-//         variant += u * u;
-//     }
-//     mean /= n as f64;
-//     variant /= n as f64;
-//     x.reset_dimensionality(50);
-//     println!("{}, {}", mean, variant);
-// }

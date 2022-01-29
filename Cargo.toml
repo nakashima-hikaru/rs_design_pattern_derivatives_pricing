@@ -11,51 +11,5 @@ text_io = "0.1.9"
 rand = { version = "0.8.4", default_features = false, features = ["small_rng"] }
 mersenne_twister = "1.1.1"
 rand_distr = "0.4.2"
+num="0.4.0"
 
-[[bin]]
-name = "simple-mc-main1"
-path = "src/simple_mc_main1.rs"
-
-[[bin]]
-name = "simple-mc-main2"
-path = "src/simple_mc_main2.rs"
-
-[[bin]]
-name = "simple-mc-main3"
-path = "src/simple_mc_main3.rs"
-
-[[bin]]
-name = "simple-mc-main4"
-path = "src/simple_mc_main4.rs"
-
-[[bin]]
-name = "simple-mc-main5"
-path = "src/simple_mc_main5.rs"
-
-[[bin]]
-name = "vanilla-main1"
-path = "src/vanilla_main1.rs"
-
-[[bin]]
-name = "vanilla-main2"
-path = "src/vanilla_main2.rs"
-
-[[bin]]
-name = "vanilla-main3"
-path = "src/vanilla_main3.rs"
-
-[[bin]]
-name = "vanilla-main4"
-path = "src/vanilla_main4.rs"
-
-[[bin]]
-name = "stats-main1"
-path = "src/stats_main1.rs"
-
-[[bin]]
-name = "stats-main2"
-path = "src/stats_main2.rs"
-
-[[bin]]
-name = "random-main3"
-path = "src/random_main3.rs"

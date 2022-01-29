@@ -3,7 +3,6 @@
 /// ParkMiller-structは乱数を生成し、
 /// RandomParkMiller-structはParkMiller-structの出力した乱数を一様乱数のベクトルに変換する。
 use crate::chapter6::random2::RandomBase;
-use crate::chapter6::random2::RandomBaseField;
 
 #[derive(Clone, Copy)]
 struct ParkMiller {
@@ -45,7 +44,7 @@ impl ParkMiller {
 
 #[derive(Clone)]
 pub struct RandomParkMiller {
-    random_base: RandomBaseField,
+    dimensionality: u64,
     inner_generator: ParkMiller,
     initial_seed: u64,
     reciprocal: f64,
@@ -55,7 +54,7 @@ impl RandomParkMiller {
     pub fn new(dimensionality: u64, seed: u64) -> RandomParkMiller {
         let inner_generator = ParkMiller::new(seed as i64);
         RandomParkMiller {
-            random_base: RandomBaseField::new(dimensionality),
+            dimensionality,
             inner_generator,
             initial_seed: seed,
             reciprocal: 1.0 / (1.0 + inner_generator.max() as f64),
@@ -68,7 +67,7 @@ impl RandomBase for RandomParkMiller {
         Box::new((*self).clone())
     }
     fn get_dimensionality(&self) -> u64 {
-        self.random_base.dimensionality
+        self.dimensionality
     }
     fn get_uniforms(&mut self, variates: &mut [f64]) {
         for j in 0..self.get_dimensionality() {
@@ -90,7 +89,7 @@ impl RandomBase for RandomParkMiller {
         self.inner_generator.set_seed(self.initial_seed as i64);
     }
     fn reset_dimensionality(&mut self, new_dimensionality: u64) {
-        self.random_base.dimensionality = new_dimensionality;
+        self.dimensionality = new_dimensionality;
         self.inner_generator.set_seed(self.initial_seed as i64);
     }
 }

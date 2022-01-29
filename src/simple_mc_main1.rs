@@ -1,8 +1,7 @@
-mod chapter1;
 use crate::chapter1::random1::get_one_gaussian_by_box_muller;
 use rand::SeedableRng;
 
-fn simple_montecarlo1(
+pub fn simple_montecarlo1(
     expiry: f64,
     strike: f64,
     spot: f64,
@@ -29,7 +28,7 @@ fn simple_montecarlo1(
     mean
 }
 
-fn main() {
+pub fn main() {
     //read in parameters
     println!("\nEnter expiry\n");
     let expiry = text_io::read!();

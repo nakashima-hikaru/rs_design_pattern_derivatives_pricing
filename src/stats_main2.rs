@@ -9,12 +9,7 @@ use crate::chapter5::convergence_table::ConvergenceTable;
 use crate::chapter5::mc_statistics::{StatisticsMC, StatisticsMean};
 use crate::chapter5::simple_mc7::simple_montecarlo5;
 
-mod chapter1;
-mod chapter3;
-mod chapter4;
-mod chapter5;
-
-fn main() {
+pub fn main() {
     println!("\nEnter expiry\n");
     let expiry = text_io::read!();
 

@@ -1,7 +1,3 @@
-mod chapter1;
-mod chapter3;
-mod chapter4;
-
 use crate::chapter4::parameters::ParametersConstant;
 
 use crate::chapter4::payoff3::Payoff;
@@ -10,7 +6,7 @@ use crate::chapter4::payoff3::PayoffPut;
 use crate::chapter4::simple_mc6::simple_montecarlo4;
 use crate::chapter4::vanilla3::VanillaOption;
 
-fn main() {
+pub fn main() {
     println!("\nEnter expiry\n");
     let expiry = text_io::read!();
 

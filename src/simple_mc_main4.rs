@@ -1,11 +1,9 @@
-mod chapter1;
-mod chapter3;
 use crate::chapter3::{
     payoff2::{Payoff, PayoffCall, PayoffPut},
     simple_mc2::simple_montecarlo2,
 };
 
-fn main() {
+pub fn main() {
     println!("\nEnter expiry\n");
     let expiry = text_io::read!();
 

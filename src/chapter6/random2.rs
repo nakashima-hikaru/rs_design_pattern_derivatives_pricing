@@ -33,17 +33,3 @@ impl Clone for Box<dyn RandomBase> {
         self.box_clone()
     }
 }
-
-#[derive(Clone, Copy)]
-pub struct RandomBaseField {
-    pub dimensionality: u64,
-}
-
-impl RandomBaseField {
-    pub fn new(dimensionality: u64) -> RandomBaseField {
-        RandomBaseField { dimensionality }
-    }
-    pub fn reset_dimensionality(&mut self, new_dimensionality: u64) {
-        self.dimensionality = new_dimensionality;
-    }
-}

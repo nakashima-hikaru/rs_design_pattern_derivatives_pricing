@@ -8,3 +8,4 @@ tasks.json
 .DS_Store
 *.idea
 .vscode/settings.json
+cargo.lock
