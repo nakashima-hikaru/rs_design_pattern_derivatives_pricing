@@ -4,6 +4,3 @@ pub mod chapter3;
 pub mod chapter4;
 pub mod chapter5;
 pub mod chapter6;
-
-#[cfg(test)]
-mod tests {}

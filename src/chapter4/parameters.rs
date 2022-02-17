@@ -1,16 +1,24 @@
 /// Bridgeパターンを利用する。
-pub trait ParametersInner {
+use std::convert::From;
+trait ParametersInner {
+    fn box_clone(&self) -> Box<dyn ParametersInner>;
     fn integral(&self, time1: f64, time2: f64) -> f64;
     fn integral_square(&self, time1: f64, time2: f64) -> f64;
 }
 
-#[derive(Copy, Clone)]
-pub struct Parameters<'a> {
-    inner_object_ptr: &'a dyn ParametersInner,
+impl Clone for Box<dyn ParametersInner> {
+    fn clone(&self) -> Box<dyn ParametersInner> {
+        self.box_clone()
+    }
 }
 
-impl<'a> Parameters<'a> {
-    pub fn new(inner_object: &dyn ParametersInner) -> Parameters {
+#[derive(Clone)]
+pub struct Parameters {
+    inner_object_ptr: Box<dyn ParametersInner>,
+}
+
+impl Parameters {
+    fn new(inner_object: Box<dyn ParametersInner>) -> Parameters {
         Parameters {
             inner_object_ptr: inner_object,
         }
@@ -36,7 +44,6 @@ impl<'a> Parameters<'a> {
         total / (time2 - time1)
     }
 }
-
 #[derive(Copy, Clone)]
 pub struct ParametersConstant {
     constant: f64,
@@ -53,11 +60,21 @@ impl ParametersConstant {
 }
 
 impl ParametersInner for ParametersConstant {
+    fn box_clone(&self) -> Box<dyn ParametersInner> {
+        Box::new((*self).clone())
+    }
     fn integral(&self, time1: f64, time2: f64) -> f64 {
         (time2 - time1) * self.constant
     }
 
     fn integral_square(&self, time1: f64, time2: f64) -> f64 {
         (time2 - time1) * self.constant_square
+    }
+}
+
+impl From<f64> for Parameters {
+    fn from(x: f64) -> Self {
+        let inner_object = Box::new(ParametersConstant::new(x));
+        Parameters::new(inner_object)
     }
 }

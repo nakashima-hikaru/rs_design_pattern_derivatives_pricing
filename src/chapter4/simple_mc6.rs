@@ -2,14 +2,14 @@
 /// *課題点
 /// Montecarloシミュレーションの収束に関する指標がない。
 use crate::chapter1::random1::get_one_gaussian_by_box_muller;
-use crate::chapter4::parameters::ParametersInner;
+use crate::chapter4::parameters::Parameters;
 use crate::chapter4::vanilla3::VanillaOption;
 
 pub fn simple_montecarlo4(
     the_option: &VanillaOption,
     spot: f64,
-    vol: &dyn ParametersInner,
-    r: &dyn ParametersInner,
+    vol: &Parameters,
+    r: &Parameters,
     number_of_paths: u64,
 ) -> f64 {
     let expiry = the_option.get_expiry();

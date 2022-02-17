@@ -4,11 +4,13 @@ pub mod chapter3;
 pub mod chapter4;
 pub mod chapter5;
 pub mod chapter6;
+pub mod chapter7;
 pub mod random_main3;
 pub mod simple_mc_main1;
 pub mod simple_mc_main2;
 pub mod simple_mc_main3;
 pub mod simple_mc_main4;
+pub mod simple_mc_main5;
 pub mod stats_main1;
 pub mod stats_main2;
 pub mod vanilla_main1;
@@ -66,6 +68,7 @@ pub fn main() {
         Ok(EntryPoints::SimpleMcMain2) => simple_mc_main2::main(),
         Ok(EntryPoints::SimpleMcMain3) => simple_mc_main3::main(),
         Ok(EntryPoints::SimpleMcMain4) => simple_mc_main4::main(),
+        Ok(EntryPoints::SimpleMcMain5) => simple_mc_main5::main(),
         Ok(EntryPoints::VanillaMain1) => vanilla_main1::main(),
         Ok(EntryPoints::VanillaMain2) => vanilla_main2::main(),
         Ok(EntryPoints::VanillaMain3) => vanilla_main3::main(),

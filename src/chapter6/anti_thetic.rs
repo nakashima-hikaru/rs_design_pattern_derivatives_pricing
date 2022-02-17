@@ -15,7 +15,7 @@ impl<'a> AntiThetic {
             dimensionality,
             inner_generator,
             odd_even: true,
-            next_variates: Vec::<f64>::with_capacity(dimensionality as usize),
+            next_variates: vec![0.0; dimensionality as usize],
         }
     }
 }
@@ -49,7 +49,7 @@ impl<'a> RandomBase for AntiThetic {
         }
         self.inner_generator.skip(number_of_paths / 2);
         if number_of_paths % 2 == 1 {
-            let mut tmp = Vec::<f64>::with_capacity(self.get_dimensionality() as usize);
+            let mut tmp = vec![0.0; self.get_dimensionality() as usize];
             self.get_uniforms(&mut tmp);
         }
     }

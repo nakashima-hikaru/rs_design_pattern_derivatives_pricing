@@ -25,3 +25,14 @@ pub fn get_one_gaussian_by_box_muller() -> f64 {
     }
     x * (-2.0 * size_squared.ln() / size_squared).sqrt()
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn test_random1() {
+        fn test_get_one_gaussian_by_simulation() {
+            get_one_gaussian_by_simulation();
+        }
+    }
+}

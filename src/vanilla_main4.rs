@@ -1,5 +1,4 @@
-use crate::chapter4::parameters::ParametersConstant;
-
+use crate::chapter4::parameters::Parameters;
 use crate::chapter4::payoff3::Payoff;
 use crate::chapter4::payoff3::PayoffCall;
 use crate::chapter4::payoff3::PayoffPut;
@@ -17,16 +16,16 @@ pub fn main() {
     let spot = text_io::read!();
 
     println!("\nEnter vol\n");
-    let vol = text_io::read!();
+    let vol: f64 = text_io::read!();
 
     println!("\nEnter r\n");
-    let r = text_io::read!();
+    let r: f64 = text_io::read!();
 
     println!("\nNumber of paths\n");
     let number_of_paths = text_io::read!();
 
-    let vol_param = ParametersConstant::new(vol);
-    let r_param = ParametersConstant::new(r);
+    let vol_param = Parameters::from(vol);
+    let r_param = Parameters::from(r);
 
     let the_payoff = &PayoffCall::new(strike);
     let the_option = VanillaOption::new(the_payoff as &dyn Payoff, expiry);

@@ -6,7 +6,6 @@ pub fn normal_density(x: f64) -> f64 {
 
 pub fn inverse_cumulative_normal(u: f64) -> f64 {
     if u < -1.0 || u > 1.0 {
-        // println!("{}", u);
         panic!("Parameters of inverse_cumulative must be within the interval [-1, 1].");
     }
     if 0.5 <= u && u <= 0.92 {

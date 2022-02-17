@@ -77,7 +77,7 @@ impl RandomBase for RandomParkMiller {
         }
     }
     fn skip(&mut self, number_of_paths: u64) {
-        let mut tmp = Vec::<f64>::with_capacity(self.get_dimensionality() as usize);
+        let mut tmp = vec![0.0; self.get_dimensionality() as usize];
         for _j in 0..number_of_paths {
             self.get_uniforms(tmp.as_mut_slice());
         }
@@ -99,7 +99,7 @@ impl RandomBase for RandomParkMiller {
 fn test_distribution() {
     let n = 100000;
     let mut x = RandomParkMiller::new(n, 25435344);
-    let mut v = Vec::<f64>::with_capacity(n as usize);
+    let mut v = vec![0.0; n as usize];
     for _i in 0..n {
         v.push(0.0);
     }
