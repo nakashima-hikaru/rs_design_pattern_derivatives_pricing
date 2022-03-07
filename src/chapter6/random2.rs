@@ -1,17 +1,18 @@
 use crate::chapter6::normals::inverse_cumulative_normal;
 
-/// 標準ライブラリのrandはコンパイラごとの実装に依存する。
-/// そのため再現性がなくテストが困難であり、実装された乱数の性能を知るのが難しい。
+/// ## 自前で乱数クラスを実装する理由
+/// 1. 標準ライブラリのrandはコンパイラごとの実装依存
+///     - 再現性がなくテストが困難
+///     - Seedをグローバル変数とすることで再現性を保証できるようになるが、他の操作を挟むと乱数の値が変化してしまう。
+///     - 乱数の性能の測定が困難
 ///
-/// 「Standコマンドで」Seedを設定して再現性を持たせたい。
-/// Seedはグローバル変数なので他のシミュレーションと競合することを防ぐことができる。
-/// さらに、クラスを修飾することができる。
-/// 疑似乱数ではなく、Loq Discrepancy Numberを使用することもできる。
+/// 1. クラスを修飾することができる
+///     - e.g. このクラスを利用してAntiTheticサンプリングを実装できる
+/// 1. 疑似乱数ではなく、Loq Discrepancy Numberを使用することもできる。
 ///
-/// 累積関数の逆関数を通して一様乱数を正規乱数に変換するため、[0,1]区間から0,1は除いてサンプリングする。
+/// 累積関数の逆関数を通して一様乱数を正規乱数に変換するため、[[0,1]]区間から0,1は除いてサンプリングする。
 
 pub trait RandomBase {
-    fn box_clone(&self) -> Box<dyn RandomBase>;
     fn get_dimensionality(&self) -> u64;
     fn get_uniforms(&mut self, variates: &mut [f64]);
     fn skip(&mut self, number_of_paths: u64);
@@ -26,10 +27,4 @@ pub trait RandomBase {
         }
     }
     fn reset_dimensionality(&mut self, new_dimensionality: u64);
-}
-
-impl Clone for Box<dyn RandomBase> {
-    fn clone(&self) -> Self {
-        self.box_clone()
-    }
 }

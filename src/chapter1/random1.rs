@@ -34,5 +34,6 @@ mod tests {
         fn test_get_one_gaussian_by_simulation() {
             get_one_gaussian_by_simulation();
         }
+        test_get_one_gaussian_by_simulation();
     }
 }

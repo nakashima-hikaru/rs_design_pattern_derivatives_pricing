@@ -1,3 +1,5 @@
+use std::rc::Rc;
+
 use crate::chapter4::parameters::Parameters;
 use crate::chapter4::payoff3::PayoffCall;
 use crate::chapter4::vanilla3::VanillaOption;
@@ -23,8 +25,8 @@ pub fn main() {
     println!("\nNumber of paths\n");
     let number_of_paths = text_io::read!();
 
-    let the_payoff = PayoffCall::new(strike);
-    let the_option = VanillaOption::new(&the_payoff, expiry);
+    let the_payoff = Rc::new(PayoffCall::new(strike));
+    let the_option = VanillaOption::new(the_payoff, expiry);
     let vol_param = Parameters::from(vol);
     let r_param = Parameters::from(r);
     let mut gatherer = StatisticsMean::default();

@@ -31,7 +31,7 @@
 #[derive(Clone, Default)]
 pub struct CashFlow {
     pub amount: f64,
-    time_index: u64,
+    pub time_index: u64,
 }
 
 impl CashFlow {

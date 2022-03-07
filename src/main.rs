@@ -5,6 +5,7 @@ pub mod chapter4;
 pub mod chapter5;
 pub mod chapter6;
 pub mod chapter7;
+pub mod equity_fx_main;
 pub mod random_main3;
 pub mod simple_mc_main1;
 pub mod simple_mc_main2;

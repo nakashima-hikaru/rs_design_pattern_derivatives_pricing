@@ -3,7 +3,6 @@
 use crate::chapter4::parameters::Parameters;
 use crate::chapter4::vanilla3::VanillaOption;
 use crate::chapter5::mc_statistics::StatisticsMC;
-
 use crate::chapter6::random2::RandomBase;
 
 pub fn simple_montecarlo6(

@@ -29,10 +29,6 @@ impl ParkMiller {
     pub fn max(&self) -> u64 {
         (ParkMiller::M - 1) as u64
     }
-    #[allow(dead_code)]
-    pub fn min(&self) -> u64 {
-        1
-    }
     pub fn get_one_random_integer(&mut self) -> i64 {
         let k = self.seed / ParkMiller::Q;
         self.seed = ParkMiller::A * (self.seed - k * ParkMiller::Q) - k * ParkMiller::R;
@@ -64,9 +60,6 @@ impl RandomParkMiller {
 }
 
 impl RandomBase for RandomParkMiller {
-    fn box_clone(&self) -> Box<dyn RandomBase> {
-        Box::new((*self).clone())
-    }
     fn get_dimensionality(&self) -> u64 {
         self.dimensionality
     }
@@ -98,7 +91,7 @@ impl RandomBase for RandomParkMiller {
 #[test]
 fn test_distribution() {
     let n = 100000;
-    let mut x = RandomParkMiller::new(n, 25435344);
+    let mut x = RandomParkMiller::new(n, 0);
     let mut v = vec![0.0; n as usize];
     for _i in 0..n {
         v.push(0.0);
@@ -113,6 +106,6 @@ fn test_distribution() {
     }
     mean /= n as f64;
     variant /= n as f64;
-    x.reset_dimensionality(50);
-    println!("{}, {}", mean, variant);
+    assert_eq!(mean, 0.00047708248676497185);
+    assert_eq!(variant, 0.9987128274353647);
 }

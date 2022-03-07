@@ -1,24 +1,17 @@
 /// Bridgeパターンを利用する。
-use std::convert::From;
+use std::{convert::From, rc::Rc};
 trait ParametersInner {
-    fn box_clone(&self) -> Box<dyn ParametersInner>;
     fn integral(&self, time1: f64, time2: f64) -> f64;
     fn integral_square(&self, time1: f64, time2: f64) -> f64;
 }
 
-impl Clone for Box<dyn ParametersInner> {
-    fn clone(&self) -> Box<dyn ParametersInner> {
-        self.box_clone()
-    }
-}
-
 #[derive(Clone)]
 pub struct Parameters {
-    inner_object_ptr: Box<dyn ParametersInner>,
+    inner_object_ptr: Rc<dyn ParametersInner>,
 }
 
 impl Parameters {
-    fn new(inner_object: Box<dyn ParametersInner>) -> Parameters {
+    fn new(inner_object: Rc<dyn ParametersInner>) -> Parameters {
         Parameters {
             inner_object_ptr: inner_object,
         }
@@ -60,9 +53,6 @@ impl ParametersConstant {
 }
 
 impl ParametersInner for ParametersConstant {
-    fn box_clone(&self) -> Box<dyn ParametersInner> {
-        Box::new((*self).clone())
-    }
     fn integral(&self, time1: f64, time2: f64) -> f64 {
         (time2 - time1) * self.constant
     }
@@ -74,7 +64,7 @@ impl ParametersInner for ParametersConstant {
 
 impl From<f64> for Parameters {
     fn from(x: f64) -> Self {
-        let inner_object = Box::new(ParametersConstant::new(x));
+        let inner_object = Rc::new(ParametersConstant::new(x));
         Parameters::new(inner_object)
     }
 }

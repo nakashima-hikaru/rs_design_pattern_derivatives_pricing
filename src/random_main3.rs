@@ -1,3 +1,6 @@
+use std::cell::RefCell;
+use std::rc::Rc;
+
 /// Decoratorパターンを援用することで、インターフェースを変更することなく機能を追加している。
 use crate::chapter4::parameters::Parameters;
 use crate::chapter4::payoff3::PayoffCall;
@@ -27,14 +30,14 @@ pub fn main() {
     println!("\nNumber of paths\n");
     let number_of_paths = text_io::read!();
 
-    let the_payoff = PayoffCall::new(strike);
-    let the_option = VanillaOption::new(&the_payoff, expiry);
+    let the_payoff = Rc::new(PayoffCall::new(strike));
+    let the_option = VanillaOption::new(the_payoff, expiry);
     let vol_param = Parameters::from(vol);
     let r_param = Parameters::from(r);
-    let gatherer = StatisticsMean::default();
-    let mut gatherer_two = ConvergenceTable::new(Box::new(gatherer));
-    let generator = RandomParkMiller::new(1, 1);
-    let mut gen_two = AntiThetic::new(Box::new(generator));
+    let gatherer = Rc::new(RefCell::new(StatisticsMean::default()));
+    let mut gatherer_two = ConvergenceTable::new(gatherer);
+    let generator = Rc::new(RefCell::new(RandomParkMiller::new(1, 1)));
+    let mut gen_two = AntiThetic::new(generator);
     simple_montecarlo6(
         &the_option,
         spot,
