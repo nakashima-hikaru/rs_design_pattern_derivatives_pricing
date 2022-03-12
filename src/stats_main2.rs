@@ -1,13 +1,13 @@
-use std::cell::RefCell;
-use std::rc::Rc;
-
 /// Decoratorパターンを援用することで、インターフェースを変更することなく機能を追加している。
 use crate::chapter4::parameters::Parameters;
 use crate::chapter4::payoff3::PayoffCall;
+use crate::chapter4::payoff_bridge::PayoffBridge;
 use crate::chapter4::vanilla3::VanillaOption;
 use crate::chapter5::convergence_table::ConvergenceTable;
 use crate::chapter5::mc_statistics::{StatisticsMC, StatisticsMean};
 use crate::chapter5::simple_mc7::simple_montecarlo5;
+use std::cell::RefCell;
+use std::rc::Rc;
 
 pub fn main() {
     println!("\nEnter expiry\n");
@@ -28,8 +28,8 @@ pub fn main() {
     println!("\nNumber of paths\n");
     let number_of_paths = text_io::read!();
 
-    let the_payoff = Rc::new(PayoffCall::new(strike));
-    let the_option = VanillaOption::new(the_payoff, expiry);
+    let the_payoff = PayoffBridge::new(Rc::new(PayoffCall::new(strike)));
+    let the_option = VanillaOption::new(&the_payoff, expiry);
     let vol_param = Parameters::from(vol);
     let r_param = Parameters::from(r);
     let gatherer = Rc::new(RefCell::new(StatisticsMean::default()));

@@ -1,6 +1,5 @@
-use std::{cell::RefCell, rc::Rc};
-
 use crate::chapter5::mc_statistics::StatisticsMC;
+use std::{cell::RefCell, rc::Rc};
 
 #[derive(Clone)]
 pub struct ConvergenceTable {

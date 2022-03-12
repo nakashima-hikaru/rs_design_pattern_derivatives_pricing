@@ -4,7 +4,7 @@
 /// RandomParkMiller-structはParkMiller-structの出力した乱数を一様乱数のベクトルに変換する。
 use crate::chapter6::random2::RandomBase;
 
-#[derive(Clone, Copy)]
+#[derive(Clone)]
 struct ParkMiller {
     seed: i64,
 }
@@ -50,11 +50,12 @@ pub struct RandomParkMiller {
 impl RandomParkMiller {
     pub fn new(dimensionality: u64, seed: u64) -> RandomParkMiller {
         let inner_generator = ParkMiller::new(seed as i64);
+        let reciprocal = 1.0 / (1.0 + inner_generator.max() as f64);
         RandomParkMiller {
             dimensionality,
             inner_generator,
             initial_seed: seed,
-            reciprocal: 1.0 / (1.0 + inner_generator.max() as f64),
+            reciprocal,
         }
     }
 }

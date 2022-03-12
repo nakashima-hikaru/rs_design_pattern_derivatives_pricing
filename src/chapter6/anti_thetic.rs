@@ -1,6 +1,5 @@
-use std::{cell::RefCell, rc::Rc};
-
 use crate::chapter6::random2::RandomBase;
+use std::{cell::RefCell, rc::Rc};
 
 #[derive(Clone)]
 pub struct AntiThetic {
@@ -10,9 +9,9 @@ pub struct AntiThetic {
     next_variates: Vec<f64>,
 }
 
-impl<'a> AntiThetic {
+impl AntiThetic {
     pub fn new(inner_generator: Rc<RefCell<dyn RandomBase>>) -> AntiThetic {
-        let dimensionality = inner_generator.borrow_mut().get_dimensionality();
+        let dimensionality = inner_generator.borrow().get_dimensionality();
         AntiThetic {
             dimensionality,
             inner_generator,
@@ -22,7 +21,7 @@ impl<'a> AntiThetic {
     }
 }
 
-impl<'a> RandomBase for AntiThetic {
+impl RandomBase for AntiThetic {
     fn get_dimensionality(&self) -> u64 {
         self.dimensionality
     }

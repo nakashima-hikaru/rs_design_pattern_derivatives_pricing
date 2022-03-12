@@ -1,7 +1,6 @@
-use std::rc::Rc;
-
 /// vanilla2.rsからメンバ変数expiryとメソッドget_expiryを取り除いた。
 use crate::chapter4::payoff3::Payoff;
+use std::rc::Rc;
 #[derive(Clone)]
 pub struct PayoffBridge {
     the_payoff_ptr: Rc<dyn Payoff>,

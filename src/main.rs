@@ -35,6 +35,7 @@ enum EntryPoints {
     StatsMain1,
     StatsMain2,
     RandomMain3,
+    EquityFXMain,
 }
 
 impl FromStr for EntryPoints {
@@ -53,6 +54,7 @@ impl FromStr for EntryPoints {
             "stats-main1" => Ok(EntryPoints::StatsMain1),
             "stats-main2" => Ok(EntryPoints::StatsMain2),
             "random-main3" => Ok(EntryPoints::RandomMain3),
+            "equity-fx-main" => Ok(EntryPoints::EquityFXMain),
             _ => Err("Invalid entry-point."),
         }
     }
@@ -77,6 +79,7 @@ pub fn main() {
         Ok(EntryPoints::StatsMain1) => stats_main1::main(),
         Ok(EntryPoints::StatsMain2) => stats_main2::main(),
         Ok(EntryPoints::RandomMain3) => random_main3::main(),
+        Ok(EntryPoints::EquityFXMain) => equity_fx_main::main(),
         _ => println!("{}", "wrong implement of pattern matching."),
     }
 }

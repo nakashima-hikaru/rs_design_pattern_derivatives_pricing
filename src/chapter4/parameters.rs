@@ -37,7 +37,7 @@ impl Parameters {
         total / (time2 - time1)
     }
 }
-#[derive(Copy, Clone)]
+#[derive(Clone)]
 pub struct ParametersConstant {
     constant: f64,
     constant_square: f64,

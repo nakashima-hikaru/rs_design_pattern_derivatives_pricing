@@ -44,5 +44,5 @@ pub trait PathDependent {
     fn get_look_at_times(&self) -> &Vec<f64>;
     fn max_number_of_cash_flow(&self) -> u64;
     fn possible_cash_flow_times(&self) -> Vec<f64>;
-    fn cash_flows(&self, spot_values: &[f64], generated_cash_flows: &[CashFlow]) -> u64;
+    fn cash_flows(&self, spot_values: &[f64], generated_cash_flows: &mut [CashFlow]) -> u64;
 }
