@@ -1,6 +1,6 @@
-/// Payoffやパラメータに応じて容易に拡張できるようになった
-/// *課題点
-/// Montecarloシミュレーションの収束に関する指標がない。
+//! Payoffやパラメータに応じて容易に拡張できるようになった
+//! *課題点
+//! Montecarloシミュレーションの収束に関する指標がない。
 use crate::chapter1::random1::get_one_gaussian_by_box_muller;
 use crate::chapter4::parameters::Parameters;
 use crate::chapter4::vanilla3::VanillaOption;

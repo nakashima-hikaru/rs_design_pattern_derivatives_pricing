@@ -1,4 +1,4 @@
-/// Decoratorパターンを援用することで、インターフェースを変更することなく機能を追加している。
+//! Decoratorパターンを援用することで、インターフェースを変更することなく機能を追加している。
 use crate::chapter4::parameters::Parameters;
 use crate::chapter4::payoff3::PayoffCall;
 use crate::chapter4::payoff_bridge::PayoffBridge;

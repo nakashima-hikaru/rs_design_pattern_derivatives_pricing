@@ -1,4 +1,4 @@
-/// Bridgeパターンを利用する。
+//! Bridgeパターンを利用する。
 use std::{convert::From, rc::Rc};
 trait ParametersInner {
     fn integral(&self, time1: f64, time2: f64) -> f64;

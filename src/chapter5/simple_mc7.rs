@@ -1,5 +1,5 @@
-/// gathererを参照とすることによって、この関数内でのgathererの変更を関数の外でも反映されるようにしている。
-/// 平均を求める処理が一行で済むようになり、可読性が向上した。
+//! gathererを参照とすることによって、この関数内でのgathererの変更を関数の外でも反映されるようにしている。
+//! 平均を求める処理が一行で済むようになり、可読性が向上した。
 use crate::chapter1::random1::get_one_gaussian_by_box_muller;
 use crate::chapter4::parameters::Parameters;
 use crate::chapter4::vanilla3::VanillaOption;

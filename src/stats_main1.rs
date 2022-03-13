@@ -1,12 +1,10 @@
-use std::rc::Rc;
-
-use crate::chapter4::payoff_bridge::PayoffBridge;
-
 use crate::chapter4::parameters::Parameters;
 use crate::chapter4::payoff3::PayoffCall;
+use crate::chapter4::payoff_bridge::PayoffBridge;
 use crate::chapter4::vanilla3::VanillaOption;
 use crate::chapter5::mc_statistics::{StatisticsMC, StatisticsMean};
 use crate::chapter5::simple_mc7::simple_montecarlo5;
+use std::rc::Rc;
 
 pub fn main() {
     println!("\nEnter expiry\n");

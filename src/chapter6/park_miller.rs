@@ -1,7 +1,7 @@
-/// minimal standard generatorと呼ばれ、保証される統計的な正確性が最低限のもの。
-/// generatorは二つの部分に分かれており、
-/// ParkMiller-structは乱数を生成し、
-/// RandomParkMiller-structはParkMiller-structの出力した乱数を一様乱数のベクトルに変換する。
+//! minimal standard generatorと呼ばれ、保証される統計的な正確性が最低限のもの。
+//! generatorは二つの部分に分かれており、
+//! ParkMiller-structは乱数を生成し、
+//! RandomParkMiller-structはParkMiller-structの出力した乱数を一様乱数のベクトルに変換する。
 use crate::chapter6::random2::RandomBase;
 
 #[derive(Clone)]

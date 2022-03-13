@@ -1,9 +1,9 @@
-/// オプションの情報をexpiryとPayoffの情報として設計し直した。
-/// Payoffはtraitなのでそのままメンバ変数にすることはできない。
-/// よってメンバ変数としてポインタや参照を用いる。
-/// 欠点
-/// ・VanillaOption-structの外部で定義されているPayoff-structのオブジェクトをメンバに持っているため、
-/// VanillaOptionオブジェクトは外部でのPayoffの変更の影響を受けてしまう。
+//! オプションの情報をexpiryとPayoffの情報として設計し直した。
+//! Payoffはtraitなのでそのままメンバ変数にすることはできない。
+//! よってメンバ変数としてポインタや参照を用いる。
+//! 欠点
+//! ・VanillaOption-structの外部で定義されているPayoff-structのオブジェクトをメンバに持っているため、
+//! VanillaOptionオブジェクトは外部でのPayoffの変更の影響を受けてしまう。
 use crate::chapter3::payoff2::Payoff;
 pub struct VanillaOption<'a> {
     expiry: f64,

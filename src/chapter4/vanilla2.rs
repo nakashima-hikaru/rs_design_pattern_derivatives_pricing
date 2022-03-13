@@ -1,12 +1,12 @@
-/// vanilla.rsからの変更点: Clone trait, Copy traitの実装
-/// Payoffオブジェクトを値渡しに変更したため、vanilla.rsで挙げた欠点(Payoffオブジェクトが外部で変更される危険性)は解消された。
-/// 三原則
-/// ・Assignment (Clone trait)
-/// a=b=cのような用法、自己代入を考慮して戻り値が&VanillaOptionであることに注意。
-/// ・Construction (Copy trait)
-/// ・Destruction (Copy traitを実装する場合は不要)
-/// 欠点
-/// ・VanillaOptionと同様のstructを定義するたびに毎回newやget_expiryなどの同じコードを書く必要がある。
+//! vanilla.rsからの変更点: Clone trait, Copy traitの実装
+//! Payoffオブジェクトを値渡しに変更したため、vanilla.rsで挙げた欠点(Payoffオブジェクトが外部で変更される危険性)は解消された。
+//! 三原則
+//! ・Assignment (Clone trait)
+//! a=b=cのような用法、自己代入を考慮して戻り値が&VanillaOptionであることに注意。
+//! ・Construction (Copy trait)
+//! ・Destruction (Copy traitを実装する場合は不要)
+//! 欠点
+//! ・VanillaOptionと同様のstructを定義するたびに毎回newやget_expiryなどの同じコードを書く必要がある。
 use crate::chapter4::payoff3::Payoff;
 
 #[derive(Clone, Copy)]

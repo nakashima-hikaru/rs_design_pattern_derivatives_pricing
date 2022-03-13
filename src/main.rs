@@ -18,7 +18,6 @@ pub mod vanilla_main1;
 pub mod vanilla_main2;
 pub mod vanilla_main3;
 pub mod vanilla_main4;
-
 use std::str::FromStr;
 
 #[derive(Debug)]

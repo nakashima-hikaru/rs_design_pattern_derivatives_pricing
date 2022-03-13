@@ -1,4 +1,4 @@
-/// vanilla2.rsからメンバ変数expiryとメソッドget_expiryを取り除いた。
+//! vanilla2.rsからメンバ変数expiryとメソッドget_expiryを取り除いた。
 use crate::chapter4::payoff3::Payoff;
 use std::rc::Rc;
 #[derive(Clone)]

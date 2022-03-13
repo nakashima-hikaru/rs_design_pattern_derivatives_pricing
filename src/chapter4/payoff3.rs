@@ -1,4 +1,4 @@
-/// payoff2.rsとの違い: Clone traitを実装することで値渡しにした。
+//! payoff2.rsとの違い: Clone traitを実装することで値渡しにした。
 
 pub trait Payoff {
     fn value(&self, spot: f64) -> f64;
