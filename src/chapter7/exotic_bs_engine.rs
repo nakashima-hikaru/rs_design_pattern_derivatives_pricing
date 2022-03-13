@@ -61,8 +61,8 @@ impl ExoticBSEngine {
 }
 
 impl ExoticEngine for ExoticBSEngine {
-    fn as_exotic_engine_field(&self) -> Box<ExoticEngineField> {
-        Box::new(self.exotic_engine_field.clone())
+    fn as_exotic_engine_field(&self) -> &ExoticEngineField {
+        &self.exotic_engine_field
     }
     fn get_one_path(&mut self, spot_values: &mut [f64]) {
         self.the_generator

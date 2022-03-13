@@ -41,7 +41,7 @@ impl ExoticEngineField {
 }
 
 pub trait ExoticEngine {
-    fn as_exotic_engine_field(&self) -> Box<ExoticEngineField>;
+    fn as_exotic_engine_field(&self) -> &ExoticEngineField;
     fn get_one_path(&mut self, spot_values: &mut [f64]);
     fn do_simulation(&mut self, the_gatherer: &mut dyn StatisticsMC, number_of_paths: u64) {
         let mut spot_values = vec![
@@ -68,10 +68,7 @@ pub trait ExoticEngine {
     fn do_one_path(&self, spot_values: &[f64]) -> f64 {
         let number_flows = self.as_exotic_engine_field().the_product.cash_flows(
             spot_values,
-            self.as_exotic_engine_field()
-                .these_cash_flows
-                .borrow_mut()
-                .as_mut_slice(),
+            &mut self.as_exotic_engine_field().these_cash_flows.borrow_mut(),
         );
         let mut value = 0.0;
         for i in 0..number_flows {

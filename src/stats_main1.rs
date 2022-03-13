@@ -44,7 +44,7 @@ pub fn main() {
     println!("`\nFor the call price the results are \n");
     for i in 0..results.len() {
         for j in 0..results[i].len() {
-            println!("{} ", results[i][j]);
+            print!("{} ", results[i][j]);
         }
         println!("\n");
     }
