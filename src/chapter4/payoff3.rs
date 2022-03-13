@@ -1,7 +1,7 @@
 //! payoff2.rsとの違い: Clone traitを実装することで値渡しにした。
 
 pub trait Payoff {
-    fn value(&self, spot: f64) -> f64;
+    fn forward_value(&self, spot: f64) -> f64;
 }
 
 #[derive(Clone)]
@@ -16,7 +16,7 @@ impl PayoffCall {
 }
 
 impl Payoff for PayoffCall {
-    fn value(&self, spot: f64) -> f64 {
+    fn forward_value(&self, spot: f64) -> f64 {
         (spot - self.strike).max(0.0)
     }
 }
@@ -33,7 +33,7 @@ impl PayoffPut {
 }
 
 impl Payoff for PayoffPut {
-    fn value(&self, spot: f64) -> f64 {
+    fn forward_value(&self, spot: f64) -> f64 {
         (self.strike - spot).max(0.0)
     }
 }

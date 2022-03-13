@@ -18,7 +18,7 @@ pub fn simple_montecarlo2(
     for _i in 0..number_of_paths {
         let this_gaussian = get_one_gaussian_by_box_muller();
         this_spot = moved_spot * (root_variance * this_gaussian).exp();
-        let this_payoff = the_payoff.value(this_spot);
+        let this_payoff = the_payoff.forward_value(this_spot);
         running_sum += this_payoff;
     }
     let mut mean = running_sum / number_of_paths as f64;
