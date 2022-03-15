@@ -20,6 +20,6 @@ impl VanillaOption {
         self.expiry
     }
     pub fn option_payoff(&self, spot: f64) -> f64 {
-        self.the_payoff.value(spot)
+        self.the_payoff.forward_value(spot)
     }
 }

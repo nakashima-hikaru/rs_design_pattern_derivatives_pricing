@@ -28,8 +28,11 @@
 //! 時間を配列によって保持するので、キャッシュフローオブジェクトはインデックスと金額のペアで定義する。
 //! cash_flowメソッドによって、スポットの配列からキャッシュフローを返す。
 #[derive(Clone, Default)]
+/// A cash flow simulated on a path.
 pub struct CashFlow {
+    /// The forward value of the cash flow
     pub amount: f64,
+    /// The time the cash flow arises
     pub time_index: u64,
 }
 
@@ -39,9 +42,21 @@ impl CashFlow {
     }
 }
 
+/// An product such that its payoff is path-dependent.
 pub trait PathDependent {
+    /// Returns times that will be used in pricing of the product.
     fn get_look_at_times(&self) -> &Vec<f64>;
-    fn max_number_of_cash_flow(&self) -> u64;
+    /// Returns the number of elements reserved by a cash-flow-vector.
+    fn max_number_of_cash_flows(&self) -> u64;
+
+    /// Returns times of cash flows to calculate its discount factor.
     fn possible_cash_flow_times(&self) -> Vec<f64>;
+
+    /// Returns the number of cash flows generated in one simulation.
+    ///
+    /// # Arguments
+    ///
+    /// * `spot_values` - Spot values collected through simulation using the Monte Carlo method.
+    /// * `generated_flows` - The forward values of Cash flows generated in simulation with `spot_values`.
     fn cash_flows(&self, spot_values: &[f64], generated_cash_flows: &mut [CashFlow]) -> u64;
 }

@@ -10,6 +10,7 @@ pub struct ExoticBSEngine {
     the_generator: Rc<RefCell<dyn RandomBase>>,
     drifts: Vec<f64>,
     standard_derivations: Vec<f64>,
+    /// A logarithm of a spot value
     log_spot: f64,
     number_of_times: u64,
     variates: Vec<f64>,
@@ -61,9 +62,11 @@ impl ExoticBSEngine {
 }
 
 impl ExoticEngine for ExoticBSEngine {
+    /// Returns the pointer of `self.exotic_engine_field`
     fn as_exotic_engine_field(&self) -> &ExoticEngineField {
         &self.exotic_engine_field
     }
+
     fn get_one_path(&mut self, spot_values: &mut [f64]) {
         self.the_generator
             .borrow_mut()
