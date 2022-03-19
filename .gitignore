@@ -9,3 +9,4 @@ tasks.json
 *.idea
 .vscode/settings.json
 cargo.lock
+*.pdf

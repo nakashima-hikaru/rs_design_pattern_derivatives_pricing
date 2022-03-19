@@ -1,6 +1,9 @@
+//! デコレーターパターンを用いることで、anti-thetic法を任意の乱数生成と任意のモンテカルロシミュレーションに適用することができるようにした。
+
 use crate::chapter6::random2::RandomBase;
 use std::{cell::RefCell, rc::Rc};
 
+/// Implemented in the decorator pattern.
 #[derive(Clone)]
 pub struct AntiThetic {
     dimensionality: u64,
@@ -28,12 +31,10 @@ impl RandomBase for AntiThetic {
     fn get_uniforms(&mut self, variates: &mut [f64]) {
         if self.odd_even {
             self.inner_generator.borrow_mut().get_uniforms(variates);
-            for i in 0..self.get_dimensionality() {
-                self.next_variates[i as usize] = 1.0 - variates[i as usize];
-            }
+            self.next_variates = variates.iter().map(|variate| 1.0 - variate).collect();
             self.odd_even = false;
         } else {
-            variates.clone_from_slice(&self.next_variates);
+            variates.copy_from_slice(&self.next_variates);
             self.odd_even = true;
         }
     }

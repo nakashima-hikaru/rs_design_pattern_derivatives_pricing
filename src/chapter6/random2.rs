@@ -9,6 +9,7 @@
 //! 1. 疑似乱数ではなく、Loq Discrepancy Numberを使用することもできる。
 //!
 //! 累積関数の逆関数を通して一様乱数を正規乱数に変換するため、[[0,1]]区間から0,1は除いてサンプリングする。
+
 use crate::chapter6::normals::inverse_cumulative_normal;
 pub trait RandomBase {
     fn get_dimensionality(&self) -> u64;
@@ -18,11 +19,12 @@ pub trait RandomBase {
     fn reset(&mut self);
     fn get_gaussians(&mut self, variates: &mut [f64]) {
         self.get_uniforms(variates);
-
-        for i in 0..self.get_dimensionality() {
-            let x = variates[i as usize];
-            variates[i as usize] = inverse_cumulative_normal(x);
-        }
+        variates.copy_from_slice(
+            &variates
+                .iter()
+                .map(|x| inverse_cumulative_normal(*x))
+                .collect::<Vec<f64>>(),
+        );
     }
     fn reset_dimensionality(&mut self, new_dimensionality: u64);
 }

@@ -1,4 +1,3 @@
-//! Decoratorパターンを援用することで、インターフェースを変更することなく機能を追加している。
 use crate::chapter4::parameters::Parameters;
 use crate::chapter4::payoff3::PayoffCall;
 use crate::chapter4::payoff_bridge::PayoffBridge;
@@ -38,10 +37,9 @@ pub fn main() {
     println!("\nNumber of paths\n");
     let number_of_paths: u64 = text_io::read!();
     let the_payoff = Rc::new(PayoffBridge::new(Rc::new(PayoffCall::new(strike))));
-    let mut times = vec![0.0; number_of_dates];
-    for i in 0..times.len() {
-        times[i] = (i as f64 + 1.0) * expiry / number_of_dates as f64;
-    }
+    let times = (0..number_of_dates)
+        .map(|i| (i as f64 + 1.0) * expiry / number_of_dates as f64)
+        .collect();
     let vol_param = Rc::new(Parameters::from(vol));
     let r_param = Rc::new(Parameters::from(r));
     let d_param = Rc::new(Parameters::from(d));

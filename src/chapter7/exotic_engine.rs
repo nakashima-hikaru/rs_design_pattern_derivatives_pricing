@@ -23,10 +23,11 @@ impl ExoticEngineField {
             CashFlow::default();
             the_product.max_number_of_cash_flows() as usize
         ]);
-        let mut discounts = the_product.possible_cash_flow_times();
-        for discount in discounts.iter_mut() {
-            *discount = (-r.integral(0.0, *discount)).exp();
-        }
+        let discounts = the_product
+            .possible_cash_flow_times()
+            .iter_mut()
+            .map(|discount| (-r.integral(0.0, *discount)).exp())
+            .collect();
         ExoticEngineField {
             the_product,
             r,
@@ -80,16 +81,18 @@ pub trait ExoticEngine {
     ///
     /// * `spot_values` - Spot values on a path.
     fn do_one_path(&self, spot_values: &[f64]) -> f64 {
-        let number_flows = self.as_exotic_engine_field().the_product.cash_flows(
+        self.as_exotic_engine_field().the_product.cash_flows(
             spot_values,
             &mut self.as_exotic_engine_field().these_cash_flows.borrow_mut(),
         );
-        let mut value = 0.0;
-        for i in 0..number_flows {
-            let field = self.as_exotic_engine_field();
-            let cashflow = &field.these_cash_flows.borrow()[i as usize];
-            value += cashflow.amount * field.discounts[cashflow.time_index as usize];
-        }
-        value
+        self.as_exotic_engine_field()
+            .these_cash_flows
+            .borrow()
+            .iter()
+            .map(|cash_flow| {
+                cash_flow.amount
+                    * self.as_exotic_engine_field().discounts[cash_flow.time_index as usize]
+            })
+            .sum()
     }
 }

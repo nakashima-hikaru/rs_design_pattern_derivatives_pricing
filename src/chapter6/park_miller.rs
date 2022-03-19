@@ -5,6 +5,10 @@
 use crate::chapter6::random2::RandomBase;
 
 #[derive(Clone)]
+/// A linear congruential generator.
+/// See \[ParkMiller\] p.1196.
+///
+/// \[ParkMiler\] Park, S. K. and Keith W. Miller. “Random number generators: good ones are hard to find.” Commun. ACM 31 (1988): 1192-1201.
 struct ParkMiller {
     seed: i64,
 }
@@ -20,15 +24,19 @@ impl ParkMiller {
         }
         ParkMiller { seed }
     }
-    pub fn set_seed(&mut self, seed: i64) {
+    fn set_seed(&mut self, seed: i64) {
         self.seed = seed;
         if self.seed == 0 {
             self.seed = 1;
         }
     }
-    pub fn max(&self) -> u64 {
+
+    /// The maximum number of generated random integers.
+    fn max(&self) -> u64 {
         (ParkMiller::M - 1) as u64
     }
+
+    /// Get a random integer in the interval \[0, M\].
     pub fn get_one_random_integer(&mut self) -> i64 {
         let k = self.seed / ParkMiller::Q;
         self.seed = ParkMiller::A * (self.seed - k * ParkMiller::Q) - k * ParkMiller::R;
@@ -44,6 +52,7 @@ pub struct RandomParkMiller {
     dimensionality: u64,
     inner_generator: ParkMiller,
     initial_seed: u64,
+    /// Converts random integers to random number in \[0,1\].
     reciprocal: f64,
 }
 
@@ -64,28 +73,55 @@ impl RandomBase for RandomParkMiller {
     fn get_dimensionality(&self) -> u64 {
         self.dimensionality
     }
+
+    /// Set uniform variables to `variates`.
     fn get_uniforms(&mut self, variates: &mut [f64]) {
-        for j in 0..self.get_dimensionality() {
-            variates[j as usize] =
-                (self.inner_generator.get_one_random_integer() as f64) * self.reciprocal;
-        }
+        variates.copy_from_slice(
+            &variates
+                .iter()
+                .map(|_j| (self.inner_generator.get_one_random_integer() as f64) * self.reciprocal)
+                .collect::<Vec<f64>>(),
+        );
     }
+
+    /// Skips random number generating
+    ///
+    /// # Arguments
+    ///
+    /// * `number_of_paths` - The number of paths to skip.
     fn skip(&mut self, number_of_paths: u64) {
         let mut tmp = vec![0.0; self.get_dimensionality() as usize];
         for _j in 0..number_of_paths {
-            self.get_uniforms(tmp.as_mut_slice());
+            self.get_uniforms(&mut tmp);
         }
     }
+
+    /// Set an initial seed.
     fn set_seed(&mut self, seed: u64) {
         self.initial_seed = seed;
         self.inner_generator.set_seed(seed as i64);
     }
+
     fn reset(&mut self) {
         self.inner_generator.set_seed(self.initial_seed as i64);
     }
+
+    /// Updates dimensionality of generated random numbers.
     fn reset_dimensionality(&mut self, new_dimensionality: u64) {
         self.dimensionality = new_dimensionality;
         self.inner_generator.set_seed(self.initial_seed as i64);
+    }
+
+    fn get_gaussians(&mut self, variates: &mut [f64]) {
+        self.get_uniforms(variates);
+        variates.copy_from_slice(
+            variates
+                .iter()
+                .map(|x| super::normals::inverse_cumulative_normal(*x))
+                .collect::<Vec<f64>>()
+                .as_slice()
+                .as_ref(),
+        );
     }
 }
 
