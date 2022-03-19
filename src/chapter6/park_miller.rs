@@ -77,8 +77,7 @@ impl RandomBase for RandomParkMiller {
     /// Set uniform variables to `variates`.
     fn get_uniforms(&mut self, variates: &mut [f64]) {
         variates.copy_from_slice(
-            &variates
-                .iter()
+            &(0..self.get_dimensionality())
                 .map(|_j| (self.inner_generator.get_one_random_integer() as f64) * self.reciprocal)
                 .collect::<Vec<f64>>(),
         );
@@ -111,18 +110,6 @@ impl RandomBase for RandomParkMiller {
         self.dimensionality = new_dimensionality;
         self.inner_generator.set_seed(self.initial_seed as i64);
     }
-
-    fn get_gaussians(&mut self, variates: &mut [f64]) {
-        self.get_uniforms(variates);
-        variates.copy_from_slice(
-            variates
-                .iter()
-                .map(|x| super::normals::inverse_cumulative_normal(*x))
-                .collect::<Vec<f64>>()
-                .as_slice()
-                .as_ref(),
-        );
-    }
 }
 
 #[test]
@@ -130,11 +117,8 @@ fn test_distribution() {
     let n = 100000;
     let mut x = RandomParkMiller::new(n, 0);
     let mut v = vec![0.0; n as usize];
-    for _i in 0..n {
-        v.push(0.0);
-    }
 
-    x.get_gaussians(&mut v.as_mut_slice());
+    x.get_gaussians(&mut v);
     let mut mean = 0.0;
     let mut variant = 0.0;
     for u in v {
