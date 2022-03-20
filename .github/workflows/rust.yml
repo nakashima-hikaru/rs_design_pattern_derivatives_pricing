@@ -11,8 +11,6 @@ jobs:
     strategy:
       matrix:
         rust:
-          - stable
-          - beta
           - nightly
         os: [ubuntu-latest, windows-latest, macos-latest]
 
