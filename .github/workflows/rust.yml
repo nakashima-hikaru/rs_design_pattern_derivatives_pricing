@@ -1,25 +1,32 @@
-name: Rust
+name: test
 
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
-
-env:
-  CARGO_TERM_COLOR: always
+on: [push, pull_request]
 
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    name: Rust ${{ matrix.os }} ${{ matrix.rust }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        rust:
+          - stable
+          - beta
+          - nightly
+        os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
     - uses: actions/checkout@v2
+
+    - name: Setup Rust
+      uses: actions-rs/toolchain@v1
       with:
-        toolchain: nightly
-    
+        profile: minimal
+        toolchain: ${{ matrix.rust }}
+        override: true
     - name: Build
-      run: cargo build --verbose
+      run: cargo build
     - name: Run tests
-      run: cargo test --verbose
+      run: cargo test
+      continue-on-error: ${{ matrix.rust == 'nightly' }}
