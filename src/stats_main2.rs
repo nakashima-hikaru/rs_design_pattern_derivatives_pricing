@@ -28,8 +28,8 @@ pub fn main() {
     println!("\nNumber of paths\n");
     let number_of_paths = text_io::read!();
 
-    let the_payoff = PayoffBridge::new(Rc::new(PayoffCall::new(strike)));
-    let the_option = VanillaOption::new(&the_payoff, expiry);
+    let the_payoff = PayoffBridge::new(Box::new(PayoffCall::new(strike)));
+    let the_option = VanillaOption::new(the_payoff, expiry);
     let vol_param = Parameters::from(vol);
     let r_param = Parameters::from(r);
     let gatherer = Rc::new(RefCell::new(StatisticsMean::default()));

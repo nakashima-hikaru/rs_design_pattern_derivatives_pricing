@@ -3,14 +3,12 @@ use crate::chapter5::mc_statistics::StatisticsMC;
 use crate::chapter7::path_dependent::CashFlow;
 use crate::chapter7::path_dependent::PathDependent;
 use std::cell::RefCell;
-use std::rc::Rc;
 
-#[derive(Clone)]
 pub struct ExoticEngineField {
     /// A path dependent product such as Asian option
-    the_product: Rc<dyn PathDependent>,
+    the_product: Box<dyn PathDependent>,
     /// Interest rates
-    r: Rc<Parameters>,
+    r: Box<Parameters>,
     /// Discount factors
     discounts: Vec<f64>,
     /// Cash flows simulated on paths
@@ -18,7 +16,7 @@ pub struct ExoticEngineField {
 }
 
 impl ExoticEngineField {
-    pub fn new(the_product: Rc<dyn PathDependent>, r: Rc<Parameters>) -> ExoticEngineField {
+    pub fn new(the_product: Box<dyn PathDependent>, r: Box<Parameters>) -> ExoticEngineField {
         let these_cash_flows = RefCell::new(vec![
             CashFlow::default();
             the_product.max_number_of_cash_flows() as usize
@@ -36,11 +34,11 @@ impl ExoticEngineField {
         }
     }
     /// Returns the pointer of `self.the_product`.
-    pub fn get_the_product(&self) -> &Rc<dyn PathDependent> {
+    pub fn get_the_product(&self) -> &Box<dyn PathDependent> {
         &self.the_product
     }
     /// Returns the pointer of `self.r`.
-    pub fn get_r(&self) -> &Rc<Parameters> {
+    pub fn get_r(&self) -> &Box<Parameters> {
         &self.r
     }
 }

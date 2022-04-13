@@ -4,7 +4,6 @@ use crate::chapter4::payoff_bridge::PayoffBridge;
 use crate::chapter4::vanilla3::VanillaOption;
 use crate::chapter5::mc_statistics::{StatisticsMC, StatisticsMean};
 use crate::chapter5::simple_mc7::simple_montecarlo5;
-use std::rc::Rc;
 
 pub fn main() {
     println!("\nEnter expiry\n");
@@ -25,8 +24,8 @@ pub fn main() {
     println!("\nNumber of paths\n");
     let number_of_paths = text_io::read!();
 
-    let the_payoff = PayoffBridge::new(Rc::new(PayoffCall::new(strike)));
-    let the_option = VanillaOption::new(&the_payoff, expiry);
+    let the_payoff = PayoffBridge::new(Box::new(PayoffCall::new(strike)));
+    let the_option = VanillaOption::new(the_payoff, expiry);
     let vol_param = Parameters::from(vol);
     let r_param = Parameters::from(r);
     let mut gatherer = StatisticsMean::default();

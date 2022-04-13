@@ -3,17 +3,16 @@
 //! このクローンをいい感じにするとより速くなるかも（Boxポインタとか？）
 use crate::chapter4::payoff_bridge::PayoffBridge;
 
-#[derive(Clone)]
 pub struct VanillaOption {
     expiry: f64,
     the_payoff: PayoffBridge,
 }
 
 impl VanillaOption {
-    pub fn new(the_payoff: &PayoffBridge, expiry: f64) -> VanillaOption {
+    pub fn new(the_payoff: PayoffBridge, expiry: f64) -> VanillaOption {
         VanillaOption {
             expiry,
-            the_payoff: the_payoff.clone(),
+            the_payoff: the_payoff,
         }
     }
     pub fn get_expiry(&self) -> f64 {

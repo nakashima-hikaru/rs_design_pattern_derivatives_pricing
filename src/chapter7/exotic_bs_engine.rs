@@ -34,8 +34,8 @@ impl ExoticBSEngine {
     /// * `spot` - A spot value of a stock
     pub fn new(
         exotic_engine_field: ExoticEngineField,
-        d: Rc<Parameters>,
-        vol: Rc<Parameters>,
+        d: Box<Parameters>,
+        vol: Box<Parameters>,
         the_generator: Rc<RefCell<dyn RandomBase>>,
         spot: f64,
     ) -> ExoticBSEngine {
@@ -65,7 +65,7 @@ impl ExoticBSEngine {
         let log_spot = spot.ln();
         let variates = vec![0.0; number_of_times as usize];
         ExoticBSEngine {
-            exotic_engine_field: exotic_engine_field.clone(),
+            exotic_engine_field: exotic_engine_field,
             the_generator,
             drifts,
             standard_deviations,

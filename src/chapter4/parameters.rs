@@ -1,5 +1,5 @@
 //! Bridgeパターンを利用する。
-use std::{convert::From, rc::Rc};
+use std::convert::From;
 
 pub trait ParametersInner {
     fn value_at(&self, x: f64) -> f64;
@@ -7,13 +7,12 @@ pub trait ParametersInner {
     fn integral_square(&self, time1: f64, time2: f64) -> f64;
 }
 
-#[derive(Clone)]
 pub struct Parameters {
-    inner_object_ptr: Rc<dyn ParametersInner>,
+    inner_object_ptr: Box<dyn ParametersInner>,
 }
 
 impl Parameters {
-    fn new(inner_object: Rc<dyn ParametersInner>) -> Parameters {
+    fn new(inner_object: Box<dyn ParametersInner>) -> Parameters {
         Parameters {
             inner_object_ptr: inner_object,
         }
@@ -69,7 +68,7 @@ impl ParametersInner for ParametersConstant {
 
 impl From<f64> for Parameters {
     fn from(x: f64) -> Self {
-        let inner_object = Rc::new(ParametersConstant::new(x));
+        let inner_object = Box::new(ParametersConstant::new(x));
         Parameters::new(inner_object)
     }
 }
@@ -85,11 +84,11 @@ pub trait ParametersPiecewiseConstantInner {
 }
 
 pub struct ParametersPiecewiseConstant {
-    inner_obj_ptr: Rc<dyn ParametersPiecewiseConstantInner>,
+    inner_obj_ptr: Box<dyn ParametersPiecewiseConstantInner>,
 }
 
 impl ParametersPiecewiseConstant {
-    pub fn new(inner_obj_ptr: Rc<dyn ParametersPiecewiseConstantInner>) -> Self {
+    pub fn new(inner_obj_ptr: Box<dyn ParametersPiecewiseConstantInner>) -> Self {
         Self { inner_obj_ptr }
     }
 }
@@ -299,7 +298,7 @@ mod tests {
     fn test_integrals() {
         let constants = [3.0, 2.0, 1.0, 5.0];
         let discontinuous_points = [-100.0, 200.0, 500.0];
-        let f = ParametersPiecewiseConstant::new(Rc::new(
+        let f = ParametersPiecewiseConstant::new(Box::new(
             ParametersLeftContinuousPiecewiseConstant::new(&constants, &discontinuous_points),
         ));
         assert_eq!(f.integral(-150.0, -120.0), 90.0);

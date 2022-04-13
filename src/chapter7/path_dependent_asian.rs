@@ -1,12 +1,10 @@
 use crate::chapter4::payoff_bridge::PayoffBridge;
 use crate::chapter7::path_dependent::CashFlow;
 use crate::chapter7::path_dependent::PathDependent;
-use std::rc::Rc;
 
-#[derive(Clone)]
 pub struct PathDependentAsian {
     delivery_time: f64,
-    the_payoff: Rc<PayoffBridge>,
+    the_payoff: Box<PayoffBridge>,
     number_of_times: u64,
     look_at_times: Vec<f64>,
 }
@@ -15,7 +13,7 @@ impl PathDependentAsian {
     pub fn new(
         look_at_times: &Vec<f64>,
         delivery_time: f64,
-        the_payoff: Rc<PayoffBridge>,
+        the_payoff: Box<PayoffBridge>,
     ) -> PathDependentAsian {
         PathDependentAsian {
             delivery_time,
