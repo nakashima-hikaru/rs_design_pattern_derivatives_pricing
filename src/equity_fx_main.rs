@@ -36,14 +36,14 @@ pub fn main() {
 
     println!("\nNumber of paths\n");
     let number_of_paths: u64 = text_io::read!();
-    let the_payoff = Box::new(PayoffBridge::new(Box::new(PayoffCall::new(strike))));
+    let the_payoff = PayoffBridge::new(Box::new(PayoffCall::new(strike)));
     let times = (0..number_of_dates)
         .map(|i| (i as f64 + 1.0) * expiry / number_of_dates as f64)
         .collect();
-    let vol_param = Box::new(Parameters::from(vol));
-    let r_param = Box::new(Parameters::from(r));
-    let d_param = Box::new(Parameters::from(d));
-    let the_option = Box::new(PathDependentAsian::new(&times, expiry, the_payoff));
+    let vol_param = Parameters::from(vol);
+    let r_param = Parameters::from(r);
+    let d_param = Parameters::from(d);
+    let the_option = Box::new(PathDependentAsian::new(times, expiry, the_payoff));
     let gatherer = Rc::new(RefCell::new(StatisticsMean::default()));
     let mut gatherer_two = ConvergenceTable::new(gatherer);
     let generator = Rc::new(RefCell::new(RandomParkMiller::new(

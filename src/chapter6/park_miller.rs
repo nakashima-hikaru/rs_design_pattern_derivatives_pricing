@@ -4,7 +4,6 @@
 //! RandomParkMiller-structはParkMiller-structの出力した乱数を一様乱数のベクトルに変換する。
 use crate::chapter6::random2::RandomBase;
 
-#[derive(Clone)]
 /// A linear congruential generator.
 /// See \[ParkMiller\] p.1196.
 ///
@@ -47,7 +46,6 @@ impl ParkMiller {
     }
 }
 
-#[derive(Clone)]
 pub struct RandomParkMiller {
     dimensionality: u64,
     inner_generator: ParkMiller,

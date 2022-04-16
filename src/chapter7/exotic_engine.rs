@@ -8,7 +8,7 @@ pub struct ExoticEngineField {
     /// A path dependent product such as Asian option
     the_product: Box<dyn PathDependent>,
     /// Interest rates
-    r: Box<Parameters>,
+    r: Parameters,
     /// Discount factors
     discounts: Vec<f64>,
     /// Cash flows simulated on paths
@@ -16,7 +16,7 @@ pub struct ExoticEngineField {
 }
 
 impl ExoticEngineField {
-    pub fn new(the_product: Box<dyn PathDependent>, r: Box<Parameters>) -> ExoticEngineField {
+    pub fn new(the_product: Box<dyn PathDependent>, r: Parameters) -> ExoticEngineField {
         let these_cash_flows = RefCell::new(vec![
             CashFlow::default();
             the_product.max_number_of_cash_flows() as usize
@@ -38,7 +38,7 @@ impl ExoticEngineField {
         &self.the_product
     }
     /// Returns the pointer of `self.r`.
-    pub fn get_r(&self) -> &Box<Parameters> {
+    pub fn get_r(&self) -> &Parameters {
         &self.r
     }
 }
@@ -47,6 +47,11 @@ pub trait ExoticEngine {
     /// Returns the pointer of `self.exotic_engine_field`.
     fn as_exotic_engine_field(&self) -> &ExoticEngineField;
 
+    /// Returns the value of the product on a path.
+    ///
+    /// # Arguments
+    ///
+    /// * `spot_values` - Spot values on a path.
     fn get_one_path(&mut self, spot_values: &mut [f64]);
 
     fn do_simulation(&mut self, the_gatherer: &mut dyn StatisticsMC, number_of_paths: u64) {
@@ -73,11 +78,6 @@ pub trait ExoticEngine {
         }
     }
 
-    /// Returns the present value of the product on a path.
-    ///
-    /// # Arguments
-    ///
-    /// * `spot_values` - Spot values on a path.
     fn do_one_path(&self, spot_values: &[f64]) -> f64 {
         self.as_exotic_engine_field().the_product.cash_flows(
             spot_values,

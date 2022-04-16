@@ -4,7 +4,6 @@ use crate::chapter6::random2::RandomBase;
 use std::{cell::RefCell, rc::Rc};
 
 /// Implemented in the decorator pattern.
-#[derive(Clone)]
 pub struct AntiThetic {
     dimensionality: u64,
     inner_generator: Rc<RefCell<dyn RandomBase>>,

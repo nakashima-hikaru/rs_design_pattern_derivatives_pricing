@@ -4,22 +4,22 @@ use crate::chapter7::path_dependent::PathDependent;
 
 pub struct PathDependentAsian {
     delivery_time: f64,
-    the_payoff: Box<PayoffBridge>,
+    the_payoff: PayoffBridge,
     number_of_times: u64,
     look_at_times: Vec<f64>,
 }
 
 impl PathDependentAsian {
     pub fn new(
-        look_at_times: &Vec<f64>,
+        look_at_times: Vec<f64>,
         delivery_time: f64,
-        the_payoff: Box<PayoffBridge>,
+        the_payoff: PayoffBridge,
     ) -> PathDependentAsian {
         PathDependentAsian {
             delivery_time,
             the_payoff,
             number_of_times: look_at_times.len() as u64,
-            look_at_times: look_at_times.clone(),
+            look_at_times,
         }
     }
 }

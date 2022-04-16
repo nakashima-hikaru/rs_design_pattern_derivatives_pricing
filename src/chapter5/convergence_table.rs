@@ -1,7 +1,6 @@
 use crate::chapter5::mc_statistics::StatisticsMC;
 use std::{cell::RefCell, rc::Rc};
 
-#[derive(Clone)]
 pub struct ConvergenceTable {
     inner: Rc<RefCell<dyn StatisticsMC>>,
     results_so_far: Vec<Vec<f64>>,

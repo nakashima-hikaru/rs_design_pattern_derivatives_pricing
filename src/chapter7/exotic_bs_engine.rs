@@ -34,8 +34,8 @@ impl ExoticBSEngine {
     /// * `spot` - A spot value of a stock
     pub fn new(
         exotic_engine_field: ExoticEngineField,
-        d: Box<Parameters>,
-        vol: Box<Parameters>,
+        d: Parameters,
+        vol: Parameters,
         the_generator: Rc<RefCell<dyn RandomBase>>,
         spot: f64,
     ) -> ExoticBSEngine {

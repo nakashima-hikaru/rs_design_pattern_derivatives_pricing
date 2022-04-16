@@ -22,7 +22,7 @@ pub trait StatisticsMC {
     fn get_results_so_far(&self) -> Vec<Vec<f64>>;
 }
 
-#[derive(Clone, Default)]
+#[derive(Default)]
 /// For obtaining mean values which equals to `running_sum`/`paths_done`.
 pub struct StatisticsMean {
     /// The sum of all result so far.

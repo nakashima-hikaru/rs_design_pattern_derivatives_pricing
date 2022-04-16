@@ -27,7 +27,7 @@
 //!     よってあらかじめ割引率を参照する必要のある時間の配列をpossible_cashflow_timesというメソッドで求めておく。
 //! 時間を配列によって保持するので、キャッシュフローオブジェクトはインデックスと金額のペアで定義する。
 //! cash_flowメソッドによって、スポットの配列からキャッシュフローを返す。
-#[derive(Clone, Default)]
+#[derive(Default, Clone, Copy)]
 /// A cash flow simulated on a path.
 pub struct CashFlow {
     /// The forward value of the cash flow
@@ -57,6 +57,6 @@ pub trait PathDependent {
     /// # Arguments
     ///
     /// * `spot_values` - Spot values collected through simulation using the Monte Carlo method.
-    /// * `generated_flows` - The forward values of Cash flows generated in simulation with `spot_values`.
+    /// * `generated_flows` - The forward values of cash flows generated in simulation with `spot_values`.
     fn cash_flows(&self, spot_values: &[f64], generated_cash_flows: &mut [CashFlow]) -> u64;
 }

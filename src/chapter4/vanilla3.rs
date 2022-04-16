@@ -10,10 +10,7 @@ pub struct VanillaOption {
 
 impl VanillaOption {
     pub fn new(the_payoff: PayoffBridge, expiry: f64) -> VanillaOption {
-        VanillaOption {
-            expiry,
-            the_payoff: the_payoff,
-        }
+        VanillaOption { expiry, the_payoff }
     }
     pub fn get_expiry(&self) -> f64 {
         self.expiry
