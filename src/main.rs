@@ -61,26 +61,25 @@ impl FromStr for EntryPoints {
 }
 
 pub fn main() {
-    equity_fx_main::main();
-    // let mut entry_point = String::new();
-    // std::io::stdin()
-    //     .read_line(&mut entry_point)
-    //     .expect("Error occurred when reading input string.");
-    // entry_point = entry_point.trim().to_string();
-    // match EntryPoints::from_str(&entry_point) {
-    //     Ok(EntryPoints::SimpleMcMain1) => simple_mc_main1::main(),
-    //     Ok(EntryPoints::SimpleMcMain2) => simple_mc_main2::main(),
-    //     Ok(EntryPoints::SimpleMcMain3) => simple_mc_main3::main(),
-    //     Ok(EntryPoints::SimpleMcMain4) => simple_mc_main4::main(),
-    //     Ok(EntryPoints::SimpleMcMain5) => simple_mc_main5::main(),
-    //     Ok(EntryPoints::VanillaMain1) => vanilla_main1::main(),
-    //     Ok(EntryPoints::VanillaMain2) => vanilla_main2::main(),
-    //     Ok(EntryPoints::VanillaMain3) => vanilla_main3::main(),
-    //     Ok(EntryPoints::VanillaMain4) => vanilla_main4::main(),
-    //     Ok(EntryPoints::StatsMain1) => stats_main1::main(),
-    //     Ok(EntryPoints::StatsMain2) => stats_main2::main(),
-    //     Ok(EntryPoints::RandomMain3) => random_main3::main(),
-    //     Ok(EntryPoints::EquityFXMain) => equity_fx_main::main(),
-    //     _ => println!("{}", "wrong implement of pattern matching."),
-    // }
+    let mut entry_point = String::new();
+    std::io::stdin()
+        .read_line(&mut entry_point)
+        .expect("Error occurred when reading input string.");
+    entry_point = entry_point.trim().to_string();
+    match EntryPoints::from_str(&entry_point) {
+        Ok(EntryPoints::SimpleMcMain1) => simple_mc_main1::main(),
+        Ok(EntryPoints::SimpleMcMain2) => simple_mc_main2::main(),
+        Ok(EntryPoints::SimpleMcMain3) => simple_mc_main3::main(),
+        Ok(EntryPoints::SimpleMcMain4) => simple_mc_main4::main(),
+        Ok(EntryPoints::SimpleMcMain5) => simple_mc_main5::main(),
+        Ok(EntryPoints::VanillaMain1) => vanilla_main1::main(),
+        Ok(EntryPoints::VanillaMain2) => vanilla_main2::main(),
+        Ok(EntryPoints::VanillaMain3) => vanilla_main3::main(),
+        Ok(EntryPoints::VanillaMain4) => vanilla_main4::main(),
+        Ok(EntryPoints::StatsMain1) => stats_main1::main(),
+        Ok(EntryPoints::StatsMain2) => stats_main2::main(),
+        Ok(EntryPoints::RandomMain3) => random_main3::main(),
+        Ok(EntryPoints::EquityFXMain) => equity_fx_main::main(),
+        _ => println!("{}", "wrong implement of pattern matching."),
+    }
 }
