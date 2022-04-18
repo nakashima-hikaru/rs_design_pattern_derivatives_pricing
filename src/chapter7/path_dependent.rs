@@ -43,7 +43,7 @@ impl CashFlow {
 }
 
 /// An product such that its payoff is path-dependent.
-pub trait PathDependent {
+pub trait PathDependent: Send + Sync {
     /// Returns times that will be used in pricing of the product.
     fn get_look_at_times(&self) -> &Vec<f64>;
     /// Returns the number of elements reserved by a cash-flow-vector.

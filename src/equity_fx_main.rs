@@ -9,8 +9,8 @@ use crate::chapter6::park_miller::RandomParkMiller;
 use crate::chapter7::exotic_bs_engine::ExoticBSEngine;
 use crate::chapter7::exotic_engine::{ExoticEngine, ExoticEngineField};
 use crate::chapter7::path_dependent_asian::PathDependentAsian;
-use std::cell::RefCell;
-use std::rc::Rc;
+use std::sync::Arc;
+use std::sync::Mutex;
 
 pub fn main() {
     println!("\nEnter expiry\n");
@@ -43,14 +43,11 @@ pub fn main() {
     let vol_param = Parameters::from(vol);
     let r_param = Parameters::from(r);
     let d_param = Parameters::from(d);
-    let the_option = Box::new(PathDependentAsian::new(times, expiry, the_payoff));
-    let gatherer = Rc::new(RefCell::new(StatisticsMean::default()));
+    let the_option = Arc::new(PathDependentAsian::new(times, expiry, the_payoff));
+    let gatherer = Arc::new(Mutex::new(StatisticsMean::default()));
     let mut gatherer_two = ConvergenceTable::new(gatherer);
-    let generator = Rc::new(RefCell::new(RandomParkMiller::new(
-        number_of_dates as u64,
-        1,
-    )));
-    let gen_two = Rc::new(RefCell::new(AntiThetic::new(generator)));
+    let generator = Arc::new(Mutex::new(RandomParkMiller::new(number_of_dates as u64, 1)));
+    let gen_two = Arc::new(Mutex::new(AntiThetic::new(generator)));
     let exotic_engine_field = ExoticEngineField::new(the_option, r_param);
     let mut the_engine =
         ExoticBSEngine::new(exotic_engine_field, d_param, vol_param, gen_two, spot);

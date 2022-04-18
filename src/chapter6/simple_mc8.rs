@@ -23,9 +23,8 @@ pub fn simple_montecarlo6(
     let moved_spot = spot * (r.integral(0.0, expiry) + ito_correlation).exp();
     let mut this_spot;
     let discounting = (-r.integral(0.0, expiry)).exp();
-    let mut variate_array = vec![0.0];
     for _i in 0..number_of_paths {
-        generator.get_gaussians(&mut variate_array);
+        let variate_array = generator.get_gaussians();
         this_spot = moved_spot * (root_variance * variate_array[0]).exp();
         let this_payoff = the_option.option_payoff(this_spot);
         gatherer.dump_one_result(this_payoff * discounting);

@@ -73,12 +73,10 @@ impl RandomBase for RandomParkMiller {
     }
 
     /// Set uniform variables to `variates`.
-    fn get_uniforms(&mut self, variates: &mut [f64]) {
-        variates.copy_from_slice(
-            &(0..self.get_dimensionality())
-                .map(|_j| (self.inner_generator.get_one_random_integer() as f64) * self.reciprocal)
-                .collect::<Vec<f64>>(),
-        );
+    fn get_uniforms(&mut self) -> Vec<f64> {
+        (0..self.get_dimensionality())
+            .map(|_| (self.inner_generator.get_one_random_integer() as f64) * self.reciprocal)
+            .collect()
     }
 
     /// Skips random number generating
@@ -87,9 +85,8 @@ impl RandomBase for RandomParkMiller {
     ///
     /// * `number_of_paths` - The number of paths to skip.
     fn skip(&mut self, number_of_paths: u64) {
-        let mut tmp = vec![0.0; self.get_dimensionality() as usize];
         for _j in 0..number_of_paths {
-            self.get_uniforms(&mut tmp);
+            self.get_uniforms();
         }
     }
 
@@ -116,7 +113,7 @@ fn test_distribution() {
     let mut x = RandomParkMiller::new(n, 0);
     let mut v = vec![0.0; n as usize];
 
-    x.get_gaussians(&mut v);
+    let v = x.get_gaussians();
     let mut mean = 0.0;
     let mut variant = 0.0;
     for u in v {

@@ -10,7 +10,7 @@
 //! 参照を利用することで、わざわざBridgeパターンを使う必要がない。
 
 /// Statistics used in the Monte Carlo method.
-pub trait StatisticsMC {
+pub trait StatisticsMC: Send + Sync {
     /// Updates the internal information required to obtain the relevant statistic results.
     ///
     /// # Arguments

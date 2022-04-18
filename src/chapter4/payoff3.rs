@@ -1,6 +1,6 @@
 //! payoff2.rsとの違い: Clone traitを実装することで値渡しにした。
 
-pub trait Payoff {
+pub trait Payoff: Send + Sync {
     fn forward_value(&self, spot: f64) -> f64;
 }
 

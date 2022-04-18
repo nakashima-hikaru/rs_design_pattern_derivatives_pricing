@@ -1,7 +1,7 @@
 //! Bridgeパターンを利用する。
-use std::convert::From;
+use std::{convert::From, sync::Arc};
 
-pub trait ParametersInner {
+pub trait ParametersInner: Send + Sync {
     fn value_at(&self, x: f64) -> f64;
     fn integral(&self, time1: f64, time2: f64) -> f64;
     fn integral_square(&self, time1: f64, time2: f64) -> f64;
@@ -75,7 +75,7 @@ impl From<f64> for Parameters {
 
 use superslice::Ext;
 
-pub trait ParametersPiecewiseConstantInner {
+pub trait ParametersPiecewiseConstantInner: Send + Sync {
     fn get_discontinuous_points(&self) -> &Vec<f64>;
     fn get_constants(&self) -> &Vec<f64>;
     fn get_cached_integrals(&self) -> &Vec<f64>;
@@ -84,11 +84,11 @@ pub trait ParametersPiecewiseConstantInner {
 }
 
 pub struct ParametersPiecewiseConstant {
-    inner_obj_ptr: Box<dyn ParametersPiecewiseConstantInner>,
+    inner_obj_ptr: Arc<dyn ParametersPiecewiseConstantInner>,
 }
 
 impl ParametersPiecewiseConstant {
-    pub fn new(inner_obj_ptr: Box<dyn ParametersPiecewiseConstantInner>) -> Self {
+    pub fn new(inner_obj_ptr: Arc<dyn ParametersPiecewiseConstantInner>) -> Self {
         Self { inner_obj_ptr }
     }
 }
@@ -298,7 +298,7 @@ mod tests {
     fn test_integrals() {
         let constants = [3.0, 2.0, 1.0, 5.0];
         let discontinuous_points = [-100.0, 200.0, 500.0];
-        let f = ParametersPiecewiseConstant::new(Box::new(
+        let f = ParametersPiecewiseConstant::new(Arc::new(
             ParametersLeftContinuousPiecewiseConstant::new(&constants, &discontinuous_points),
         ));
         assert_eq!(f.integral(-150.0, -120.0), 90.0);

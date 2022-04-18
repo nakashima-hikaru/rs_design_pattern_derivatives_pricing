@@ -6,8 +6,7 @@ use crate::chapter4::vanilla3::VanillaOption;
 use crate::chapter5::convergence_table::ConvergenceTable;
 use crate::chapter5::mc_statistics::{StatisticsMC, StatisticsMean};
 use crate::chapter5::simple_mc7::simple_montecarlo5;
-use std::cell::RefCell;
-use std::rc::Rc;
+use std::sync::{Arc, Mutex};
 
 pub fn main() {
     println!("\nEnter expiry\n");
@@ -32,7 +31,7 @@ pub fn main() {
     let the_option = VanillaOption::new(the_payoff, expiry);
     let vol_param = Parameters::from(vol);
     let r_param = Parameters::from(r);
-    let gatherer = Rc::new(RefCell::new(StatisticsMean::default()));
+    let gatherer = Arc::new(Mutex::new(StatisticsMean::default()));
     let mut gatherer_two = ConvergenceTable::new(gatherer);
     simple_montecarlo5(
         &the_option,

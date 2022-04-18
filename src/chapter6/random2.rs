@@ -12,22 +12,17 @@
 
 use crate::chapter6::normals::inverse_cumulative_normal;
 
-pub trait RandomBase {
+pub trait RandomBase: Send + Sync {
     fn get_dimensionality(&self) -> u64;
-    fn get_uniforms(&mut self, variates: &mut [f64]);
+    fn get_uniforms(&mut self) -> Vec<f64>;
     fn skip(&mut self, number_of_paths: u64);
     fn set_seed(&mut self, seed: u64);
     fn reset(&mut self);
-    fn get_gaussians(&mut self, variates: &mut [f64]) {
-        self.get_uniforms(variates);
-        variates.copy_from_slice(
-            variates
-                .iter()
-                .map(|x| inverse_cumulative_normal(*x))
-                .collect::<Vec<f64>>()
-                .as_slice()
-                .as_ref(),
-        );
+    fn get_gaussians(&mut self) -> Vec<f64> {
+        self.get_uniforms()
+            .iter()
+            .map(|x| inverse_cumulative_normal(*x))
+            .collect()
     }
     fn reset_dimensionality(&mut self, new_dimensionality: u64);
 }

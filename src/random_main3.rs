@@ -8,8 +8,7 @@ use crate::chapter5::mc_statistics::{StatisticsMC, StatisticsMean};
 use crate::chapter6::anti_thetic::AntiThetic;
 use crate::chapter6::park_miller::RandomParkMiller;
 use crate::chapter6::simple_mc8::simple_montecarlo6;
-use std::cell::RefCell;
-use std::rc::Rc;
+use std::sync::{Arc, Mutex};
 
 pub fn main() {
     println!("\nEnter expiry\n");
@@ -34,9 +33,9 @@ pub fn main() {
     let the_option = VanillaOption::new(the_payoff, expiry);
     let vol_param = Parameters::from(vol);
     let r_param = Parameters::from(r);
-    let gatherer = Rc::new(RefCell::new(StatisticsMean::default()));
+    let gatherer = Arc::new(Mutex::new(StatisticsMean::default()));
     let mut gatherer_two = ConvergenceTable::new(gatherer);
-    let generator = Rc::new(RefCell::new(RandomParkMiller::new(1, 1)));
+    let generator = Arc::new(Mutex::new(RandomParkMiller::new(1, 1)));
     let mut gen_two = AntiThetic::new(generator);
     simple_montecarlo6(
         &the_option,

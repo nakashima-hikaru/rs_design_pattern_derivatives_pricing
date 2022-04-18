@@ -10,3 +10,4 @@ tasks.json
 .vscode/settings.json
 cargo.lock
 *.pdf
+Cargo.lock
