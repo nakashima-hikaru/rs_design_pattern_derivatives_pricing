@@ -1,7 +1,6 @@
 //! Decoratorパターンを援用することで、インターフェースを変更することなく機能を追加している。
-use crate::chapter4::parameters::Parameters;
+use crate::chapter4::parameters::ParametersConstant;
 use crate::chapter4::payoff3::PayoffCall;
-use crate::chapter4::payoff_bridge::PayoffBridge;
 use crate::chapter4::vanilla3::VanillaOption;
 use crate::chapter5::convergence_table::ConvergenceTable;
 use crate::chapter5::mc_statistics::{StatisticsMC, StatisticsMean};
@@ -29,10 +28,10 @@ pub fn main() {
     println!("\nNumber of paths\n");
     let number_of_paths = text_io::read!();
 
-    let the_payoff = PayoffBridge::new(Box::new(PayoffCall::new(strike)));
+    let the_payoff = Box::new(PayoffCall::new(strike));
     let the_option = VanillaOption::new(the_payoff, expiry);
-    let vol_param = Parameters::from(vol);
-    let r_param = Parameters::from(r);
+    let vol_param = Box::new(ParametersConstant::new(vol));
+    let r_param = Box::new(ParametersConstant::new(r));
     let gatherer = Arc::new(Mutex::new(StatisticsMean::default()));
     let mut gatherer_two = ConvergenceTable::new(gatherer);
     let generator = Arc::new(Mutex::new(RandomParkMiller::new(1, 1)));
@@ -40,8 +39,8 @@ pub fn main() {
     simple_montecarlo6(
         &the_option,
         spot,
-        &vol_param,
-        &r_param,
+        vol_param.as_ref(),
+        r_param.as_ref(),
         number_of_paths,
         &mut gatherer_two,
         &mut gen_two,

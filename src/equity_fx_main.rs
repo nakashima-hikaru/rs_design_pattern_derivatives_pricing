@@ -1,6 +1,5 @@
-use crate::chapter4::parameters::Parameters;
+use crate::chapter4::parameters::ParametersConstant;
 use crate::chapter4::payoff3::PayoffCall;
-use crate::chapter4::payoff_bridge::PayoffBridge;
 use crate::chapter5::convergence_table::ConvergenceTable;
 use crate::chapter5::mc_statistics::StatisticsMC;
 use crate::chapter5::mc_statistics::StatisticsMean;
@@ -36,13 +35,13 @@ pub fn main() {
 
     println!("\nNumber of paths\n");
     let number_of_paths: u64 = text_io::read!();
-    let the_payoff = PayoffBridge::new(Box::new(PayoffCall::new(strike)));
+    let the_payoff = Box::new(PayoffCall::new(strike));
     let times = (0..number_of_dates)
         .map(|i| (i as f64 + 1.0) * expiry / number_of_dates as f64)
         .collect();
-    let vol_param = Parameters::from(vol);
-    let r_param = Parameters::from(r);
-    let d_param = Parameters::from(d);
+    let vol_param = Box::new(ParametersConstant::new(vol));
+    let r_param = Box::new(ParametersConstant::new(r));
+    let d_param = Box::new(ParametersConstant::new(d));
     let the_option = Arc::new(PathDependentAsian::new(times, expiry, the_payoff));
     let gatherer = Arc::new(Mutex::new(StatisticsMean::default()));
     let mut gatherer_two = ConvergenceTable::new(gatherer);
