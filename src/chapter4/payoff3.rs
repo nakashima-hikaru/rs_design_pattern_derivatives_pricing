@@ -4,6 +4,7 @@ pub trait Payoff: Send + Sync {
     fn forward_value(&self, spot: f64) -> f64;
 }
 
+#[derive(Clone)]
 pub struct PayoffCall {
     strike: f64,
 }

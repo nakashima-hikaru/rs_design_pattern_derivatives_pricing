@@ -3,6 +3,7 @@ use crate::chapter4::payoff3::Payoff;
 use crate::chapter7::path_dependent::CashFlow;
 use crate::chapter7::path_dependent::PathDependent;
 
+/// Payoff: \frac{1}{length of `look_at_times`} \sum_{t \in `look_at_times`} SpotValue(t)
 pub struct PathDependentAsian {
     delivery_time: f64,
     the_payoff: Box<dyn Payoff>,
@@ -33,9 +34,7 @@ impl PathDependent for PathDependentAsian {
         1
     }
     fn possible_cash_flow_times(&self) -> Vec<f64> {
-        let mut tmp = vec![1.0];
-        tmp[0] = self.delivery_time;
-        tmp
+        vec![self.delivery_time]
     }
 
     fn cash_flows(&self, spot_values: &[f64], generated_flows: &mut [CashFlow]) -> u64 {

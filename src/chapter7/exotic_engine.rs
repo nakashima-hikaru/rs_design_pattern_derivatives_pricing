@@ -1,3 +1,6 @@
+//! キャッシュフローを格納するVectorを1回のシミュレーションごとに作るのはコンストラクタとデストラクタの呼び出しに時間がかかるので、
+//! mutableなメンバ変数にしている。
+
 use crate::chapter4::parameters::Parameters;
 use crate::chapter5::mc_statistics::StatisticsMC;
 use crate::chapter7::path_dependent::CashFlow;
@@ -49,15 +52,23 @@ pub trait ExoticEngine {
     /// Returns the pointer of `self.exotic_engine_field`.
     fn as_exotic_engine_field(&self) -> &ExoticEngineField;
 
-    fn get_one_path(&mut self) -> Vec<f64>;
+    fn get_one_path(&mut self, variates: &mut [f64]);
 
     fn do_simulation(&mut self, the_gatherer: &mut dyn StatisticsMC, number_of_paths: u64)
     where
         Self: Sync,
         Self: Send,
     {
+        let spot_values = vec![
+            0.0;
+            self.as_exotic_engine_field()
+                .the_product
+                .get_look_at_times()
+                .len()
+        ];
         let self_ptr = Arc::new(Mutex::new(self));
         let the_gatherer_ptr = Arc::new(Mutex::new(the_gatherer));
+        let spot_values_ptr = Arc::new(Mutex::new(spot_values));
         let _: Vec<_> = (0..number_of_paths)
             .into_par_iter()
             .map(|_| {
@@ -65,8 +76,9 @@ pub trait ExoticEngine {
                 let the_gatherer_ptr = Arc::clone(&the_gatherer_ptr);
                 let mut locked_self_ptr = self_ptr.lock().unwrap();
                 let mut locked_the_gatherer_ptr = the_gatherer_ptr.lock().unwrap();
-                let spot_values = (*locked_self_ptr).get_one_path();
-                let this_value = (*locked_self_ptr).do_one_path(&spot_values);
+                let mut locked_spot_values_ptr = spot_values_ptr.lock().unwrap();
+                (*locked_self_ptr).get_one_path(&mut *locked_spot_values_ptr);
+                let this_value = (*locked_self_ptr).do_one_path(&*locked_spot_values_ptr);
                 (*locked_the_gatherer_ptr).dump_one_result(this_value);
             })
             .collect();

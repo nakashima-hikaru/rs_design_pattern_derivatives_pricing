@@ -2,7 +2,7 @@
 //! ただし、毎回クローンするのが遅いので、パラメータは常に参照渡しにすべき。
 //! このクローンをいい感じにするとより速くなるかも（Boxポインタとか？）
 
-use super::payoff3::Payoff;
+use crate::chapter4::payoff3::Payoff;
 
 pub struct VanillaOption {
     expiry: f64,
