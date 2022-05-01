@@ -53,7 +53,11 @@ impl RandomBase for AntiThetic {
             self.odd_even = false;
             number_of_paths -= 1;
         }
-        self.inner_generator.lock().as_mut().unwrap().skip(number_of_paths / 2);
+        self.inner_generator
+            .lock()
+            .as_mut()
+            .unwrap()
+            .skip(number_of_paths / 2);
         if number_of_paths % 2 == 1 {
             let mut tmp = vec![0.0; self.get_dimensionality() as usize];
             self.get_uniforms(&mut tmp);

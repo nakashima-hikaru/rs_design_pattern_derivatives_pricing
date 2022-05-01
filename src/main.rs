@@ -1,85 +1,70 @@
-#![feature(is_sorted)]
-pub mod chapter1;
-pub mod chapter2;
-pub mod chapter3;
-pub mod chapter4;
-pub mod chapter5;
-pub mod chapter6;
-pub mod chapter7;
+use actix_web::{web, App, HttpResponse, HttpServer};
 pub mod equity_fx_main;
-pub mod random_main3;
-pub mod simple_mc_main1;
-pub mod simple_mc_main2;
-pub mod simple_mc_main3;
-pub mod simple_mc_main4;
-pub mod simple_mc_main5;
-pub mod stats_main1;
-pub mod stats_main2;
-pub mod vanilla_main1;
-pub mod vanilla_main2;
-pub mod vanilla_main3;
-pub mod vanilla_main4;
-use std::str::FromStr;
 
-#[derive(Debug)]
-enum EntryPoints {
-    SimpleMcMain1,
-    SimpleMcMain2,
-    SimpleMcMain3,
-    SimpleMcMain4,
-    SimpleMcMain5,
-    VanillaMain1,
-    VanillaMain2,
-    VanillaMain3,
-    VanillaMain4,
-    StatsMain1,
-    StatsMain2,
-    RandomMain3,
-    EquityFXMain,
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    let server = HttpServer::new(|| {
+        App::new()
+            .route("/", web::get().to(get_index))
+            .route("/price", web::post().to(post_price))
+    });
+
+    println!("Serving on http://localhost:3000...");
+    server
+        .bind("127.0.0.1:3000")
+        .expect("error binding server to address")
+        .run()
+        .await
 }
 
-impl FromStr for EntryPoints {
-    type Err = &'static str;
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "simple-mc-main1" => Ok(EntryPoints::SimpleMcMain1),
-            "simple-mc-main2" => Ok(EntryPoints::SimpleMcMain2),
-            "simple-mc-main3" => Ok(EntryPoints::SimpleMcMain3),
-            "simple-mc-main4" => Ok(EntryPoints::SimpleMcMain4),
-            "simple-mc-main5" => Ok(EntryPoints::SimpleMcMain5),
-            "vanilla-main1" => Ok(EntryPoints::VanillaMain1),
-            "vanilla-main2" => Ok(EntryPoints::VanillaMain2),
-            "vanilla-main3" => Ok(EntryPoints::VanillaMain3),
-            "vanilla-main4" => Ok(EntryPoints::VanillaMain4),
-            "stats-main1" => Ok(EntryPoints::StatsMain1),
-            "stats-main2" => Ok(EntryPoints::StatsMain2),
-            "random-main3" => Ok(EntryPoints::RandomMain3),
-            "equity-fx-main" => Ok(EntryPoints::EquityFXMain),
-            _ => Err("Invalid entry-point."),
-        }
-    }
+async fn get_index() -> HttpResponse {
+    HttpResponse::Ok().content_type("text/html").body(
+        r#"
+                <title>Calculator</title>
+                <form action="/price" method="post">
+                Expiry <input type="text" name="expiry" value=30.0 ></br>
+                Strike <input type="text" name="strike" value=100.0 ></br>
+                Spot <input type="text" name="spot" value=100.0 ></br>
+                Volatility <input type="text" name="vol" value=0.01 ></br>
+                Interest Rate<input type="text" name="r" value=0.01 ></br>
+                Dividend <input type="text" name="d" value=0.0 ></br>
+                Number of dates <input type="text" name="number_of_dates" value=100 ></br>
+                Number of paths <input type="text" name="number_of_paths" value=100 ></br>
+                <button type="submit">Compute Price</button>
+                </form>
+            "#,
+    )
 }
 
-pub fn main() {
-    let mut entry_point = String::new();
-    std::io::stdin()
-        .read_line(&mut entry_point)
-        .expect("Error occurred when reading input string.");
-    entry_point = entry_point.trim().to_string();
-    match EntryPoints::from_str(&entry_point) {
-        Ok(EntryPoints::SimpleMcMain1) => simple_mc_main1::main(),
-        Ok(EntryPoints::SimpleMcMain2) => simple_mc_main2::main(),
-        Ok(EntryPoints::SimpleMcMain3) => simple_mc_main3::main(),
-        Ok(EntryPoints::SimpleMcMain4) => simple_mc_main4::main(),
-        Ok(EntryPoints::SimpleMcMain5) => simple_mc_main5::main(),
-        Ok(EntryPoints::VanillaMain1) => vanilla_main1::main(),
-        Ok(EntryPoints::VanillaMain2) => vanilla_main2::main(),
-        Ok(EntryPoints::VanillaMain3) => vanilla_main3::main(),
-        Ok(EntryPoints::VanillaMain4) => vanilla_main4::main(),
-        Ok(EntryPoints::StatsMain1) => stats_main1::main(),
-        Ok(EntryPoints::StatsMain2) => stats_main2::main(),
-        Ok(EntryPoints::RandomMain3) => random_main3::main(),
-        Ok(EntryPoints::EquityFXMain) => equity_fx_main::main(),
-        _ => println!("{}", "wrong implement of pattern matching."),
-    }
+use equity_fx_main::price;
+use serde::Deserialize;
+
+#[derive(Deserialize)]
+struct PriceParameters {
+    expiry: f64,
+    strike: f64,
+    spot: f64,
+    vol: f64,
+    r: f64,
+    d: f64,
+    number_of_dates: u64,
+    number_of_paths: u64,
+}
+
+async fn post_price(form: web::Form<PriceParameters>) -> HttpResponse {
+    let response = format!(
+        "The greatest common divisor of the numbers is {}\n",
+        price(
+            form.expiry,
+            form.strike,
+            form.spot,
+            form.vol,
+            form.r,
+            form.d,
+            form.number_of_dates,
+            form.number_of_paths,
+        )
+    );
+
+    HttpResponse::Ok().content_type("text/html").body(response)
 }

@@ -1,8 +1,8 @@
-use crate::chapter4::parameters::ParametersConstant;
-use crate::chapter4::payoff3::PayoffCall;
-use crate::chapter4::vanilla3::VanillaOption;
-use crate::chapter5::mc_statistics::{StatisticsMC, StatisticsMean};
-use crate::chapter5::simple_mc7::simple_montecarlo5;
+use rust_design_pattern_derivative_pricing::chapter4::parameters::ParametersConstant;
+use rust_design_pattern_derivative_pricing::chapter4::payoff3::PayoffCall;
+use rust_design_pattern_derivative_pricing::chapter4::vanilla3::VanillaOption;
+use rust_design_pattern_derivative_pricing::chapter5::mc_statistics::{StatisticsMC, StatisticsMean};
+use rust_design_pattern_derivative_pricing::chapter5::simple_mc7::simple_montecarlo5;
 
 pub fn main() {
     println!("\nEnter expiry\n");

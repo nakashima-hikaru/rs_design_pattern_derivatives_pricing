@@ -1,4 +1,4 @@
-use crate::chapter1::random1::get_one_gaussian_by_box_muller;
+use rust_design_pattern_derivative_pricing::chapter1::random1::get_one_gaussian_by_box_muller;
 
 pub fn simple_montecarlo1(
     expiry: f64,

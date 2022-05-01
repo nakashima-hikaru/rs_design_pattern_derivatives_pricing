@@ -1,12 +1,12 @@
 //! Decoratorパターンを援用することで、インターフェースを変更することなく機能を追加している。
-use crate::chapter4::parameters::ParametersConstant;
-use crate::chapter4::payoff3::PayoffCall;
-use crate::chapter4::vanilla3::VanillaOption;
-use crate::chapter5::convergence_table::ConvergenceTable;
-use crate::chapter5::mc_statistics::{StatisticsMC, StatisticsMean};
-use crate::chapter6::anti_thetic::AntiThetic;
-use crate::chapter6::park_miller::RandomParkMiller;
-use crate::chapter6::simple_mc8::simple_montecarlo6;
+use rust_design_pattern_derivative_pricing::chapter4::parameters::ParametersConstant;
+use rust_design_pattern_derivative_pricing::chapter4::payoff3::PayoffCall;
+use rust_design_pattern_derivative_pricing::chapter4::vanilla3::VanillaOption;
+use rust_design_pattern_derivative_pricing::chapter5::convergence_table::ConvergenceTable;
+use rust_design_pattern_derivative_pricing::chapter5::mc_statistics::{StatisticsMC, StatisticsMean};
+use rust_design_pattern_derivative_pricing::chapter6::anti_thetic::AntiThetic;
+use rust_design_pattern_derivative_pricing::chapter6::park_miller::RandomParkMiller;
+use rust_design_pattern_derivative_pricing::chapter6::simple_mc8::simple_montecarlo6;
 use std::sync::{Arc, Mutex};
 
 pub fn main() {

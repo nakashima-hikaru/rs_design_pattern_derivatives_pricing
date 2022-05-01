@@ -1,6 +1,6 @@
-use crate::chapter3::double_digital;
-use crate::chapter4::simple_mc3::simple_montecarlo3;
-use crate::chapter4::vanilla1::VanillaOption;
+use rust_design_pattern_derivative_pricing::chapter3::double_digital;
+use rust_design_pattern_derivative_pricing::chapter4::simple_mc3::simple_montecarlo3;
+use rust_design_pattern_derivative_pricing::chapter4::vanilla1::VanillaOption;
 
 pub fn main() {
     println!("\nEnter expiry\n");

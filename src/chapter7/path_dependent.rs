@@ -58,5 +58,5 @@ pub trait PathDependent: Send + Sync {
     ///
     /// * `spot_values` - Spot values collected through simulation using the Monte Carlo method.
     /// * `generated_flows` - The forward values of cash flows generated in simulation with `spot_values`.
-    fn cash_flows(&self, spot_values: &[f64], generated_cash_flows: &mut [CashFlow]) -> u64;
+    fn cash_flows(&self, spot_values: &[f64], generated_flows: &mut [CashFlow]) -> u64;
 }

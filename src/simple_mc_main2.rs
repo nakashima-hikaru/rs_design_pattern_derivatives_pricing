@@ -1,4 +1,4 @@
-use crate::chapter2::{
+use rust_design_pattern_derivative_pricing::chapter2::{
     payoff1::{OptionType, Payoff},
     simple_mc::simple_montecarlo2,
 };

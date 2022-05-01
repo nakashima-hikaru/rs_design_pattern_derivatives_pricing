@@ -1,7 +1,7 @@
-use crate::chapter4::payoff3::PayoffCall;
-use crate::chapter4::payoff3::PayoffPut;
-use crate::chapter4::simple_mc5::simple_montecarlo3;
-use crate::chapter4::vanilla3::VanillaOption;
+use rust_design_pattern_derivative_pricing::chapter4::payoff3::PayoffCall;
+use rust_design_pattern_derivative_pricing::chapter4::payoff3::PayoffPut;
+use rust_design_pattern_derivative_pricing::chapter4::simple_mc5::simple_montecarlo3;
+use rust_design_pattern_derivative_pricing::chapter4::vanilla3::VanillaOption;
 
 pub fn main() {
     println!("\nEnter expiry\n");

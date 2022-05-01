@@ -1,8 +1,8 @@
-use crate::chapter4::parameters::ParametersConstant;
-use crate::chapter4::payoff3::PayoffCall;
-use crate::chapter4::payoff3::PayoffPut;
-use crate::chapter4::simple_mc6::simple_montecarlo4;
-use crate::chapter4::vanilla3::VanillaOption;
+use rust_design_pattern_derivative_pricing::chapter4::parameters::ParametersConstant;
+use rust_design_pattern_derivative_pricing::chapter4::payoff3::PayoffCall;
+use rust_design_pattern_derivative_pricing::chapter4::payoff3::PayoffPut;
+use rust_design_pattern_derivative_pricing::chapter4::simple_mc6::simple_montecarlo4;
+use rust_design_pattern_derivative_pricing::chapter4::vanilla3::VanillaOption;
 
 pub fn main() {
     println!("\nEnter expiry\n");
@@ -39,10 +39,22 @@ pub fn main() {
     println!("the call price is {} \n", result);
 
     let second_option = the_option;
-    let result = simple_montecarlo4(&second_option, spot, vol_param.as_ref(), r_param.as_ref(), number_of_paths);
+    let result = simple_montecarlo4(
+        &second_option,
+        spot,
+        vol_param.as_ref(),
+        r_param.as_ref(),
+        number_of_paths,
+    );
     println!("the call price is {} \n", result);
     let other_payoff = Box::new(PayoffPut::new(strike));
     let third_option = VanillaOption::new(other_payoff, expiry);
-    let result = simple_montecarlo4(&third_option, spot, vol_param.as_ref(), r_param.as_ref(), number_of_paths);
+    let result = simple_montecarlo4(
+        &third_option,
+        spot,
+        vol_param.as_ref(),
+        r_param.as_ref(),
+        number_of_paths,
+    );
     println!("the put price is {} \n", result);
 }
