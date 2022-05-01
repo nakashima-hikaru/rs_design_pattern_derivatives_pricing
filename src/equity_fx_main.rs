@@ -106,7 +106,7 @@ pub fn test_main() {
     let strike = 100.0;
     let spot: f64 = 100.0;
     let vol: f64 = 0.01;
-    let r: f64 = 0.05;
+    let r: f64 = 0.01;
     let d: f64 = 0.0;
     let number_of_dates = 1000;
     let number_of_paths: u64 = 1000;
