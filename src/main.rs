@@ -18,22 +18,9 @@ async fn main() -> std::io::Result<()> {
 }
 
 async fn get_index() -> HttpResponse {
-    HttpResponse::Ok().content_type("text/html").body(
-        r#"
-                <title>Calculator</title>
-                <form action="/price" method="post">
-                Expiry <input type="text" name="expiry" value=30.0 ></br>
-                Strike <input type="text" name="strike" value=100.0 ></br>
-                Spot <input type="text" name="spot" value=100.0 ></br>
-                Volatility <input type="text" name="vol" value=0.01 ></br>
-                Interest Rate<input type="text" name="r" value=0.01 ></br>
-                Dividend <input type="text" name="d" value=0.0 ></br>
-                Number of dates <input type="text" name="number_of_dates" value=100 ></br>
-                Number of paths <input type="text" name="number_of_paths" value=100 ></br>
-                <button type="submit">Compute Price</button>
-                </form>
-            "#,
-    )
+    HttpResponse::Ok()
+        .content_type("text/html; charset=utf-8")
+        .body(include_str!("web/index.html"))
 }
 
 use equity_fx_main::price;
@@ -53,7 +40,7 @@ struct PriceParameters {
 
 async fn post_price(form: web::Form<PriceParameters>) -> HttpResponse {
     let response = format!(
-        "The greatest common divisor of the numbers is {}\n",
+        "The price is {}\n",
         price(
             form.expiry,
             form.strike,
