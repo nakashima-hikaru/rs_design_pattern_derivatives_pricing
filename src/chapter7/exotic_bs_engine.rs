@@ -34,8 +34,8 @@ impl ExoticBSEngine {
     /// * `spot` - A spot value of a stock
     pub fn new(
         exotic_engine_field: ExoticEngineField,
-        d: Box<dyn Parameters>,
-        vol: Box<dyn Parameters>,
+        d: Parameters,
+        vol: Parameters,
         the_generator: Arc<Mutex<dyn RandomBase>>,
         spot: f64,
     ) -> ExoticBSEngine {
@@ -43,9 +43,7 @@ impl ExoticBSEngine {
         let number_of_times = times.len() as u64;
 
         the_generator
-            .lock()
-            .as_mut()
-            .unwrap()
+            .lock().as_mut().unwrap()
             .reset_dimensionality(number_of_times);
         let mut drifts = vec![0.0; number_of_times as usize];
         let mut standard_deviations = vec![0.0; number_of_times as usize];

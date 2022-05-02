@@ -23,38 +23,22 @@ pub fn main() {
     println!("\nNumber of paths\n");
     let number_of_paths = text_io::read!();
 
-    let vol_param = Box::new(ParametersConstant::new(vol));
-    let r_param = Box::new(ParametersConstant::new(r));
+    let vol_param = Parameters::from(vol);
+    let r_param = Parameters::from(r);
 
-    let the_payoff = Box::new(PayoffCall::new(strike));
+    let the_payoff = PayoffBridge::new(Box::new(PayoffCall::new(strike)));
     let the_option = VanillaOption::new(the_payoff, expiry);
-    let result = simple_montecarlo4(
-        &the_option,
-        spot,
-        vol_param.as_ref(),
-        r_param.as_ref(),
-        number_of_paths,
-    );
+    let result = simple_montecarlo4(&the_option, spot, &vol_param, &r_param, number_of_paths);
 
     println!("the call price is {} \n", result);
 
     let second_option = the_option;
-    let result = simple_montecarlo4(
-        &second_option,
-        spot,
-        vol_param.as_ref(),
-        r_param.as_ref(),
-        number_of_paths,
-    );
+
+    let result = simple_montecarlo4(&second_option, spot, &vol_param, &r_param, number_of_paths);
     println!("the call price is {} \n", result);
-    let other_payoff = Box::new(PayoffPut::new(strike));
+    let other_payoff = PayoffBridge::new(Box::new(PayoffPut::new(strike)));
     let third_option = VanillaOption::new(other_payoff, expiry);
-    let result = simple_montecarlo4(
-        &third_option,
-        spot,
-        vol_param.as_ref(),
-        r_param.as_ref(),
-        number_of_paths,
-    );
+
+    let result = simple_montecarlo4(&third_option, spot, &vol_param, &r_param, number_of_paths);
     println!("the put price is {} \n", result);
 }

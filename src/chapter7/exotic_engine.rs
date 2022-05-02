@@ -13,7 +13,7 @@ pub struct ExoticEngineField {
     /// A path dependent product such as Asian option
     the_product: Arc<dyn PathDependent>,
     /// Interest rates
-    r: Box<dyn Parameters>,
+    r: Parameters,
     /// Discount factors
     discounts: Vec<f64>,
     /// Cash flows simulated on paths
@@ -21,7 +21,7 @@ pub struct ExoticEngineField {
 }
 
 impl ExoticEngineField {
-    pub fn new(the_product: Arc<dyn PathDependent>, r: Box<dyn Parameters>) -> ExoticEngineField {
+    pub fn new(the_product: Arc<dyn PathDependent>, r: Parameters) -> ExoticEngineField {
         let these_cash_flows = Mutex::new(vec![
             CashFlow::default();
             the_product.max_number_of_cash_flows() as usize
@@ -43,7 +43,7 @@ impl ExoticEngineField {
         &self.the_product
     }
     /// Returns the pointer of `self.r`.
-    pub fn get_r(&self) -> &Box<dyn Parameters> {
+    pub fn get_r(&self) -> &Parameters {
         &self.r
     }
 }

@@ -28,17 +28,17 @@ pub fn main() {
     println!("\nNumber of paths\n");
     let number_of_paths = text_io::read!();
 
-    let the_payoff = Box::new(PayoffCall::new(strike));
+    let the_payoff = PayoffBridge::new(Box::new(PayoffCall::new(strike)));
     let the_option = VanillaOption::new(the_payoff, expiry);
-    let vol_param = Box::new(ParametersConstant::new(vol));
-    let r_param = Box::new(ParametersConstant::new(r));
+    let vol_param = Parameters::from(vol);
+    let r_param = Parameters::from(r);
     let gatherer = Arc::new(Mutex::new(StatisticsMean::default()));
     let mut gatherer_two = ConvergenceTable::new(gatherer);
     simple_montecarlo5(
         &the_option,
         spot,
-        vol_param.as_ref(),
-        r_param.as_ref(),
+        &vol_param,
+        &r_param,
         number_of_paths,
         &mut gatherer_two,
     );

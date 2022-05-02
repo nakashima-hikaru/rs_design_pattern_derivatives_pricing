@@ -1,9 +1,12 @@
 //! Decoratorパターンを援用することで、インターフェースを変更することなく機能を追加している。
+
 use rust_design_pattern_derivative_pricing::chapter4::parameters::ParametersConstant;
 use rust_design_pattern_derivative_pricing::chapter4::payoff3::PayoffCall;
 use rust_design_pattern_derivative_pricing::chapter4::vanilla3::VanillaOption;
 use rust_design_pattern_derivative_pricing::chapter5::convergence_table::ConvergenceTable;
-use rust_design_pattern_derivative_pricing::chapter5::mc_statistics::{StatisticsMC, StatisticsMean};
+use rust_design_pattern_derivative_pricing::chapter5::mc_statistics::{
+    StatisticsMC, StatisticsMean,
+};
 use rust_design_pattern_derivative_pricing::chapter6::anti_thetic::AntiThetic;
 use rust_design_pattern_derivative_pricing::chapter6::park_miller::RandomParkMiller;
 use rust_design_pattern_derivative_pricing::chapter6::simple_mc8::simple_montecarlo6;
@@ -28,10 +31,10 @@ pub fn main() {
     println!("\nNumber of paths\n");
     let number_of_paths = text_io::read!();
 
-    let the_payoff = Box::new(PayoffCall::new(strike));
+    let the_payoff = PayoffBridge::new(Box::new(PayoffCall::new(strike)));
     let the_option = VanillaOption::new(the_payoff, expiry);
-    let vol_param = Box::new(ParametersConstant::new(vol));
-    let r_param = Box::new(ParametersConstant::new(r));
+    let vol_param = Parameters::from(vol);
+    let r_param = Parameters::from(r);
     let gatherer = Arc::new(Mutex::new(StatisticsMean::default()));
     let mut gatherer_two = ConvergenceTable::new(gatherer);
     let generator = Arc::new(Mutex::new(RandomParkMiller::new(1, 1)));
@@ -39,8 +42,8 @@ pub fn main() {
     simple_montecarlo6(
         &the_option,
         spot,
-        vol_param.as_ref(),
-        r_param.as_ref(),
+        &vol_param,
+        &r_param,
         number_of_paths,
         &mut gatherer_two,
         &mut gen_two,

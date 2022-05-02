@@ -1,21 +1,43 @@
 //! Bridgeパターンを利用する。
-use std::sync::Arc;
+use std::{convert::From, sync::Arc};
 
-pub trait Parameters: Send + Sync {
+pub trait ParametersInner: Send + Sync {
     fn value_at(&self, x: f64) -> f64;
     fn integral(&self, time1: f64, time2: f64) -> f64;
     fn integral_square(&self, time1: f64, time2: f64) -> f64;
-    fn mean(&self, time1: f64, time2: f64) -> f64 {
+}
+
+pub struct Parameters {
+    inner_object_ptr: Box<dyn ParametersInner>,
+}
+
+impl Parameters {
+    fn new(inner_object: Box<dyn ParametersInner>) -> Parameters {
+        Parameters {
+            inner_object_ptr: inner_object,
+        }
+    }
+
+    #[inline]
+    pub fn integral(&self, time1: f64, time2: f64) -> f64 {
+        self.inner_object_ptr.integral(time1, time2)
+    }
+
+    #[inline]
+    pub fn integral_square(&self, time1: f64, time2: f64) -> f64 {
+        self.inner_object_ptr.integral_square(time1, time2)
+    }
+
+    pub fn mean(&self, time1: f64, time2: f64) -> f64 {
         let total = self.integral(time1, time2);
         total / (time2 - time1)
     }
 
-    fn root_mean_square(&self, time1: f64, time2: f64) -> f64 {
+    pub fn root_mean_square(&self, time1: f64, time2: f64) -> f64 {
         let total = self.integral_square(time1, time2);
         total / (time2 - time1)
     }
 }
-
 #[derive(Clone)]
 pub struct ParametersConstant {
     constant: f64,
@@ -31,7 +53,7 @@ impl ParametersConstant {
     }
 }
 
-impl Parameters for ParametersConstant {
+impl ParametersInner for ParametersConstant {
     fn value_at(&self, _x: f64) -> f64 {
         self.constant
     }
@@ -41,6 +63,13 @@ impl Parameters for ParametersConstant {
 
     fn integral_square(&self, time1: f64, time2: f64) -> f64 {
         (time2 - time1) * self.constant_square
+    }
+}
+
+impl From<f64> for Parameters {
+    fn from(x: f64) -> Self {
+        let inner_object = Box::new(ParametersConstant::new(x));
+        Parameters::new(inner_object)
     }
 }
 
@@ -64,7 +93,7 @@ impl ParametersPiecewiseConstant {
     }
 }
 
-impl Parameters for ParametersPiecewiseConstant {
+impl ParametersInner for ParametersPiecewiseConstant {
     fn value_at(&self, x: f64) -> f64 {
         self.inner_obj_ptr.value_at(x)
     }

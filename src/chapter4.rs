@@ -1,5 +1,6 @@
 pub mod parameters;
 pub mod payoff3;
+pub mod payoff_bridge;
 pub mod simple_mc3;
 pub mod simple_mc4;
 pub mod simple_mc5;
