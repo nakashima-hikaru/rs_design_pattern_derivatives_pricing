@@ -6,8 +6,8 @@ use std::sync::Arc;
 use std::sync::Mutex;
 
 ///
-pub struct ExoticBSEngine {
-    exotic_engine_field: ExoticEngineField,
+pub struct ExoticBSEngine<'a> {
+    exotic_engine_field: ExoticEngineField<'a>,
     /// A random number generator
     the_generator: Arc<Mutex<dyn RandomBase>>,
     /// Drifts
@@ -22,7 +22,7 @@ pub struct ExoticBSEngine {
     variates: Vec<f64>,
 }
 
-impl ExoticBSEngine {
+impl<'a> ExoticBSEngine<'a> {
     /// Constructor.
     ///
     /// # Arguments
@@ -34,8 +34,8 @@ impl ExoticBSEngine {
     /// * `spot` - A spot value of a stock
     pub fn new(
         exotic_engine_field: ExoticEngineField,
-        d: Parameters,
-        vol: Parameters,
+        d: impl Parameters,
+        vol: impl Parameters,
         the_generator: Arc<Mutex<dyn RandomBase>>,
         spot: f64,
     ) -> ExoticBSEngine {
@@ -77,7 +77,7 @@ impl ExoticBSEngine {
     }
 }
 
-impl ExoticEngine for ExoticBSEngine {
+impl<'a> ExoticEngine for ExoticBSEngine<'a> {
     /// Returns the pointer of `self.exotic_engine_field`
     fn as_exotic_engine_field(&self) -> &ExoticEngineField {
         &self.exotic_engine_field

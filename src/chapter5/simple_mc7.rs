@@ -8,8 +8,8 @@ use crate::chapter5::mc_statistics::StatisticsMC;
 pub fn simple_montecarlo5(
     the_option: &VanillaOption,
     spot: f64,
-    vol: &Parameters,
-    r: &Parameters,
+    vol: impl Parameters,
+    r: impl Parameters,
     number_of_paths: u64,
     gatherer: &mut dyn StatisticsMC,
 ) {

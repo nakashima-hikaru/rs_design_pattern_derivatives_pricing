@@ -8,8 +8,8 @@ use crate::chapter4::vanilla3::VanillaOption;
 pub fn simple_montecarlo4(
     the_option: &VanillaOption,
     spot: f64,
-    vol: &Parameters,
-    r: &Parameters,
+    vol: impl Parameters,
+    r: impl Parameters,
     number_of_paths: u64,
 ) -> f64 {
     let expiry = the_option.get_expiry();

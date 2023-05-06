@@ -9,19 +9,19 @@ use rayon::prelude::*;
 use std::sync::Arc;
 use std::sync::Mutex;
 
-pub struct ExoticEngineField {
+pub struct ExoticEngineField<'a> {
     /// A path dependent product such as Asian option
     the_product: Arc<dyn PathDependent>,
     /// Interest rates
-    r: Parameters,
+    r: &'a dyn Parameters,
     /// Discount factors
     discounts: Vec<f64>,
     /// Cash flows simulated on paths
     these_cash_flows: Mutex<Vec<CashFlow>>,
 }
 
-impl ExoticEngineField {
-    pub fn new(the_product: Arc<dyn PathDependent>, r: Parameters) -> ExoticEngineField {
+impl<'a> ExoticEngineField<'a> {
+    pub fn new(the_product: Arc<dyn PathDependent>, r: &'a (impl Parameters + 'a)) -> ExoticEngineField<'a> {
         let these_cash_flows = Mutex::new(vec![
             CashFlow::default();
             the_product.max_number_of_cash_flows() as usize
@@ -43,8 +43,8 @@ impl ExoticEngineField {
         &self.the_product
     }
     /// Returns the pointer of `self.r`.
-    pub fn get_r(&self) -> &Parameters {
-        &self.r
+    pub fn get_r(&self) -> &'a dyn Parameters {
+        self.r
     }
 }
 
