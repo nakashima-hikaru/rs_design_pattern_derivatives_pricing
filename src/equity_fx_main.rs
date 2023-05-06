@@ -104,21 +104,21 @@ pub fn price(
 
 #[test]
 pub fn test_main() {
-    let expiry: f64 = 30.0;
+    let expiry = 30.0;
     let strike = 100.0;
-    let spot: f64 = 100.0;
-    let vol: f64 = 0.01;
-    let r: f64 = 0.01;
-    let d: f64 = 0.0;
+    let spot = 100.0;
+    let vol = 0.01;
+    let r = 0.01;
+    let d = 0.0;
     let number_of_dates = 1000;
-    let number_of_paths: u64 = 1000;
-    let the_payoff = Box::new(PayoffCall::new(strike));
+    let number_of_paths = 1000;
+    let the_payoff = PayoffBridge::new(Box::new(PayoffCall::new(strike)));
     let times = (0..number_of_dates)
         .map(|i| (i as f64 + 1.0) * expiry / number_of_dates as f64)
         .collect();
-    let vol_param = Box::new(ParametersConstant::new(vol));
-    let r_param = Box::new(ParametersConstant::new(r));
-    let d_param = Box::new(ParametersConstant::new(d));
+    let vol_param = Parameters::from(vol);
+    let r_param = Parameters::from(r);
+    let d_param = Parameters::from(d);
     let the_option = Arc::new(PathDependentAsian::new(times, expiry, the_payoff));
     let gatherer = Arc::new(Mutex::new(StatisticsMean::default()));
     let mut gatherer_two = ConvergenceTable::new(gatherer);
