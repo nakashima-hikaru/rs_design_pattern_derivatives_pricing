@@ -246,6 +246,48 @@ impl ParametersPiecewiseConstantInner for ParametersLeftContinuousPiecewiseConst
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_value_at() {
+        let params = ParametersConstant::new(2.0);
+        assert_eq!(params.value_at(1.0), 2.0);
+    }
+
+    #[test]
+    fn test_integral() {
+        let params = ParametersConstant::new(2.0);
+        assert_eq!(params.integral(0.0, 1.0), 2.0);
+        assert_eq!(params.integral(0.0, 2.0), 4.0);
+    }
+
+    #[test]
+    fn test_integral_square() {
+        let params = ParametersConstant::new(2.0);
+        assert_eq!(params.integral_square(0.0, 1.0), 4.0);
+        assert_eq!(params.integral_square(0.0, 2.0), 8.0);
+    }
+
+    #[test]
+    fn test_mean() {
+        let params = ParametersConstant::new(2.0);
+        assert_eq!(params.mean(0.0, 1.0), 2.0);
+        assert_eq!(params.mean(0.0, 2.0), 2.0);
+    }
+
+    #[test]
+    fn test_root_mean_square() {
+        let params = ParametersConstant::new(2.0);
+        assert_eq!(params.root_mean_square(0.0, 1.0), 4.0);
+        assert_eq!(params.root_mean_square(0.0, 2.0), 4.0);
+    }
+
+    #[test]
+    fn test_from() {
+        let params: ParametersConstant = 2.0.into();
+        assert_eq!(params.constant, 2.0);
+        assert_eq!(params.constant_square, 4.0);
+    }
+
     #[test]
     fn test_left_continuous() {
         // When StepType is LeftContinuous,

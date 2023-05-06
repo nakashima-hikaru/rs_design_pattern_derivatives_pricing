@@ -43,3 +43,48 @@ impl<'a> StatisticsMC for ConvergenceTable<'a> {
         tmp
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use approx::assert_relative_eq;
+
+    struct MockStats {
+        results: Vec<f64>,
+    }
+
+    impl StatisticsMC for MockStats {
+        fn dump_one_result(&mut self, result: f64) {
+            self.results.push(result);
+        }
+
+        fn get_results_so_far(&self) -> Vec<Vec<f64>> {
+            vec![vec![self.results.len() as f64 * 0.5]]
+        }
+    }
+
+    #[test]
+    fn test_convergence_table() {
+        let mut stats = MockStats {
+            results: Vec::new(),
+        };
+        let mut conv_table = ConvergenceTable::new(&mut stats);
+
+        let num_paths = 1024u32;
+        let expected_results = (2..=num_paths)
+            .filter(|n| n.is_power_of_two())
+            .map(|n| vec![n as f64 * 0.5, n as f64])
+            .collect::<Vec<Vec<f64>>>();
+
+        for i in 1..=num_paths {
+            conv_table.dump_one_result(i as f64);
+        }
+
+        let results = conv_table.get_results_so_far();
+        assert_eq!(results.len(), expected_results.len());
+        for (actual, expected) in results.iter().zip(expected_results.iter()) {
+            assert_relative_eq!(actual[0], expected[0]);
+            assert_relative_eq!(actual[1], expected[1]);
+        }
+    }
+}

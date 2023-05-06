@@ -42,3 +42,20 @@ impl StatisticsMC for StatisticsMean {
         results
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_statistics_mean() {
+        let mut stats = StatisticsMean::default();
+
+        stats.dump_one_result(1.0);
+        stats.dump_one_result(2.0);
+        stats.dump_one_result(3.0);
+
+        let results = stats.get_results_so_far();
+        assert_eq!(results, vec![vec![2.0]]);
+    }
+}

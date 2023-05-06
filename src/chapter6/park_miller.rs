@@ -109,21 +109,43 @@ impl Random for RandomParkMiller {
     }
 }
 
-#[test]
-fn test_distribution() {
-    let n = 100000;
-    let mut x = RandomParkMiller::new(n, 0);
-    let mut v = vec![0.0; n];
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-    x.get_gaussians(&mut v);
-    let mut mean = 0.0;
-    let mut variant = 0.0;
-    for u in v {
-        mean += u;
-        variant += u * u;
+    #[test]
+    fn test_random_park_miller() {
+        let mut rng = RandomParkMiller::new(1, 12345);
+
+        let mut results = vec![0.0; 10];
+        rng.get_uniforms(&mut results);
+
+        assert_eq!(rng.get_dimensionality(), 1);
+        assert_eq!(results.len(), 10);
+
+        rng.reset_dimensionality(5);
+        assert_eq!(rng.get_dimensionality(), 5);
+
+        rng.set_seed(54321);
+        rng.get_uniforms(&mut results);
     }
-    mean /= n as f64;
-    variant /= n as f64;
-    assert_eq!(mean, 0.00047708248676497185);
-    assert_eq!(variant, 0.9987128274353647);
+
+    #[test]
+    fn test_distribution() {
+        let n = 100000;
+        let mut x = RandomParkMiller::new(n, 0);
+        let mut v = vec![0.0; n];
+
+        x.get_gaussians(&mut v);
+        let mut mean = 0.0;
+        let mut variant = 0.0;
+        for u in v {
+            mean += u;
+            variant += u * u;
+        }
+        mean /= n as f64;
+        variant /= n as f64;
+        assert_eq!(mean, 0.00047708248676497185);
+        assert_eq!(variant, 0.9987128274353647);
+    }
 }

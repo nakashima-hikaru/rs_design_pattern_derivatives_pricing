@@ -17,6 +17,22 @@ impl<'a> VanillaOption<'a> {
         self.expiry
     }
     pub fn option_payoff(&self, spot: f64) -> f64 {
-        self.the_payoff.forward_value(spot)
+        self.the_payoff.calculate(spot)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::chapter4::payoff3::PayoffCall;
+    #[test]
+    fn test_vanilla_option() {
+        let payoff = PayoffCall::new(100.0);
+        let option = VanillaOption::new(&payoff, 1.0);
+
+        assert_eq!(option.get_expiry(), 1.0);
+        assert_eq!(option.option_payoff(80.0), 0.0);
+        assert_eq!(option.option_payoff(100.0), 0.0);
+        assert_eq!(option.option_payoff(120.0), 20.0);
     }
 }

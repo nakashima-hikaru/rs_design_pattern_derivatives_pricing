@@ -40,7 +40,7 @@ impl<'a> PathDependent for PathDependentAsian<'a> {
         let sum: f64 = spot_values.iter().sum();
         let mean = sum / self.number_of_times as f64;
         generated_flows[0].time_index = 0;
-        generated_flows[0].amount = self.the_payoff.forward_value(mean);
+        generated_flows[0].amount = self.the_payoff.calculate(mean);
         1
     }
 }

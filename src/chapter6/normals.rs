@@ -74,3 +74,29 @@ pub fn cumulative_normal(x: f64) -> f64 {
     }
     result
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_normal_density() {
+        assert_eq!(normal_density(0.0), 0.398942280401433);
+        assert_eq!(normal_density(1.0), 0.24197072451914353);
+        assert_eq!(normal_density(-1.0), 0.24197072451914353);
+    }
+
+    #[test]
+    fn test_inverse_cumulative_normal() {
+        assert_eq!(inverse_cumulative_normal(0.5), 0.0);
+        assert_eq!(inverse_cumulative_normal(0.95), 1.644853553323174);
+        assert_eq!(inverse_cumulative_normal(0.999), 3.090195109132865);
+    }
+
+    #[test]
+    fn test_cumulative_normal() {
+        assert_eq!(cumulative_normal(0.0), 0.4999999994751917);
+        assert_eq!(cumulative_normal(1.0), 0.8413447404368684);
+        assert_eq!(cumulative_normal(-1.0), 0.15865525956313165);
+    }
+}
