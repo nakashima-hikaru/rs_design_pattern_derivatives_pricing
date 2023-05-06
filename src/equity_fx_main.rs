@@ -60,7 +60,7 @@ pub fn main() {
         println!("\n");
     }
 }
-// 9.87 ->
+
 pub fn price(
     expiry: f64,
     strike: f64,
