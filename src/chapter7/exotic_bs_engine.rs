@@ -84,8 +84,7 @@ impl<'a> ExoticEngine for ExoticBSEngine<'a> {
         self.the_generator.get_gaussians(&mut self.variates);
         let mut current_log_spot = self.log_spot;
         for j in 0..self.number_of_times {
-            current_log_spot += self.drifts[j];
-            current_log_spot += self.standard_deviations[j] * self.variates[j];
+            current_log_spot += self.drifts[j] + self.standard_deviations[j] * self.variates[j];
             spot_values[j] = current_log_spot.exp();
         }
     }
