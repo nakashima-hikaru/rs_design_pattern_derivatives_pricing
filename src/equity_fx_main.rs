@@ -34,10 +34,10 @@ pub fn main() {
     let number_of_dates = text_io::read!();
 
     println!("\nNumber of paths\n");
-    let number_of_paths: u64 = text_io::read!();
+    let number_of_paths = text_io::read!();
     let the_payoff = PayoffCall::new(strike);
     let times = (0..number_of_dates)
-        .map(|i| (i as f64 + 1.0) * expiry / number_of_dates as f64)
+        .map(|i| ((i + 1) as f64) * expiry / number_of_dates as f64)
         .collect();
     let vol_param = ParametersConstant::from(vol);
     let r_param = ParametersConstant::from(r);
@@ -45,7 +45,7 @@ pub fn main() {
     let the_option = PathDependentAsian::new(times, expiry, &the_payoff);
     let mut gatherer = StatisticsMean::default();
     let mut gatherer_two = ConvergenceTable::new(&mut gatherer);
-    let mut generator = RandomParkMiller::new(number_of_dates as u64, 1);
+    let mut generator = RandomParkMiller::new(number_of_dates, 1);
     let mut gen_two = AntiThetic::new(&mut generator);
     let exotic_engine_field = ExoticEngineField::new(&the_option, &r_param);
     let mut the_engine =
@@ -60,7 +60,7 @@ pub fn main() {
         println!("\n");
     }
 }
-
+// 9.87 ->
 pub fn price(
     expiry: f64,
     strike: f64,
@@ -68,8 +68,8 @@ pub fn price(
     vol: f64,
     r: f64,
     d: f64,
-    number_of_dates: u64,
-    number_of_paths: u64,
+    number_of_dates: usize,
+    number_of_paths: usize,
 ) -> f64 {
     let the_payoff = PayoffCall::new(strike);
     let times = (0..number_of_dates)
@@ -81,7 +81,7 @@ pub fn price(
     let the_option = PathDependentAsian::new(times, expiry, &the_payoff);
     let mut gatherer = StatisticsMean::default();
     let mut gatherer_two = ConvergenceTable::new(&mut gatherer);
-    let mut generator = RandomParkMiller::new(number_of_dates as u64, 1);
+    let mut generator = RandomParkMiller::new(number_of_dates, 1);
     let mut gen_two = AntiThetic::new(&mut generator);
     let exotic_engine_field = ExoticEngineField::new(&the_option, &r_param);
     let mut the_engine =
@@ -118,7 +118,7 @@ pub fn test_main() {
     let the_option = PathDependentAsian::new(times, expiry, &the_payoff);
     let mut gatherer = StatisticsMean::default();
     let mut gatherer_two = ConvergenceTable::new(&mut gatherer);
-    let mut generator = RandomParkMiller::new(number_of_dates as u64, 1);
+    let mut generator = RandomParkMiller::new(number_of_dates, 1);
     let mut gen_two = AntiThetic::new(&mut generator);
     let exotic_engine_field = ExoticEngineField::new(&the_option, &r_param);
     let mut the_engine =

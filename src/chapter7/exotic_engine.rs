@@ -5,8 +5,8 @@ use crate::chapter4::parameters::Parameters;
 use crate::chapter5::mc_statistics::StatisticsMC;
 use crate::chapter7::path_dependent::CashFlow;
 use crate::chapter7::path_dependent::PathDependent;
-use rayon::iter::ParallelIterator;
 use rayon::iter::IntoParallelIterator;
+use rayon::iter::ParallelIterator;
 use std::sync::Arc;
 use std::sync::Mutex;
 
@@ -28,7 +28,7 @@ impl<'a> ExoticEngineField<'a> {
     ) -> ExoticEngineField<'a> {
         let these_cash_flows = Mutex::new(vec![
             CashFlow::default();
-            the_product.max_number_of_cash_flows() as usize
+            the_product.max_number_of_cash_flows()
         ]);
         let discounts = the_product
             .possible_cash_flow_times()
@@ -58,7 +58,7 @@ pub trait ExoticEngine {
 
     fn get_one_path(&mut self, variates: &mut [f64]);
 
-    fn do_simulation(&mut self, the_gatherer: &mut dyn StatisticsMC, number_of_paths: u64)
+    fn do_simulation(&mut self, the_gatherer: &mut dyn StatisticsMC, number_of_paths: usize)
     where
         Self: Sync,
         Self: Send,
@@ -76,8 +76,6 @@ pub trait ExoticEngine {
         let _: Vec<_> = (0..number_of_paths)
             .into_par_iter()
             .map(|_| {
-                let self_ptr = Arc::clone(&self_ptr);
-                let the_gatherer_ptr = Arc::clone(&the_gatherer_ptr);
                 let mut locked_self_ptr = self_ptr.lock().unwrap();
                 let mut locked_the_gatherer_ptr = the_gatherer_ptr.lock().unwrap();
                 let mut locked_spot_values_ptr = spot_values_ptr.lock().unwrap();
@@ -105,7 +103,7 @@ pub trait ExoticEngine {
             .as_ref()
             .unwrap()
             .iter()
-            .map(|cash_flow| cash_flow.amount * discounts[cash_flow.time_index as usize])
+            .map(|cash_flow| cash_flow.amount * discounts[cash_flow.time_index])
             .sum()
     }
 }

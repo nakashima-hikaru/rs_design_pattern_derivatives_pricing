@@ -33,11 +33,11 @@ pub struct CashFlow {
     /// The forward value of the cash flow
     pub amount: f64,
     /// The time the cash flow arises
-    pub time_index: u64,
+    pub time_index: usize,
 }
 
 impl CashFlow {
-    pub fn new(time_index: u64, amount: f64) -> Self {
+    pub fn new(time_index: usize, amount: f64) -> Self {
         CashFlow { time_index, amount }
     }
 }
@@ -47,7 +47,7 @@ pub trait PathDependent: Send + Sync {
     /// Returns times that will be used in pricing of the product.
     fn get_look_at_times(&self) -> &Vec<f64>;
     /// Returns the number of elements reserved by a cash-flow-vector.
-    fn max_number_of_cash_flows(&self) -> u64;
+    fn max_number_of_cash_flows(&self) -> usize;
 
     /// Returns times of cash flows to calculate its discount factor.
     fn possible_cash_flow_times(&self) -> Vec<f64>;

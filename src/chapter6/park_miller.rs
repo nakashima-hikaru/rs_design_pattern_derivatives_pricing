@@ -9,7 +9,7 @@ use crate::chapter6::random2::Random;
 ///
 /// \[ParkMiler\] Park, S. K. and Keith W. Miller. “Random number generators: good ones are hard to find.” Commun. ACM 31 (1988): 1192-1201.
 struct ParkMiller {
-    seed: i64,
+    seed: u64,
 }
 
 impl ParkMiller {
@@ -17,13 +17,13 @@ impl ParkMiller {
     const M: i64 = 2147483647;
     const Q: i64 = 127773;
     const R: i64 = 2836;
-    pub fn new(mut seed: i64) -> ParkMiller {
+    pub fn new(mut seed: u64) -> ParkMiller {
         if seed == 0 {
             seed = 1;
         }
         ParkMiller { seed }
     }
-    fn set_seed(&mut self, seed: i64) {
+    fn set_seed(&mut self, seed: u64) {
         self.seed = seed;
         if self.seed == 0 {
             self.seed = 1;
@@ -36,18 +36,19 @@ impl ParkMiller {
     }
 
     /// Get a random integer in the interval \[0, M\].
-    pub fn get_one_random_integer(&mut self) -> i64 {
-        let k = self.seed / ParkMiller::Q;
-        self.seed = ParkMiller::A * (self.seed - k * ParkMiller::Q) - k * ParkMiller::R;
-        if self.seed < 0 {
-            self.seed += ParkMiller::M;
+    pub fn get_one_random_integer(&mut self) -> u64 {
+        let k = self.seed as i64 / ParkMiller::Q;
+        let mut seed = ParkMiller::A * (self.seed as i64 - k * ParkMiller::Q) - k * ParkMiller::R;
+        if seed < 0 {
+            seed += ParkMiller::M;
         }
+        self.seed = seed as u64;
         self.seed
     }
 }
 
 pub struct RandomParkMiller {
-    dimensionality: u64,
+    dimensionality: usize,
     generator: ParkMiller,
     initial_seed: u64,
     /// Converts random integers to random number in \[0,1\].
@@ -55,8 +56,8 @@ pub struct RandomParkMiller {
 }
 
 impl RandomParkMiller {
-    pub fn new(dimensionality: u64, seed: u64) -> RandomParkMiller {
-        let generator = ParkMiller::new(seed as i64);
+    pub fn new(dimensionality: usize, seed: u64) -> RandomParkMiller {
+        let generator = ParkMiller::new(seed);
         let reciprocal = 1.0 / (1.0 + generator.max() as f64);
         RandomParkMiller {
             dimensionality,
@@ -68,15 +69,14 @@ impl RandomParkMiller {
 }
 
 impl Random for RandomParkMiller {
-    fn get_dimensionality(&self) -> u64 {
+    fn get_dimensionality(&self) -> usize {
         self.dimensionality
     }
 
     /// Set uniform variables to `variates`.
     fn get_uniforms(&mut self, variates: &mut [f64]) {
         for i in 0..self.get_dimensionality() {
-            variates[i as usize] =
-                (self.generator.get_one_random_integer() as f64) * self.reciprocal;
+            variates[i] = (self.generator.get_one_random_integer() as f64) * self.reciprocal;
         }
     }
 
@@ -86,7 +86,7 @@ impl Random for RandomParkMiller {
     ///
     /// * `number_of_paths` - The number of paths to skip.
     fn skip(&mut self, number_of_paths: u64) {
-        let mut tmp = vec![0.0; self.get_dimensionality() as usize];
+        let mut tmp = vec![0.0; self.get_dimensionality()];
         for _j in 0..number_of_paths {
             self.get_uniforms(&mut tmp);
         }
@@ -95,17 +95,17 @@ impl Random for RandomParkMiller {
     /// Set an initial seed.
     fn set_seed(&mut self, seed: u64) {
         self.initial_seed = seed;
-        self.generator.set_seed(seed as i64);
+        self.generator.set_seed(seed);
     }
 
     fn reset(&mut self) {
-        self.generator.set_seed(self.initial_seed as i64);
+        self.generator.set_seed(self.initial_seed);
     }
 
     /// Updates dimensionality of generated random numbers.
-    fn reset_dimensionality(&mut self, new_dimensionality: u64) {
+    fn reset_dimensionality(&mut self, new_dimensionality: usize) {
         self.dimensionality = new_dimensionality;
-        self.generator.set_seed(self.initial_seed as i64);
+        self.generator.set_seed(self.initial_seed);
     }
 }
 
@@ -113,7 +113,7 @@ impl Random for RandomParkMiller {
 fn test_distribution() {
     let n = 100000;
     let mut x = RandomParkMiller::new(n, 0);
-    let mut v = vec![0.0; n as usize];
+    let mut v = vec![0.0; n];
 
     x.get_gaussians(&mut v);
     let mut mean = 0.0;

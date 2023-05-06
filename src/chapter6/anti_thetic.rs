@@ -4,7 +4,7 @@ use crate::chapter6::random2::Random;
 
 /// Implemented in the decorator pattern.
 pub struct AntiThetic<'a> {
-    dimensionality: u64,
+    dimensionality: usize,
     generator: &'a mut dyn Random,
     odd_even: bool,
     next_variates: Vec<f64>,
@@ -17,19 +17,22 @@ impl<'a> AntiThetic<'a> {
             dimensionality,
             generator,
             odd_even: true,
-            next_variates: vec![0.0; dimensionality as usize],
+            next_variates: vec![0.0; dimensionality],
         }
     }
 }
 
 impl<'a> Random for AntiThetic<'a> {
-    fn get_dimensionality(&self) -> u64 {
+    fn get_dimensionality(&self) -> usize {
         self.dimensionality
     }
     fn get_uniforms(&mut self, variates: &mut [f64]) {
         if self.odd_even {
             self.generator.get_uniforms(variates);
-            self.next_variates = variates.iter().map(|variate| 1.0 - variate).collect();
+            for i in 0..variates.len() {
+                self.next_variates[i] = 1.0 - variates[i];
+            }
+            // self.next_variates = variates.iter().map(|variate| 1.0 - variate).collect();
             self.odd_even = false;
         } else {
             variates.copy_from_slice(&self.next_variates);
@@ -46,7 +49,7 @@ impl<'a> Random for AntiThetic<'a> {
         }
         self.generator.skip(number_of_paths / 2);
         if number_of_paths % 2 == 1 {
-            let mut tmp = vec![0.0; self.get_dimensionality() as usize];
+            let mut tmp = vec![0.0; self.get_dimensionality()];
             self.get_uniforms(&mut tmp);
         }
     }
@@ -58,9 +61,9 @@ impl<'a> Random for AntiThetic<'a> {
         self.generator.reset();
         self.odd_even = true;
     }
-    fn reset_dimensionality(&mut self, new_dimensionality: u64) {
+    fn reset_dimensionality(&mut self, new_dimensionality: usize) {
         self.dimensionality = new_dimensionality;
-        self.next_variates.resize(new_dimensionality as usize, 0.0);
+        self.next_variates.resize(new_dimensionality, 0.0);
         self.generator.reset_dimensionality(new_dimensionality);
     }
 }

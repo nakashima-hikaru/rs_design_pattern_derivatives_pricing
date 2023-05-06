@@ -34,8 +34,8 @@ struct PriceParameters {
     vol: f64,
     r: f64,
     d: f64,
-    number_of_dates: u64,
-    number_of_paths: u64,
+    number_of_dates: usize,
+    number_of_paths: usize,
 }
 
 async fn post_price(form: web::Form<PriceParameters>) -> HttpResponse {

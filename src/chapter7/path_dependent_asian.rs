@@ -6,7 +6,7 @@ use crate::chapter7::path_dependent::PathDependent;
 pub struct PathDependentAsian<'a> {
     delivery_time: f64,
     the_payoff: &'a dyn Payoff,
-    number_of_times: u64,
+    number_of_times: usize,
     look_at_times: Vec<f64>,
 }
 
@@ -19,7 +19,7 @@ impl<'a> PathDependentAsian<'a> {
         PathDependentAsian {
             delivery_time,
             the_payoff,
-            number_of_times: look_at_times.len() as u64,
+            number_of_times: look_at_times.len(),
             look_at_times,
         }
     }
@@ -29,7 +29,7 @@ impl<'a> PathDependent for PathDependentAsian<'a> {
     fn get_look_at_times(&self) -> &Vec<f64> {
         &self.look_at_times
     }
-    fn max_number_of_cash_flows(&self) -> u64 {
+    fn max_number_of_cash_flows(&self) -> usize {
         1
     }
     fn possible_cash_flow_times(&self) -> Vec<f64> {
