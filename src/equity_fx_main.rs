@@ -11,9 +11,6 @@ use rust_design_pattern_derivative_pricing::chapter7::exotic_engine::{
 };
 use rust_design_pattern_derivative_pricing::chapter7::path_dependent_asian::PathDependentAsian;
 
-use std::sync::Arc;
-use std::sync::Mutex;
-
 pub fn main() {
     println!("\nEnter expiry\n");
     let expiry: f64 = text_io::read!();
@@ -46,13 +43,13 @@ pub fn main() {
     let r_param = ParametersConstant::from(r);
     let d_param = ParametersConstant::from(d);
     let the_option = PathDependentAsian::new(times, expiry, &the_payoff);
-    let gatherer = Arc::new(Mutex::new(StatisticsMean::default()));
-    let mut gatherer_two = ConvergenceTable::new(gatherer);
-    let generator = Arc::new(Mutex::new(RandomParkMiller::new(number_of_dates as u64, 1)));
-    let gen_two = Arc::new(Mutex::new(AntiThetic::new(generator)));
+    let mut gatherer = StatisticsMean::default();
+    let mut gatherer_two = ConvergenceTable::new(&mut gatherer);
+    let mut generator = RandomParkMiller::new(number_of_dates as u64, 1);
+    let mut gen_two = AntiThetic::new(&mut generator);
     let exotic_engine_field = ExoticEngineField::new(&the_option, &r_param);
     let mut the_engine =
-        ExoticBSEngine::new(exotic_engine_field, d_param, vol_param, gen_two, spot);
+        ExoticBSEngine::new(exotic_engine_field, d_param, vol_param, &mut gen_two, spot);
     the_engine.do_simulation(&mut gatherer_two, number_of_paths);
     let results = gatherer_two.get_results_so_far();
     println!("\nFor the Asian call price the results are \n");
@@ -82,13 +79,13 @@ pub fn price(
     let r_param = ParametersConstant::from(r);
     let d_param = ParametersConstant::from(d);
     let the_option = PathDependentAsian::new(times, expiry, &the_payoff);
-    let gatherer = Arc::new(Mutex::new(StatisticsMean::default()));
-    let mut gatherer_two = ConvergenceTable::new(gatherer);
-    let generator = Arc::new(Mutex::new(RandomParkMiller::new(number_of_dates as u64, 1)));
-    let gen_two = Arc::new(Mutex::new(AntiThetic::new(generator)));
+    let mut gatherer = StatisticsMean::default();
+    let mut gatherer_two = ConvergenceTable::new(&mut gatherer);
+    let mut generator = RandomParkMiller::new(number_of_dates as u64, 1);
+    let mut gen_two = AntiThetic::new(&mut generator);
     let exotic_engine_field = ExoticEngineField::new(&the_option, &r_param);
     let mut the_engine =
-        ExoticBSEngine::new(exotic_engine_field, d_param, vol_param, gen_two, spot);
+        ExoticBSEngine::new(exotic_engine_field, d_param, vol_param, &mut gen_two, spot);
     the_engine.do_simulation(&mut gatherer_two, number_of_paths);
     let results = gatherer_two.get_results_so_far();
     println!("\nFor the Asian call price the results are \n");
@@ -119,13 +116,13 @@ pub fn test_main() {
     let r_param = ParametersConstant::from(r);
     let d_param = ParametersConstant::from(d);
     let the_option = PathDependentAsian::new(times, expiry, &the_payoff);
-    let gatherer = Arc::new(Mutex::new(StatisticsMean::default()));
-    let mut gatherer_two = ConvergenceTable::new(gatherer);
-    let generator = Arc::new(Mutex::new(RandomParkMiller::new(number_of_dates as u64, 1)));
-    let gen_two = Arc::new(Mutex::new(AntiThetic::new(generator)));
+    let mut gatherer = StatisticsMean::default();
+    let mut gatherer_two = ConvergenceTable::new(&mut gatherer);
+    let mut generator = RandomParkMiller::new(number_of_dates as u64, 1);
+    let mut gen_two = AntiThetic::new(&mut generator);
     let exotic_engine_field = ExoticEngineField::new(&the_option, &r_param);
     let mut the_engine =
-        ExoticBSEngine::new(exotic_engine_field, d_param, vol_param, gen_two, spot);
+        ExoticBSEngine::new(exotic_engine_field, d_param, vol_param, &mut gen_two, spot);
     the_engine.do_simulation(&mut gatherer_two, number_of_paths);
     let results = gatherer_two.get_results_so_far();
     assert_eq!(

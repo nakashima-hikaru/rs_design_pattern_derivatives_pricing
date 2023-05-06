@@ -5,7 +5,8 @@ use crate::chapter4::parameters::Parameters;
 use crate::chapter5::mc_statistics::StatisticsMC;
 use crate::chapter7::path_dependent::CashFlow;
 use crate::chapter7::path_dependent::PathDependent;
-use rayon::prelude::*;
+use rayon::iter::ParallelIterator;
+use rayon::iter::IntoParallelIterator;
 use std::sync::Arc;
 use std::sync::Mutex;
 

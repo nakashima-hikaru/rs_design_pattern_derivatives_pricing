@@ -2,7 +2,7 @@
 //! generatorは二つの部分に分かれており、
 //! ParkMiller-structは乱数を生成し、
 //! RandomParkMiller-structはParkMiller-structの出力した乱数を一様乱数のベクトルに変換する。
-use crate::chapter6::random2::RandomBase;
+use crate::chapter6::random2::Random;
 
 /// A linear congruential generator.
 /// See \[ParkMiller\] p.1196.
@@ -48,7 +48,7 @@ impl ParkMiller {
 
 pub struct RandomParkMiller {
     dimensionality: u64,
-    inner_generator: ParkMiller,
+    generator: ParkMiller,
     initial_seed: u64,
     /// Converts random integers to random number in \[0,1\].
     reciprocal: f64,
@@ -56,18 +56,18 @@ pub struct RandomParkMiller {
 
 impl RandomParkMiller {
     pub fn new(dimensionality: u64, seed: u64) -> RandomParkMiller {
-        let inner_generator = ParkMiller::new(seed as i64);
-        let reciprocal = 1.0 / (1.0 + inner_generator.max() as f64);
+        let generator = ParkMiller::new(seed as i64);
+        let reciprocal = 1.0 / (1.0 + generator.max() as f64);
         RandomParkMiller {
             dimensionality,
-            inner_generator,
+            generator,
             initial_seed: seed,
             reciprocal,
         }
     }
 }
 
-impl RandomBase for RandomParkMiller {
+impl Random for RandomParkMiller {
     fn get_dimensionality(&self) -> u64 {
         self.dimensionality
     }
@@ -76,7 +76,7 @@ impl RandomBase for RandomParkMiller {
     fn get_uniforms(&mut self, variates: &mut [f64]) {
         for i in 0..self.get_dimensionality() {
             variates[i as usize] =
-                (self.inner_generator.get_one_random_integer() as f64) * self.reciprocal;
+                (self.generator.get_one_random_integer() as f64) * self.reciprocal;
         }
     }
 
@@ -95,17 +95,17 @@ impl RandomBase for RandomParkMiller {
     /// Set an initial seed.
     fn set_seed(&mut self, seed: u64) {
         self.initial_seed = seed;
-        self.inner_generator.set_seed(seed as i64);
+        self.generator.set_seed(seed as i64);
     }
 
     fn reset(&mut self) {
-        self.inner_generator.set_seed(self.initial_seed as i64);
+        self.generator.set_seed(self.initial_seed as i64);
     }
 
     /// Updates dimensionality of generated random numbers.
     fn reset_dimensionality(&mut self, new_dimensionality: u64) {
         self.dimensionality = new_dimensionality;
-        self.inner_generator.set_seed(self.initial_seed as i64);
+        self.generator.set_seed(self.initial_seed as i64);
     }
 }
 

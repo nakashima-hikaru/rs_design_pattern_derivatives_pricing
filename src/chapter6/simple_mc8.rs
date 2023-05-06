@@ -3,7 +3,7 @@
 use crate::chapter4::parameters::Parameters;
 use crate::chapter4::vanilla3::VanillaOption;
 use crate::chapter5::mc_statistics::StatisticsMC;
-use crate::chapter6::random2::RandomBase;
+use crate::chapter6::random2::Random;
 
 pub fn simple_montecarlo6(
     the_option: &VanillaOption,
@@ -12,7 +12,7 @@ pub fn simple_montecarlo6(
     r: impl Parameters,
     number_of_paths: u64,
     gatherer: &mut dyn StatisticsMC,
-    generator: &mut dyn RandomBase,
+    generator: &mut dyn Random,
 ) {
     generator.reset_dimensionality(1);
 

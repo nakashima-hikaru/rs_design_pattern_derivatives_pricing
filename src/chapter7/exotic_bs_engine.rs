@@ -1,15 +1,13 @@
 use crate::chapter4::parameters::Parameters;
-use crate::chapter6::random2::RandomBase;
+use crate::chapter6::random2::Random;
 use crate::chapter7::exotic_engine::ExoticEngine;
 use crate::chapter7::exotic_engine::ExoticEngineField;
-use std::sync::Arc;
-use std::sync::Mutex;
 
 ///
 pub struct ExoticBSEngine<'a> {
     exotic_engine_field: ExoticEngineField<'a>,
     /// A random number generator
-    the_generator: Arc<Mutex<dyn RandomBase>>,
+    the_generator: &'a mut dyn Random,
     /// Drifts
     drifts: Vec<f64>,
     /// The standard deviations of logarithm of the stock price
@@ -33,20 +31,16 @@ impl<'a> ExoticBSEngine<'a> {
     /// * `the_generator` - A random number generator
     /// * `spot` - A spot value of a stock
     pub fn new(
-        exotic_engine_field: ExoticEngineField,
+        exotic_engine_field: ExoticEngineField<'a>,
         d: impl Parameters,
         vol: impl Parameters,
-        the_generator: Arc<Mutex<dyn RandomBase>>,
+        the_generator: &'a mut (impl Random + 'a),
         spot: f64,
-    ) -> ExoticBSEngine {
+    ) -> ExoticBSEngine<'a> {
         let times = exotic_engine_field.get_the_product().get_look_at_times();
         let number_of_times = times.len() as u64;
 
-        the_generator
-            .lock()
-            .as_mut()
-            .unwrap()
-            .reset_dimensionality(number_of_times);
+        the_generator.reset_dimensionality(number_of_times);
         let mut drifts = vec![0.0; number_of_times as usize];
         let mut standard_deviations = vec![0.0; number_of_times as usize];
 
@@ -89,11 +83,7 @@ impl<'a> ExoticEngine for ExoticBSEngine<'a> {
     ///
     /// * `spot_values` - A container to store spot values
     fn get_one_path(&mut self, spot_values: &mut [f64]) {
-        self.the_generator
-            .lock()
-            .as_mut()
-            .unwrap()
-            .get_gaussians(&mut self.variates);
+        self.the_generator.get_gaussians(&mut self.variates);
         let mut current_log_spot = self.log_spot;
         for j in 0..self.number_of_times {
             current_log_spot += self.drifts[j as usize];
