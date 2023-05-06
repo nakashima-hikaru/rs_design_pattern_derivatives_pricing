@@ -11,7 +11,7 @@ pub fn simple_montecarlo5(
     vol: impl Parameters,
     r: impl Parameters,
     number_of_paths: u64,
-    gatherer: &mut dyn StatisticsMC,
+    gatherer: &mut impl StatisticsMC,
 ) {
     let expiry = the_option.get_expiry();
     let variance = vol.integral_square(0.0, expiry);

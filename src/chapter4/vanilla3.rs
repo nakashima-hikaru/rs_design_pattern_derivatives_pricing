@@ -10,11 +10,8 @@ pub struct VanillaOption<'a> {
 }
 
 impl<'a> VanillaOption<'a> {
-    pub fn new(the_payoff: &'a (impl Payoff + 'a), expiry: f64) -> VanillaOption<'a> {
-        VanillaOption {
-            expiry,
-            the_payoff,
-        }
+    pub fn new(the_payoff: &'a impl Payoff, expiry: f64) -> VanillaOption<'a> {
+        VanillaOption { expiry, the_payoff }
     }
     pub fn get_expiry(&self) -> f64 {
         self.expiry

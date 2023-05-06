@@ -12,7 +12,7 @@ use std::sync::Mutex;
 
 pub struct ExoticEngineField<'a> {
     /// A path dependent product such as Asian option
-    the_product: &'a (dyn PathDependent + 'a),
+    the_product: &'a dyn PathDependent,
     /// Interest rates
     r: &'a dyn Parameters,
     /// Discount factors
@@ -23,7 +23,7 @@ pub struct ExoticEngineField<'a> {
 
 impl<'a> ExoticEngineField<'a> {
     pub fn new(
-        the_product: &'a (impl PathDependent + 'a),
+        the_product: &'a impl PathDependent,
         r: &'a (impl Parameters + 'a),
     ) -> ExoticEngineField<'a> {
         let these_cash_flows = Mutex::new(vec![
@@ -58,7 +58,7 @@ pub trait ExoticEngine {
 
     fn get_one_path(&mut self, variates: &mut [f64]);
 
-    fn do_simulation(&mut self, the_gatherer: &mut dyn StatisticsMC, number_of_paths: usize)
+    fn do_simulation(&mut self, the_gatherer: &mut impl StatisticsMC, number_of_paths: usize)
     where
         Self: Sync,
         Self: Send,

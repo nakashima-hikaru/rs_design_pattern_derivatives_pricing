@@ -11,8 +11,8 @@ pub fn simple_montecarlo6(
     vol: impl Parameters,
     r: impl Parameters,
     number_of_paths: u64,
-    gatherer: &mut dyn StatisticsMC,
-    generator: &mut dyn Random,
+    gatherer: &mut impl StatisticsMC,
+    generator: &mut impl Random,
 ) {
     generator.reset_dimensionality(1);
 

@@ -3,7 +3,6 @@ use crate::chapter6::random2::Random;
 use crate::chapter7::exotic_engine::ExoticEngine;
 use crate::chapter7::exotic_engine::ExoticEngineField;
 
-///
 pub struct ExoticBSEngine<'a> {
     exotic_engine_field: ExoticEngineField<'a>,
     /// A random number generator
@@ -34,7 +33,7 @@ impl<'a> ExoticBSEngine<'a> {
         exotic_engine_field: ExoticEngineField<'a>,
         d: impl Parameters,
         vol: impl Parameters,
-        the_generator: &'a mut (impl Random + 'a),
+        the_generator: &'a mut impl Random,
         spot: f64,
     ) -> ExoticBSEngine<'a> {
         let times = exotic_engine_field.get_the_product().get_look_at_times();

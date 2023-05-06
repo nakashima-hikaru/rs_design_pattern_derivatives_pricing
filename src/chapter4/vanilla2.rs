@@ -16,7 +16,7 @@ pub struct VanillaOption<'a> {
 }
 
 impl<'a> VanillaOption<'a> {
-    pub fn new(the_payoff_ptr: &'a dyn Payoff, expiry: f64) -> Self {
+    pub fn new(the_payoff_ptr: &'a impl Payoff, expiry: f64) -> Self {
         Self {
             the_payoff_ptr: the_payoff_ptr.clone(),
             expiry,
