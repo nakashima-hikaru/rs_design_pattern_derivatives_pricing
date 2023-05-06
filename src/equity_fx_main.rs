@@ -1,6 +1,5 @@
 use rust_design_pattern_derivative_pricing::chapter4::parameters::ParametersConstant;
 use rust_design_pattern_derivative_pricing::chapter4::payoff3::PayoffCall;
-use rust_design_pattern_derivative_pricing::chapter4::payoff_bridge::PayoffBridge;
 use rust_design_pattern_derivative_pricing::chapter5::convergence_table::ConvergenceTable;
 use rust_design_pattern_derivative_pricing::chapter5::mc_statistics::StatisticsMC;
 use rust_design_pattern_derivative_pricing::chapter5::mc_statistics::StatisticsMean;
@@ -39,19 +38,19 @@ pub fn main() {
 
     println!("\nNumber of paths\n");
     let number_of_paths: u64 = text_io::read!();
-    let the_payoff = PayoffBridge::new(Box::new(PayoffCall::new(strike)));
+    let the_payoff = PayoffCall::new(strike);
     let times = (0..number_of_dates)
         .map(|i| (i as f64 + 1.0) * expiry / number_of_dates as f64)
         .collect();
     let vol_param = ParametersConstant::from(vol);
     let r_param = ParametersConstant::from(r);
     let d_param = ParametersConstant::from(d);
-    let the_option = Arc::new(PathDependentAsian::new(times, expiry, the_payoff));
+    let the_option = PathDependentAsian::new(times, expiry, &the_payoff);
     let gatherer = Arc::new(Mutex::new(StatisticsMean::default()));
     let mut gatherer_two = ConvergenceTable::new(gatherer);
     let generator = Arc::new(Mutex::new(RandomParkMiller::new(number_of_dates as u64, 1)));
     let gen_two = Arc::new(Mutex::new(AntiThetic::new(generator)));
-    let exotic_engine_field = ExoticEngineField::new(the_option, &r_param);
+    let exotic_engine_field = ExoticEngineField::new(&the_option, &r_param);
     let mut the_engine =
         ExoticBSEngine::new(exotic_engine_field, d_param, vol_param, gen_two, spot);
     the_engine.do_simulation(&mut gatherer_two, number_of_paths);
@@ -75,19 +74,19 @@ pub fn price(
     number_of_dates: u64,
     number_of_paths: u64,
 ) -> f64 {
-    let the_payoff = PayoffBridge::new(Box::new(PayoffCall::new(strike)));
+    let the_payoff = PayoffCall::new(strike);
     let times = (0..number_of_dates)
         .map(|i| (i as f64 + 1.0) * expiry / number_of_dates as f64)
         .collect();
     let vol_param = ParametersConstant::from(vol);
     let r_param = ParametersConstant::from(r);
     let d_param = ParametersConstant::from(d);
-    let the_option = Arc::new(PathDependentAsian::new(times, expiry, the_payoff));
+    let the_option = PathDependentAsian::new(times, expiry, &the_payoff);
     let gatherer = Arc::new(Mutex::new(StatisticsMean::default()));
     let mut gatherer_two = ConvergenceTable::new(gatherer);
     let generator = Arc::new(Mutex::new(RandomParkMiller::new(number_of_dates as u64, 1)));
     let gen_two = Arc::new(Mutex::new(AntiThetic::new(generator)));
-    let exotic_engine_field = ExoticEngineField::new(the_option, &r_param);
+    let exotic_engine_field = ExoticEngineField::new(&the_option, &r_param);
     let mut the_engine =
         ExoticBSEngine::new(exotic_engine_field, d_param, vol_param, gen_two, spot);
     the_engine.do_simulation(&mut gatherer_two, number_of_paths);

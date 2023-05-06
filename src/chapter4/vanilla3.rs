@@ -2,16 +2,19 @@
 //! ただし、毎回クローンするのが遅いので、パラメータは常に参照渡しにすべき。
 //! このクローンをいい感じにするとより速くなるかも（Boxポインタとか？）
 
-use crate::chapter4::payoff_bridge::PayoffBridge;
+use crate::chapter4::payoff3::Payoff;
 
-pub struct VanillaOption {
+pub struct VanillaOption<'a> {
     expiry: f64,
-    the_payoff: PayoffBridge,
+    the_payoff: &'a dyn Payoff,
 }
 
-impl VanillaOption {
-    pub fn new(the_payoff: PayoffBridge, expiry: f64) -> VanillaOption {
-        VanillaOption { expiry, the_payoff }
+impl<'a> VanillaOption<'a> {
+    pub fn new(the_payoff: &'a (impl Payoff + 'a), expiry: f64) -> VanillaOption<'a> {
+        VanillaOption {
+            expiry,
+            the_payoff,
+        }
     }
     pub fn get_expiry(&self) -> f64 {
         self.expiry

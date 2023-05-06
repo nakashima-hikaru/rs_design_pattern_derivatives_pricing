@@ -11,7 +11,7 @@ use std::sync::Mutex;
 
 pub struct ExoticEngineField<'a> {
     /// A path dependent product such as Asian option
-    the_product: Arc<dyn PathDependent>,
+    the_product: &'a (dyn PathDependent + 'a),
     /// Interest rates
     r: &'a dyn Parameters,
     /// Discount factors
@@ -21,7 +21,10 @@ pub struct ExoticEngineField<'a> {
 }
 
 impl<'a> ExoticEngineField<'a> {
-    pub fn new(the_product: Arc<dyn PathDependent>, r: &'a (impl Parameters + 'a)) -> ExoticEngineField<'a> {
+    pub fn new(
+        the_product: &'a (impl PathDependent + 'a),
+        r: &'a (impl Parameters + 'a),
+    ) -> ExoticEngineField<'a> {
         let these_cash_flows = Mutex::new(vec![
             CashFlow::default();
             the_product.max_number_of_cash_flows() as usize
@@ -39,8 +42,8 @@ impl<'a> ExoticEngineField<'a> {
         }
     }
     /// Returns the pointer of `self.the_product`.
-    pub fn get_the_product(&self) -> &Arc<dyn PathDependent> {
-        &self.the_product
+    pub fn get_the_product(&self) -> &'a dyn PathDependent {
+        self.the_product
     }
     /// Returns the pointer of `self.r`.
     pub fn get_r(&self) -> &'a dyn Parameters {
