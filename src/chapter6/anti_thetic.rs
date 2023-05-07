@@ -11,7 +11,7 @@ pub struct AntiThetic<'a> {
 }
 
 impl<'a> AntiThetic<'a> {
-    pub fn new(generator: &'a mut (impl Random + 'a)) -> AntiThetic<'a> {
+    pub fn new(generator: &'a mut impl Random) -> AntiThetic<'a> {
         let dimensionality = generator.get_dimensionality();
         AntiThetic {
             dimensionality,

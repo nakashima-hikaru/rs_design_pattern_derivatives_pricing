@@ -24,7 +24,7 @@ pub struct ExoticEngineField<'a> {
 impl<'a> ExoticEngineField<'a> {
     pub fn new(
         the_product: &'a impl PathDependent,
-        r: &'a (impl Parameters + 'a),
+        r: &'a impl Parameters,
     ) -> ExoticEngineField<'a> {
         let these_cash_flows = Mutex::new(vec![
             CashFlow::default();
