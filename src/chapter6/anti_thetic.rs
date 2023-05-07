@@ -29,10 +29,7 @@ impl<'a> Random for AntiThetic<'a> {
     fn get_uniforms(&mut self, variates: &mut [f64]) {
         if self.odd_even {
             self.generator.get_uniforms(variates);
-            for i in 0..variates.len() {
-                self.next_variates[i] = 1.0 - variates[i];
-            }
-            // self.next_variates = variates.iter().map(|variate| 1.0 - variate).collect();
+            self.next_variates = variates.iter().map(|variate| 1.0 - variate).collect();
             self.odd_even = false;
         } else {
             variates.copy_from_slice(&self.next_variates);

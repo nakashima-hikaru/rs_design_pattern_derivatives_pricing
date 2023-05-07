@@ -1,10 +1,10 @@
 use crate::chapter4::parameters::Parameters;
 use crate::chapter6::random2::Random;
 use crate::chapter7::exotic_engine::ExoticEngine;
-use crate::chapter7::exotic_engine::ExoticEngineField;
+use crate::chapter7::exotic_engine::ExoticEngineData;
 
 pub struct ExoticBSEngine<'a> {
-    exotic_engine_field: ExoticEngineField<'a>,
+    exotic_engine_field: ExoticEngineData<'a>,
     /// A random number generator
     the_generator: &'a mut dyn Random,
     /// Drifts
@@ -30,7 +30,7 @@ impl<'a> ExoticBSEngine<'a> {
     /// * `the_generator` - A random number generator
     /// * `spot` - A spot value of a stock
     pub fn new(
-        exotic_engine_field: ExoticEngineField<'a>,
+        exotic_engine_field: ExoticEngineData<'a>,
         d: impl Parameters,
         vol: impl Parameters,
         the_generator: &'a mut impl Random,
@@ -70,7 +70,7 @@ impl<'a> ExoticBSEngine<'a> {
 
 impl<'a> ExoticEngine for ExoticBSEngine<'a> {
     /// Returns the pointer of `self.exotic_engine_field`
-    fn as_exotic_engine_field(&self) -> &ExoticEngineField {
+    fn get_exotic_engine_data(&self) -> &ExoticEngineData {
         &self.exotic_engine_field
     }
 

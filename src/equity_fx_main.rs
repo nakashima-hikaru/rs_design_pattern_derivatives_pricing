@@ -7,7 +7,7 @@ use rust_design_pattern_derivative_pricing::chapter6::anti_thetic::AntiThetic;
 use rust_design_pattern_derivative_pricing::chapter6::park_miller::RandomParkMiller;
 use rust_design_pattern_derivative_pricing::chapter7::exotic_bs_engine::ExoticBSEngine;
 use rust_design_pattern_derivative_pricing::chapter7::exotic_engine::{
-    ExoticEngine, ExoticEngineField,
+    ExoticEngine, ExoticEngineData,
 };
 use rust_design_pattern_derivative_pricing::chapter7::path_dependent_asian::PathDependentAsian;
 
@@ -47,7 +47,7 @@ pub fn main() {
     let mut gatherer_two = ConvergenceTable::new(&mut gatherer);
     let mut generator = RandomParkMiller::new(number_of_dates, 1);
     let mut gen_two = AntiThetic::new(&mut generator);
-    let exotic_engine_field = ExoticEngineField::new(&the_option, &r_param);
+    let exotic_engine_field = ExoticEngineData::new(&the_option, &r_param);
     let mut the_engine =
         ExoticBSEngine::new(exotic_engine_field, d_param, vol_param, &mut gen_two, spot);
     the_engine.do_simulation(&mut gatherer_two, number_of_paths);
@@ -83,7 +83,7 @@ pub fn price(
     let mut gatherer_two = ConvergenceTable::new(&mut gatherer);
     let mut generator = RandomParkMiller::new(number_of_dates, 1);
     let mut gen_two = AntiThetic::new(&mut generator);
-    let exotic_engine_field = ExoticEngineField::new(&the_option, &r_param);
+    let exotic_engine_field = ExoticEngineData::new(&the_option, &r_param);
     let mut the_engine =
         ExoticBSEngine::new(exotic_engine_field, d_param, vol_param, &mut gen_two, spot);
     the_engine.do_simulation(&mut gatherer_two, number_of_paths);
@@ -120,7 +120,7 @@ pub fn test_main() {
     let mut gatherer_two = ConvergenceTable::new(&mut gatherer);
     let mut generator = RandomParkMiller::new(number_of_dates, 1);
     let mut gen_two = AntiThetic::new(&mut generator);
-    let exotic_engine_field = ExoticEngineField::new(&the_option, &r_param);
+    let exotic_engine_field = ExoticEngineData::new(&the_option, &r_param);
     let mut the_engine =
         ExoticBSEngine::new(exotic_engine_field, d_param, vol_param, &mut gen_two, spot);
     the_engine.do_simulation(&mut gatherer_two, number_of_paths);
