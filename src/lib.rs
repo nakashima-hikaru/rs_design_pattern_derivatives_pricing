@@ -1,4 +1,3 @@
-#![feature(is_sorted)]
 pub mod chapter1;
 mod chapter10;
 pub mod chapter2;

@@ -111,9 +111,7 @@ impl Parameters for ParametersPiecewiseConstant {
         let idx1 = discontinuous_points.upper_bound_by(|a| a.partial_cmp(&time1).unwrap());
         let idx2 = discontinuous_points.lower_bound_by(|a| a.partial_cmp(&time2).unwrap());
         if idx1 == discontinuous_points.len() && idx2 == discontinuous_points.len() {
-            (time2 - time1)
-                * constants[constants.len() - 1]
-                * constants[constants.len() - 1]
+            (time2 - time1) * constants[constants.len() - 1] * constants[constants.len() - 1]
         } else if idx2 == discontinuous_points.len() {
             return cached_square_integrals[cached_square_integrals.len() - 1]
                 - cached_square_integrals[idx1]
@@ -140,7 +138,7 @@ impl ParametersRightContinuousPiecewiseConstant {
     pub fn new(constants: &[f64], discontinuous_points: &[f64]) -> Self {
         // validation
         assert!(constants.len() == discontinuous_points.len() + 1);
-        assert!(discontinuous_points.is_sorted());
+        // assert!(discontinuous_points.is_sorted());
 
         let mut cached_integrals = Vec::<f64>::default();
         let mut cached_square_integrals = Vec::<f64>::default();
@@ -197,7 +195,7 @@ impl ParametersLeftContinuousPiecewiseConstant {
     pub fn new(constants: &[f64], discontinuous_points: &[f64]) -> Self {
         // validation
         assert!(constants.len() == discontinuous_points.len() + 1);
-        assert!(discontinuous_points.is_sorted());
+        // assert!(discontinuous_points.is_sorted());
 
         let mut cached_integrals = vec![0.0; 1];
         let mut cached_square_integrals = vec![0.0; 1];

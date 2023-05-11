@@ -1,49 +1,150 @@
 <!DOCTYPE html>
 <html lang="ja">
-<title>Calculator</title>
+<head>
+    <meta charset="UTF-8">
+    <title>Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
 
+        form {
+            max-width: 800px;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 30px 40px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        table {
+            margin: 0 auto;
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            font-weight: normal;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .input-field {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+
+        .input-field label {
+            margin-bottom: 5px;
+        }
+
+        .input-field input[type=text] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 16px;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #3e8e41;
+        }
+    </style>
+</head>
 <body>
-    <form action="/price" method="post">
-        <table border="0">
-            <tr>
-                <th>パラメータ</th>
-                <th>パラメータ値</th>
-            </tr>
-            <tr>
-                <th>満期</th>
-                <th><input type="text" name="expiry" value="30.0" /></th>
-            </tr>
-            <tr>
-                <th>ストライク</th>
-                <th><input type="text" name="strike" value="100.0" /></th>
-            </tr>
-            <tr>
-                <th>スポット</th>
-                <th><input type="text" name="spot" value="100.0" /></th>
-            </tr>
-            <tr>
-                <th>ボラティリティ</th>
-                <th><input type="text" name="vol" value="0.01" /></th>
-            </tr>
-            <tr>
-                <th>金利</th>
-                <th><input type="text" name="r" value="0.01" /></th>
-            </tr>
-            <tr>
-                <th>配当</th>
-                <th><input type="text" name="d" value="0.0" /></th>
-            </tr>
-            <tr>
-                <th>参照日数</th>
-                <th><input type="text" name="number_of_dates" value="100" /></th>
-            </tr>
-            <tr>
-                <th>モンテカルロパス数</th>
-                <th><input type="text" name="number_of_paths" value="100" /></th>
-            </tr>
-        </table>
-        <button type="submit">時価計算</button>
-    </form>
+<form action="/price" method="post">
+    <table>
+        <tr>
+            <td class="label-cell">
+                <label for="expiry">満期</label>
+            </td>
+            <td>
+                <input type="text" name="expiry" value="30.0"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="label-cell">
+                <label for="strike">ストライク</label>
+            </td>
+            <td>
+                <input type="text" name="strike" value="100.0"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="label-cell">
+                <label for="spot">スポット</label>
+            </td>
+            <td>
+                <input type="text" name="spot" value="100.0"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="label-cell">
+                <label for="vol">ボラティリティ</label>
+            </td>
+            <td>
+                <input type="text" name="vol" value="0.01"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="label-cell">
+                <label for="r">金利</label>
+            </td>
+            <td>
+                <input type="text" name="r" value="0.01"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="label-cell">
+                <label for="d">配当</label>
+            </td>
+            <td>
+                <input type="text" name="d" value="0.0"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="label-cell">
+                <label for="number_of_dates">参照日数</label>
+            </td>
+            <td>
+                <input type="text" name="number_of_dates" value="100"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="label-cell">
+                <label for="number_of_paths">モンテカルロパス数</label>
+            </td>
+            <td>
+                <input type="text" name="number_of_paths" value="100"/>
+            </td>
+        </tr>
+    </table>
+    <button type="submit">時価計算</button>
+</form>
 </body>
-
-</html>

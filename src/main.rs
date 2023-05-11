@@ -2,13 +2,15 @@ use axum::{response::Html, routing::get, routing::post, Router};
 use serde::Deserialize;
 use std::net::SocketAddr;
 
-pub mod equity_fx_main;
+mod equity_fx_main;
+
+type HtmlString = Html<&'static str>;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let app = Router::new()
-        .route("/", get(get_index))
-        .route("/price", post(post_price));
+        .route("/", get(index))
+        .route("/price", post(calculate_price));
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
 
@@ -20,7 +22,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-async fn get_index() -> Html<&'static str> {
+async fn index() -> HtmlString {
     Html(include_str!("web/index.html"))
 }
 
@@ -36,20 +38,17 @@ struct PriceParameters {
     number_of_paths: usize,
 }
 
-async fn post_price(form: axum::extract::Form<PriceParameters>) -> String {
-    let response = format!(
-        "The price is {}\n",
-        equity_fx_main::price(
-            form.expiry,
-            form.strike,
-            form.spot,
-            form.vol,
-            form.r,
-            form.d,
-            form.number_of_dates,
-            form.number_of_paths,
-        )
+async fn calculate_price(form: axum::extract::Form<PriceParameters>) -> String {
+    let result = equity_fx_main::price(
+        form.expiry,
+        form.strike,
+        form.spot,
+        form.vol,
+        form.r,
+        form.d,
+        form.number_of_dates,
+        form.number_of_paths,
     );
 
-    response
+    format!("The price is {}\n", result)
 }
