@@ -26,6 +26,5 @@ pub fn simple_montecarlo4(
             the_option.option_payoff(this_spot)
         })
         .sum::<f64>();
-    let mean = payoff_sum / number_of_paths as f64 * (-drift).exp();
-    mean
+    payoff_sum / number_of_paths as f64 * (-drift).exp()
 }

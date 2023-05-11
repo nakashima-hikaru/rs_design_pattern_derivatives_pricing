@@ -75,8 +75,8 @@ pub trait ExoticEngine {
             let mut locked_self_ptr = self_ptr.write().unwrap();
             let mut locked_the_gatherer_ptr = the_gatherer_ptr.write().unwrap();
             let mut locked_spot_values_ptr = spot_values_ptr.write().unwrap();
-            (*locked_self_ptr).get_one_path(&mut *locked_spot_values_ptr);
-            let this_value = (*locked_self_ptr).do_one_path(&*locked_spot_values_ptr);
+            (*locked_self_ptr).get_one_path(&mut locked_spot_values_ptr);
+            let this_value = (*locked_self_ptr).do_one_path(&locked_spot_values_ptr);
             (*locked_the_gatherer_ptr).dump_one_result(this_value);
         });
     }

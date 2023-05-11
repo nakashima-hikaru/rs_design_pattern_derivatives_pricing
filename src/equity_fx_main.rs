@@ -53,9 +53,9 @@ pub fn main() {
     the_engine.do_simulation(&mut gatherer_two, number_of_paths);
     let results = gatherer_two.get_results_so_far();
     println!("\nFor the Asian call price the results are \n");
-    for i in 0..results.len() {
-        for j in 0..results[i].len() {
-            print!("{} ", results[i][j]);
+    for result in &results {
+        for data in result {
+            print!("{} ", data);
         }
         println!("\n");
     }
@@ -89,9 +89,9 @@ pub fn price(
     the_engine.do_simulation(&mut gatherer_two, number_of_paths);
     let results = gatherer_two.get_results_so_far();
     println!("\nFor the Asian call price the results are \n");
-    for i in 0..results.len() {
-        for j in 0..results[i].len() {
-            print!("{} ", results[i][j]);
+    for result in &results {
+        for data in result {
+            print!("{} ", data);
         }
         println!("\n");
     }

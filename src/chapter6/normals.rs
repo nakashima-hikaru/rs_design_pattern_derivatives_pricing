@@ -6,10 +6,10 @@ pub fn normal_density(x: f64) -> f64 {
 
 #[inline(always)]
 pub fn inverse_cumulative_normal(u: f64) -> f64 {
-    if u < -1.0 || u > 1.0 {
+    if !(-1.0..=1.0).contains(&u) {
         panic!("Parameters of inverse_cumulative must be within the interval [-1, 1].");
     }
-    if 0.5 <= u && u <= 0.92 {
+    if (0.5..=0.92).contains(&u) {
         const A: [f64; 4] = [
             2.50662823884,
             -18.61500062529,
@@ -59,17 +59,15 @@ pub fn cumulative_normal(x: f64) -> f64 {
     let mut result: f64;
     if x < -7.0 {
         result = normal_density(x) / (1.0 + x * x).sqrt();
+    } else if x > 7.0 {
+        result = 1.0 - cumulative_normal(-x);
     } else {
-        if x > 7.0 {
-            result = 1.0 - cumulative_normal(-x);
-        } else {
-            let tmp = 1.0 / (1.0 + 0.2316419 * x.abs());
-            result = 1.0
-                - normal_density(x)
-                    * (tmp * (A[0] + tmp * (A[1] + tmp * (A[2] + tmp * (A[3] + tmp * A[4])))));
-            if x <= 0.0 {
-                result = 1.0 - result;
-            }
+        let tmp = 1.0 / (1.0 + 0.2316419 * x.abs());
+        result = 1.0
+            - normal_density(x)
+                * (tmp * (A[0] + tmp * (A[1] + tmp * (A[2] + tmp * (A[3] + tmp * A[4])))));
+        if x <= 0.0 {
+            result = 1.0 - result;
         }
     }
     result

@@ -82,9 +82,13 @@ impl<'a> ExoticEngine for ExoticBSEngine<'a> {
     fn get_one_path(&mut self, spot_values: &mut [f64]) {
         self.the_generator.get_gaussians(&mut self.variates);
         let mut current_log_spot = self.log_spot;
-        for j in 0..self.number_of_times {
+        for (j, spot_value) in spot_values
+            .iter_mut()
+            .enumerate()
+            .take(self.number_of_times)
+        {
             current_log_spot += self.drifts[j] + self.standard_deviations[j] * self.variates[j];
-            spot_values[j] = current_log_spot.exp();
+            *spot_value = current_log_spot.exp();
         }
     }
 }

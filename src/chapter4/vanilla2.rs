@@ -18,12 +18,11 @@ pub struct VanillaOption<'a> {
 impl<'a> VanillaOption<'a> {
     pub fn new(the_payoff_ptr: &'a impl Payoff, expiry: f64) -> Self {
         Self {
-            the_payoff_ptr: the_payoff_ptr.clone(),
+            the_payoff_ptr,
             expiry,
         }
     }
     pub fn get_expiry(&self) -> f64 {
-        self.the_payoff_ptr;
         self.expiry
     }
     pub fn option_payoff(&self, spot: f64) -> f64 {

@@ -75,8 +75,8 @@ impl Random for RandomParkMiller {
 
     /// Set uniform variables to `variates`.
     fn get_uniforms(&mut self, variates: &mut [f64]) {
-        for i in 0..self.get_dimensionality() {
-            variates[i] = (self.generator.get_one_random_integer() as f64) * self.reciprocal;
+        for variate in variates.iter_mut().take(self.get_dimensionality()) {
+            *variate = (self.generator.get_one_random_integer() as f64) * self.reciprocal;
         }
     }
 

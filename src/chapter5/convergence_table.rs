@@ -24,7 +24,7 @@ impl<'a> StatisticsMC for ConvergenceTable<'a> {
         self.paths_done += 1;
         if self.paths_done == self.stopping_point {
             self.stopping_point *= 2;
-            let this_result = self.inner.get_results_so_far().clone();
+            let this_result = self.inner.get_results_so_far();
             for mut res in this_result {
                 res.push(self.paths_done as f64);
                 self.results_so_far.push(res);
