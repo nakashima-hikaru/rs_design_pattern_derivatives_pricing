@@ -47,9 +47,9 @@ pub fn main() {
     let mut gatherer_two = ConvergenceTable::new(&mut gatherer);
     let mut generator = RandomParkMiller::new(number_of_dates, 1);
     let mut gen_two = AntiThetic::new(&mut generator);
-    let exotic_engine_field = ExoticEngineData::new(&the_option, &r_param);
+    let exotic_engine_data = ExoticEngineData::new(&the_option, &r_param);
     let mut the_engine =
-        ExoticBSEngine::new(exotic_engine_field, d_param, vol_param, &mut gen_two, spot);
+        ExoticBSEngine::new(exotic_engine_data, d_param, vol_param, &mut gen_two, spot);
     the_engine.do_simulation(&mut gatherer_two, number_of_paths);
     let results = gatherer_two.get_results_so_far();
     println!("\nFor the Asian call price the results are \n");
@@ -83,9 +83,9 @@ pub fn price(
     let mut gatherer_two = ConvergenceTable::new(&mut gatherer);
     let mut generator = RandomParkMiller::new(number_of_dates, 1);
     let mut gen_two = AntiThetic::new(&mut generator);
-    let exotic_engine_field = ExoticEngineData::new(&the_option, &r_param);
+    let exotic_engine_data = ExoticEngineData::new(&the_option, &r_param);
     let mut the_engine =
-        ExoticBSEngine::new(exotic_engine_field, d_param, vol_param, &mut gen_two, spot);
+        ExoticBSEngine::new(exotic_engine_data, d_param, vol_param, &mut gen_two, spot);
     the_engine.do_simulation(&mut gatherer_two, number_of_paths);
     let results = gatherer_two.get_results_so_far();
     println!("\nFor the Asian call price the results are \n");
@@ -120,9 +120,9 @@ pub fn test_main() {
     let mut gatherer_two = ConvergenceTable::new(&mut gatherer);
     let mut generator = RandomParkMiller::new(number_of_dates, 1);
     let mut gen_two = AntiThetic::new(&mut generator);
-    let exotic_engine_field = ExoticEngineData::new(&the_option, &r_param);
+    let exotic_engine_data = ExoticEngineData::new(&the_option, &r_param);
     let mut the_engine =
-        ExoticBSEngine::new(exotic_engine_field, d_param, vol_param, &mut gen_two, spot);
+        ExoticBSEngine::new(exotic_engine_data, d_param, vol_param, &mut gen_two, spot);
     the_engine.do_simulation(&mut gatherer_two, number_of_paths);
     let results = gatherer_two.get_results_so_far();
     assert_eq!(

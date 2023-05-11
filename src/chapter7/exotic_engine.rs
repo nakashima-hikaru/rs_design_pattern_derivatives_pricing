@@ -51,7 +51,7 @@ impl<'a> ExoticEngineData<'a> {
 }
 
 pub trait ExoticEngine {
-    /// Returns the pointer of `self.exotic_engine_field`.
+    /// Returns the pointer of `self.exotic_engine_data`.
     fn get_exotic_engine_data(&self) -> &ExoticEngineData;
 
     fn get_one_path(&mut self, variates: &mut [f64]);

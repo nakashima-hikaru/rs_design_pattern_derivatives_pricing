@@ -4,7 +4,7 @@ use crate::chapter7::exotic_engine::ExoticEngine;
 use crate::chapter7::exotic_engine::ExoticEngineData;
 
 pub struct ExoticBSEngine<'a> {
-    exotic_engine_field: ExoticEngineData<'a>,
+    exotic_engine_data: ExoticEngineData<'a>,
     /// A random number generator
     the_generator: &'a mut dyn Random,
     /// Drifts
@@ -24,19 +24,19 @@ impl<'a> ExoticBSEngine<'a> {
     ///
     /// # Arguments
     ///
-    /// * `exotic_engine_field` - Common information on exotic engine
+    /// * `exotic_engine_data` - Common information on exotic engine
     /// * `d` - A dividend
     /// * `vol` - A volatility
     /// * `the_generator` - A random number generator
     /// * `spot` - A spot value of a stock
     pub fn new(
-        exotic_engine_field: ExoticEngineData<'a>,
+        exotic_engine_data: ExoticEngineData<'a>,
         d: impl Parameters,
         vol: impl Parameters,
         the_generator: &'a mut impl Random,
         spot: f64,
     ) -> ExoticBSEngine<'a> {
-        let times = exotic_engine_field.get_the_product().get_look_at_times();
+        let times = exotic_engine_data.get_the_product().get_look_at_times();
         let number_of_times = times.len();
 
         the_generator.reset_dimensionality(number_of_times);
@@ -44,20 +44,20 @@ impl<'a> ExoticBSEngine<'a> {
         let mut standard_deviations = vec![0.0; number_of_times];
 
         let variance = vol.integral_square(0.0, times[0]);
-        drifts[0] = exotic_engine_field.get_r().integral(0.0, times[0])
+        drifts[0] = exotic_engine_data.get_r().integral(0.0, times[0])
             - d.integral(0.0, times[0])
             - 0.5 * variance;
         standard_deviations[0] = variance.sqrt();
         for j in 1..number_of_times {
             let this_variance = vol.integral_square(times[j - 1], times[j]);
-            drifts[j] = exotic_engine_field.get_r().integral(times[j - 1], times[j])
+            drifts[j] = exotic_engine_data.get_r().integral(times[j - 1], times[j])
                 - d.integral(times[j - 1], times[j])
                 - 0.5 * this_variance;
             standard_deviations[j] = this_variance.sqrt();
         }
         let variates = vec![0.0; number_of_times];
         ExoticBSEngine {
-            exotic_engine_field,
+            exotic_engine_data,
             the_generator,
             drifts,
             standard_deviations,
@@ -69,9 +69,9 @@ impl<'a> ExoticBSEngine<'a> {
 }
 
 impl<'a> ExoticEngine for ExoticBSEngine<'a> {
-    /// Returns the pointer of `self.exotic_engine_field`
+    /// Returns the pointer of `self.exotic_engine_data`
     fn get_exotic_engine_data(&self) -> &ExoticEngineData {
-        &self.exotic_engine_field
+        &self.exotic_engine_data
     }
 
     /// Stores spot values on a path.
