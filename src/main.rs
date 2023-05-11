@@ -1,30 +1,28 @@
-use actix_web::{web, App, HttpResponse, HttpServer};
+use axum::{response::Html, routing::get, routing::post, Router};
+use serde::Deserialize;
+use std::net::SocketAddr;
+
 pub mod equity_fx_main;
 
-#[actix_web::main]
-async fn main() -> std::io::Result<()> {
-    let server = HttpServer::new(|| {
-        App::new()
-            .route("/", web::get().to(get_index))
-            .route("/price", web::post().to(post_price))
-    });
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let app = Router::new()
+        .route("/", get(get_index))
+        .route("/price", post(post_price));
+
+    let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
 
     println!("Serving on http://localhost:3000...");
-    server
-        .bind("127.0.0.1:3000")
-        .expect("error binding server to address")
-        .run()
-        .await
+    axum::Server::bind(&addr)
+        .serve(app.into_make_service())
+        .await?;
+
+    Ok(())
 }
 
-async fn get_index() -> HttpResponse {
-    HttpResponse::Ok()
-        .content_type("text/html; charset=utf-8")
-        .body(include_str!("web/index.html"))
+async fn get_index() -> Html<&'static str> {
+    Html(include_str!("web/index.html"))
 }
-
-use equity_fx_main::price;
-use serde::Deserialize;
 
 #[derive(Deserialize)]
 struct PriceParameters {
@@ -38,10 +36,10 @@ struct PriceParameters {
     number_of_paths: usize,
 }
 
-async fn post_price(form: web::Form<PriceParameters>) -> HttpResponse {
+async fn post_price(form: axum::extract::Form<PriceParameters>) -> String {
     let response = format!(
         "The price is {}\n",
-        price(
+        equity_fx_main::price(
             form.expiry,
             form.strike,
             form.spot,
@@ -53,5 +51,5 @@ async fn post_price(form: web::Form<PriceParameters>) -> HttpResponse {
         )
     );
 
-    HttpResponse::Ok().content_type("text/html").body(response)
+    response
 }
