@@ -86,7 +86,7 @@ impl Parameters for ParametersPiecewiseConstant {
         let idx1 = discontinuous_points.upper_bound_by(|a| a.partial_cmp(&time1).unwrap());
         let idx2 = discontinuous_points.lower_bound_by(|a| a.partial_cmp(&time2).unwrap());
         if idx1 == discontinuous_points.len() && idx2 == discontinuous_points.len() {
-            return (time2 - time1) * constants[constants.len() - 1];
+            (time2 - time1) * constants[constants.len() - 1]
         } else if idx2 == discontinuous_points.len() {
             return cached_integrals[cached_integrals.len() - 1] - cached_integrals[idx1]
                 + (discontinuous_points[idx1] - time1) * constants[idx1]
@@ -111,9 +111,9 @@ impl Parameters for ParametersPiecewiseConstant {
         let idx1 = discontinuous_points.upper_bound_by(|a| a.partial_cmp(&time1).unwrap());
         let idx2 = discontinuous_points.lower_bound_by(|a| a.partial_cmp(&time2).unwrap());
         if idx1 == discontinuous_points.len() && idx2 == discontinuous_points.len() {
-            return (time2 - time1)
+            (time2 - time1)
                 * constants[constants.len() - 1]
-                * constants[constants.len() - 1];
+                * constants[constants.len() - 1]
         } else if idx2 == discontinuous_points.len() {
             return cached_square_integrals[cached_square_integrals.len() - 1]
                 - cached_square_integrals[idx1]
