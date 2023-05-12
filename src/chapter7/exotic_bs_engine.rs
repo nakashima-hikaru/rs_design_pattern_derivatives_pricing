@@ -2,6 +2,7 @@ use crate::chapter4::parameters::Parameters;
 use crate::chapter6::random2::Random;
 use crate::chapter7::exotic_engine::ExoticEngine;
 use crate::chapter7::exotic_engine::ExoticEngineData;
+use crate::chapter7::path_dependent::PathDependent;
 
 pub struct ExoticBSEngine<'a> {
     exotic_engine_data: ExoticEngineData<'a>,
@@ -30,12 +31,14 @@ impl<'a> ExoticBSEngine<'a> {
     /// * `the_generator` - A random number generator
     /// * `spot` - A spot value of a stock
     pub fn new(
-        exotic_engine_data: ExoticEngineData<'a>,
+        the_product: &'a impl PathDependent,
+        r: &'a impl Parameters,
         d: impl Parameters,
         vol: impl Parameters,
         the_generator: &'a mut impl Random,
         spot: f64,
     ) -> ExoticBSEngine<'a> {
+        let exotic_engine_data = ExoticEngineData::new(the_product, r);
         let times = exotic_engine_data.get_the_product().get_look_at_times();
         let number_of_times = times.len();
 

@@ -15,7 +15,6 @@ pub trait Parameters: Send + Sync {
     }
 }
 
-#[derive(Clone)]
 pub struct ParametersConstant {
     constant: f64,
     constant_square: f64,
