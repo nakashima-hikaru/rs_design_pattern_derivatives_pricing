@@ -1,17 +1,18 @@
 use crate::chapter4::payoff3::Payoff;
+use once_cell::sync::Lazy;
 use std::collections::HashMap;
 
-type CreatePayoffFunction = dyn Fn(f64) -> Box<dyn Payoff>;
+type CreatePayoffFunction = dyn Fn(f64) -> Box<dyn Payoff> + Sync + Send;
 
+#[derive(Default)]
 pub struct PayoffFactory {
     the_creator_functions: HashMap<String, Box<CreatePayoffFunction>>,
 }
 
 impl PayoffFactory {
-    pub fn instance() -> Self {
-        PayoffFactory {
-            the_creator_functions: HashMap::new(),
-        }
+    pub fn instance() -> &'static mut PayoffFactory {
+        static mut FACTORY: Lazy<PayoffFactory> = Lazy::new(PayoffFactory::default);
+        unsafe { &mut FACTORY }
     }
 
     pub fn register_payoff(

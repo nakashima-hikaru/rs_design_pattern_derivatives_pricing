@@ -1,4 +1,5 @@
 use rust_design_pattern_derivative_pricing::chapter10::payoff_factory::PayoffFactory;
+use rust_design_pattern_derivative_pricing::chapter10::payoff_registration::register_all_payoffs;
 use std::io;
 
 fn main() {
@@ -11,6 +12,8 @@ fn main() {
     let name = name.trim();
 
     let payoff_factory = PayoffFactory::instance();
+    register_all_payoffs();
+
     let payoff = payoff_factory.create_payoff(name, strike);
 
     if let Some(payoff) = payoff {

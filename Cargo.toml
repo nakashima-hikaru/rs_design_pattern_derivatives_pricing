@@ -15,7 +15,3 @@ serde = { version = "1.0.162", features = ["derive"] }
 approx = "0.5.1"
 axum = "0.6.1"
 tokio = { version = "1.28.0", features = ["macros", "rt-multi-thread"] }
-
-#[[bin]]
-#name = "simple-mc-main5"
-#path = "src/simple_mc_main5.rs"

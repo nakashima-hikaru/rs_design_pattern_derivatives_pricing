@@ -12,7 +12,7 @@ impl<T: 'static + Payoff> PayoffHelper<T> {
     }
 
     pub fn new(payoff_id: String) -> Self {
-        let mut the_payoff_factory = PayoffFactory::instance();
+        let the_payoff_factory = PayoffFactory::instance();
         the_payoff_factory.register_payoff(payoff_id, Box::new(PayoffHelper::<T>::create));
         Self {
             _phantom: PhantomData,
