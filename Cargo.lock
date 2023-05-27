@@ -474,9 +474,11 @@ version = "0.1.0"
 dependencies = [
  "approx",
  "axum",
+ "once_cell",
  "rand",
  "rayon",
  "serde",
+ "text_io",
  "tokio",
 ]
 
@@ -576,6 +578,12 @@ name = "sync_wrapper"
 version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2047c6ded9c721764247e62cd3b03c09ffc529b2ba5b10ec482ae507a4a70160"
+
+[[package]]
+name = "text_io"
+version = "0.1.12"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d5f0c8eb2ad70c12a6a69508f499b3051c924f4b1cfeae85bfad96e6bc5bba46"
 
 [[package]]
 name = "tokio"

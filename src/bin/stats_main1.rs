@@ -1,5 +1,5 @@
 use rust_design_pattern_derivative_pricing::chapter4::parameters::ParametersConstant;
-use rust_design_pattern_derivative_pricing::chapter4::payoff3::PayoffCall;
+use rust_design_pattern_derivative_pricing::chapter4::payoff3::{Payoff, PayoffCall};
 use rust_design_pattern_derivative_pricing::chapter4::vanilla3::VanillaOption;
 use rust_design_pattern_derivative_pricing::chapter5::mc_statistics::{
     StatisticsMC, StatisticsMean,
@@ -25,24 +25,24 @@ pub fn main() {
     println!("\nNumber of paths\n");
     let number_of_paths = text_io::read!();
 
-    let the_payoff = PayoffBridge::new(Box::new(PayoffCall::new(strike)));
-    let the_option = VanillaOption::new(the_payoff, expiry);
-    let vol_param = Parameters::from(vol);
-    let r_param = Parameters::from(r);
+    let the_payoff = PayoffCall::new(strike);
+    let the_option = VanillaOption::new(&the_payoff, expiry);
+    let vol_param = ParametersConstant::new(vol);
+    let r_param = ParametersConstant::new(r);
     let mut gatherer = StatisticsMean::default();
     simple_montecarlo5(
         &the_option,
         spot,
-        &vol_param,
-        &r_param,
+        vol_param,
+        r_param,
         number_of_paths,
         &mut gatherer,
     );
     let results = gatherer.get_results_so_far();
     println!("`\nFor the call price the results are \n");
-    for i in 0..results.len() {
-        for j in 0..results[i].len() {
-            print!("{} ", results[i][j]);
+    for result in &results {
+        for data in result {
+            print!("{} ", data);
         }
         println!("\n");
     }

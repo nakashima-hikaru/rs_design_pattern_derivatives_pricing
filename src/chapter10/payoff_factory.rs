@@ -23,7 +23,7 @@ impl PayoffFactory {
             .insert(payoff_id, creator_function);
     }
 
-    fn create_payoff(&self, payoff_id: &str, strike: f64) -> Option<Box<dyn Payoff>> {
+    pub fn create_payoff(&self, payoff_id: &str, strike: f64) -> Option<Box<dyn Payoff>> {
         if let Some(creator_function) = self.the_creator_functions.get(payoff_id) {
             Some(creator_function(strike))
         } else {

@@ -8,8 +8,8 @@ use crate::chapter6::random2::Random;
 pub fn simple_montecarlo6(
     the_option: &VanillaOption,
     spot: f64,
-    vol: impl Parameters,
-    r: impl Parameters,
+    vol: &impl Parameters,
+    r: &impl Parameters,
     number_of_paths: u64,
     gatherer: &mut impl StatisticsMC,
     generator: &mut impl Random,

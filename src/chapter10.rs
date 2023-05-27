@@ -1,2 +1,3 @@
 mod payoff_constructible;
-mod payoff_factory;
+pub mod payoff_factory;
+mod payoff_registration;
