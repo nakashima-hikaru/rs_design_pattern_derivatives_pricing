@@ -1,4 +1,6 @@
-use rust_design_pattern_derivative_pricing::chapter3::{double_digital::PayoffDoubleDigital, simple_mc2::simple_montecarlo2};
+use rust_design_pattern_derivative_pricing::chapter3::{
+    double_digital::PayoffDoubleDigital, simple_mc2::simple_montecarlo2,
+};
 pub fn main() {
     println!("\nEnter expiry\n");
     let expiry = text_io::read!();

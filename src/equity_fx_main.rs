@@ -1,4 +1,5 @@
 use rust_design_pattern_derivative_pricing::chapter4::parameters::ParametersConstant;
+use rust_design_pattern_derivative_pricing::chapter4::payoff3::Payoff;
 use rust_design_pattern_derivative_pricing::chapter4::payoff3::PayoffCall;
 use rust_design_pattern_derivative_pricing::chapter5::convergence_table::ConvergenceTable;
 use rust_design_pattern_derivative_pricing::chapter5::mc_statistics::StatisticsMC;
@@ -9,6 +10,7 @@ use rust_design_pattern_derivative_pricing::chapter7::exotic_bs_engine::ExoticBS
 use rust_design_pattern_derivative_pricing::chapter7::exotic_engine::ExoticEngine;
 use rust_design_pattern_derivative_pricing::chapter7::path_dependent_asian::PathDependentAsian;
 
+#[allow(clippy::too_many_arguments)]
 pub fn price(
     expiry: f64,
     strike: f64,

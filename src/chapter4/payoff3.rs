@@ -1,6 +1,9 @@
 //! payoff2.rsとの違い: Clone traitを実装することで値渡しにした。
 
 pub trait Payoff: Send + Sync {
+    fn new(strike: f64) -> Self
+    where
+        Self: Sized;
     fn calculate(&self, spot: f64) -> f64;
 }
 
@@ -9,13 +12,10 @@ pub struct PayoffCall {
     strike: f64,
 }
 
-impl PayoffCall {
-    pub fn new(strike: f64) -> Self {
+impl Payoff for PayoffCall {
+    fn new(strike: f64) -> Self {
         Self { strike }
     }
-}
-
-impl Payoff for PayoffCall {
     fn calculate(&self, spot: f64) -> f64 {
         (spot - self.strike).max(0.0)
     }
@@ -26,13 +26,10 @@ pub struct PayoffPut {
     strike: f64,
 }
 
-impl PayoffPut {
-    pub fn new(strike: f64) -> Self {
+impl Payoff for PayoffPut {
+    fn new(strike: f64) -> Self {
         Self { strike }
     }
-}
-
-impl Payoff for PayoffPut {
     fn calculate(&self, spot: f64) -> f64 {
         (self.strike - spot).max(0.0)
     }
