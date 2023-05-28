@@ -1,5 +1,5 @@
 use crate::chapter4::payoff3::Payoff;
-use once_cell::sync::Lazy;
+use once_cell::sync::OnceCell;
 use std::{
     collections::HashMap,
     sync::{Arc, Mutex, RwLock},
@@ -7,7 +7,7 @@ use std::{
 
 type CreatePayoffFunction = dyn Fn(f64) -> Box<dyn Payoff> + Send + Sync;
 
-pub static FACTORY: Lazy<Mutex<PayoffFactory>> = Lazy::new(|| Mutex::new(PayoffFactory::default()));
+pub static FACTORY: OnceCell<Mutex<PayoffFactory>> = OnceCell::new();
 
 #[derive(Default)]
 pub struct PayoffFactory {
@@ -15,8 +15,8 @@ pub struct PayoffFactory {
 }
 
 impl PayoffFactory {
-    pub fn instance() -> &'static Lazy<Mutex<PayoffFactory>> {
-        &FACTORY
+    pub fn instance() -> &'static Mutex<PayoffFactory> {
+        FACTORY.get_or_init(|| Mutex::new(PayoffFactory::default()))
     }
 
     pub fn register_payoff(
