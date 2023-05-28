@@ -3,6 +3,7 @@ use rust_design_pattern_derivative_pricing::chapter10::payoff_registration::regi
 use std::io;
 
 fn main() {
+    register_all_payoffs();
     println!("strike");
     let mut strike = String::new();
     io::stdin().read_line(&mut strike).unwrap();
@@ -13,7 +14,6 @@ fn main() {
     io::stdin().read_line(&mut name).unwrap();
     let name = name.trim();
 
-    register_all_payoffs();
     let payoff_factory = PayoffFactory::instance().lock().unwrap();
     let payoff = payoff_factory.create_payoff(name, strike);
     if let Some(payoff) = payoff {

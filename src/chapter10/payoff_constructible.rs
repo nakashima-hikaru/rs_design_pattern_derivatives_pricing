@@ -13,12 +13,10 @@ impl<T: 'static + Payoff> PayoffHelper<T> {
     }
 
     pub fn new(payoff_id: String) -> Self {
-        // let the_payoff_factory = &mut PayoffFactory::instance();
-
-        // the_payoff_factory
-        let mut t = PayoffFactory::instance().lock().unwrap();
-
-        t.register_payoff(payoff_id, Arc::new(RwLock::new(PayoffHelper::<T>::create)));
+        PayoffFactory::instance()
+            .lock()
+            .unwrap()
+            .register_payoff(payoff_id, Arc::new(RwLock::new(PayoffHelper::<T>::create)));
         Self {
             _phantom: PhantomData,
         }
