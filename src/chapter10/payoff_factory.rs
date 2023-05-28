@@ -32,6 +32,7 @@ impl PayoffFactory {
         if let Some(creator_function) = self.the_creator_functions.get(payoff_id) {
             Some(creator_function.read().unwrap()(strike))
         } else {
+            println!("{} is an unknown payoff", payoff_id);
             None
         }
     }
