@@ -1,7 +1,7 @@
 use crate::chapter10::payoff_factory::PayoffFactory;
 use crate::chapter4::payoff3::Payoff;
 use std::marker::PhantomData;
-use std::sync::{Arc, Mutex};
+use std::sync::Arc;
 
 pub struct PayoffHelper<T: 'static + Payoff> {
     _phantom: PhantomData<T>,
