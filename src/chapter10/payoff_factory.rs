@@ -1,4 +1,3 @@
-use crate::chapter10::payoff_registration::register_all_payoffs;
 use crate::chapter4::payoff3::Payoff;
 use once_cell::sync::OnceCell;
 use std::{
@@ -23,7 +22,7 @@ impl PayoffFactory {
             Mutex::new(PayoffFactory::default())
         });
         if init {
-            register_all_payoffs();
+            PayoffFactory::register();
         }
         ret
     }
