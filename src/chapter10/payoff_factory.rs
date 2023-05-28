@@ -1,3 +1,4 @@
+use crate::chapter10::payoff_registration::register_all_payoffs;
 use crate::chapter4::payoff3::Payoff;
 use once_cell::sync::OnceCell;
 use std::{
@@ -16,7 +17,15 @@ pub struct PayoffFactory {
 
 impl PayoffFactory {
     pub fn instance() -> &'static Mutex<PayoffFactory> {
-        FACTORY.get_or_init(|| Mutex::new(PayoffFactory::default()))
+        let mut init = false;
+        let ret = FACTORY.get_or_init(|| {
+            init = true;
+            Mutex::new(PayoffFactory::default())
+        });
+        if init {
+            register_all_payoffs();
+        }
+        ret
     }
 
     pub fn register_payoff(
