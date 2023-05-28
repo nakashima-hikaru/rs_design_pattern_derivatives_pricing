@@ -16,7 +16,7 @@ impl<T: 'static + Payoff> PayoffHelper<T> {
         PayoffFactory::instance()
             .lock()
             .unwrap()
-            .register_payoff(payoff_id, Arc::new(Mutex::new(PayoffHelper::<T>::create)));
+            .register_payoff(payoff_id, Arc::new(PayoffHelper::<T>::create));
         Self {
             _phantom: PhantomData,
         }

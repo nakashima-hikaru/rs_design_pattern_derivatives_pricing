@@ -12,7 +12,7 @@ pub static FACTORY: OnceCell<Mutex<PayoffFactory>> = OnceCell::new();
 
 #[derive(Default)]
 pub struct PayoffFactory {
-    the_creator_functions: HashMap<String, Arc<Mutex<CreatePayoffFunction>>>,
+    the_creator_functions: HashMap<String, Arc<CreatePayoffFunction>>,
 }
 
 impl PayoffFactory {
@@ -31,7 +31,7 @@ impl PayoffFactory {
     pub fn register_payoff(
         &mut self,
         payoff_id: String,
-        creator_function: Arc<Mutex<CreatePayoffFunction>>,
+        creator_function: Arc<CreatePayoffFunction>,
     ) {
         self.the_creator_functions
             .insert(payoff_id, creator_function);
@@ -39,7 +39,7 @@ impl PayoffFactory {
 
     pub fn create_payoff(&self, payoff_id: &str, strike: f64) -> Option<Box<dyn Payoff>> {
         if let Some(creator_function) = self.the_creator_functions.get(payoff_id) {
-            Some(creator_function.lock().unwrap()(strike))
+            Some(creator_function(strike))
         } else {
             println!("{} is an unknown payoff", payoff_id);
             None
