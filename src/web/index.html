@@ -38,12 +38,6 @@
             background-color: #f2f2f2;
         }
 
-        .input-field {
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 20px;
-        }
-
         .input-field label {
             margin-bottom: 5px;
         }
@@ -74,6 +68,17 @@
 <body>
 <form action="/price" method="post">
     <table>
+        <tr>
+            <td class="label-cell">
+                <label for="option_type">オプションタイプ</label>
+            </td>
+            <td>
+                <select id="option_type" name="option_type">
+                    <option value="call">call</option>
+                    <option value="put">put</option>
+                </select>
+            </td>
+        </tr>
         <tr>
             <td class="label-cell">
                 <label for="expiry">満期</label>

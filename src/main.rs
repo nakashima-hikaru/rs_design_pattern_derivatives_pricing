@@ -28,6 +28,7 @@ async fn index() -> HtmlString {
 
 #[derive(Deserialize)]
 struct PriceParameters {
+    option_type: String,
     expiry: f64,
     strike: f64,
     spot: f64,
@@ -40,6 +41,7 @@ struct PriceParameters {
 
 async fn calculate_price(form: axum::extract::Form<PriceParameters>) -> String {
     let result = equity_fx_main::price(
+        form.option_type.as_str(),
         form.expiry,
         form.strike,
         form.spot,

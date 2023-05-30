@@ -14,7 +14,7 @@ impl<'a> PathDependentAsian<'a> {
     pub fn new(
         look_at_times: Vec<f64>,
         delivery_time: f64,
-        the_payoff: &'a impl Payoff,
+        the_payoff: &'a dyn Payoff,
     ) -> PathDependentAsian<'a> {
         PathDependentAsian {
             delivery_time,
