@@ -3,7 +3,7 @@ use crate::chapter4::payoff3::Payoff;
 use std::marker::PhantomData;
 use std::sync::Arc;
 
-pub struct PayoffHelper<T: 'static + Payoff> {
+pub struct PayoffHelper<T: Payoff> {
     _phantom: PhantomData<T>,
 }
 

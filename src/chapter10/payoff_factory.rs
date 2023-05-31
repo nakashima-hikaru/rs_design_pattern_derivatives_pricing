@@ -7,7 +7,7 @@ use std::{
 
 type CreatePayoffFunction = dyn Fn(f64) -> Box<dyn Payoff> + Send + Sync;
 
-pub static FACTORY: OnceCell<Mutex<PayoffFactory>> = OnceCell::new();
+static FACTORY: OnceCell<Mutex<PayoffFactory>> = OnceCell::new();
 
 #[derive(Default)]
 pub struct PayoffFactory {
