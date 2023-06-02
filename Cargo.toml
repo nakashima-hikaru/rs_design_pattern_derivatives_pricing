@@ -9,9 +9,10 @@ edition = "2021"
 text_io = "0.1.12"
 rand = "0.8.5"
 rayon = "1.7.0"
-once_cell = "1.17.1"
-
 serde = { version = "1.0.162", features = ["derive"] }
 approx = "0.5.1"
 axum = "0.6.1"
 tokio = { version = "1.28.0", features = ["macros", "rt-multi-thread"] }
+
+[dev-dependencies]
+approx = "0.5.1"

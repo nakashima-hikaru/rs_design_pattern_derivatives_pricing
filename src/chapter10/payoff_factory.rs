@@ -1,13 +1,13 @@
 use crate::chapter4::payoff3::Payoff;
-use once_cell::sync::OnceCell;
 use std::{
     collections::HashMap,
+    sync::OnceLock,
     sync::{Arc, Mutex},
 };
 
 type CreatePayoffFunction = dyn Fn(f64) -> Box<dyn Payoff> + Send + Sync;
 
-static FACTORY: OnceCell<Mutex<PayoffFactory>> = OnceCell::new();
+static FACTORY: OnceLock<Mutex<PayoffFactory>> = OnceLock::new();
 
 #[derive(Default)]
 pub struct PayoffFactory {
