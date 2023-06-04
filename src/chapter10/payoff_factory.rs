@@ -1,3 +1,4 @@
+use crate::chapter10::payoff_registration_error::ErrorType::NotFound;
 use crate::chapter10::payoff_registration_error::RegistrationError;
 use crate::chapter4::payoff3::Payoff;
 use std::{
@@ -37,12 +38,15 @@ impl PayoffFactory {
             .insert(payoff_id.to_string(), creator_function);
     }
 
-    pub fn create_payoff(&self, payoff_id: &str, strike: f64) -> Option<Box<dyn Payoff>> {
+    pub fn create_payoff(
+        &self,
+        payoff_id: &str,
+        strike: f64,
+    ) -> Result<Box<dyn Payoff>, RegistrationError> {
         if let Some(creator_function) = self.the_creator_functions.get(payoff_id) {
-            Some(creator_function(strike))
+            Ok(creator_function(strike))
         } else {
-            println!("{} is an unknown payoff", payoff_id);
-            None
+            Err(RegistrationError::new(NotFound(payoff_id.to_string())))
         }
     }
 

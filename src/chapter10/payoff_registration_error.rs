@@ -20,6 +20,7 @@ impl RegistrationError {
 
 #[derive(Debug)]
 pub enum ErrorType {
+    NotFound(String),
     DuplicateError(String),
     PoisonError(Box<dyn Error>),
 }
@@ -33,6 +34,9 @@ impl<T: 'static> From<PoisonError<T>> for RegistrationError {
 impl fmt::Display for RegistrationError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match &self._error_type {
+            ErrorType::NotFound(s) => {
+                write!(f, "The Payoff {} is not found in the factory", s)
+            }
             ErrorType::DuplicateError(s) => {
                 write!(f, "The payoff {} is already registered", s)
             }

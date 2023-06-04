@@ -14,15 +14,14 @@ fn main() -> Result<(), RegistrationError> {
     let name = name.trim();
 
     let payoff_factory = PayoffFactory::instance()?.lock()?;
-    let payoff = payoff_factory.create_payoff(name, strike);
-    if let Some(payoff) = payoff {
-        println!("spot");
-        let mut spot = String::new();
-        io::stdin().read_line(&mut spot).unwrap();
-        let spot: f64 = spot.trim().parse().unwrap();
+    let payoff = payoff_factory.create_payoff(name, strike)?;
 
-        println!("{}", payoff.calculate(spot));
-    }
+    println!("spot");
+    let mut spot = String::new();
+    io::stdin().read_line(&mut spot).unwrap();
+    let spot: f64 = spot.trim().parse().unwrap();
+
+    println!("{}", payoff.calculate(spot));
 
     let mut tmp = String::new();
     io::stdin().read_line(&mut tmp).unwrap();

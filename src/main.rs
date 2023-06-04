@@ -39,7 +39,7 @@ struct PriceParameters {
     number_of_paths: usize,
 }
 
-async fn calculate_price(form: axum::extract::Form<PriceParameters>) -> String {
+async fn calculate_price(form: axum::extract::Form<PriceParameters>) -> Result<String, String> {
     let result = equity_fx_main::price(
         form.option_type.as_str(),
         form.expiry,
@@ -51,6 +51,9 @@ async fn calculate_price(form: axum::extract::Form<PriceParameters>) -> String {
         form.number_of_dates,
         form.number_of_paths,
     );
-
-    format!("The price is {}\n", result)
+    if let Ok(result) = result {
+        Ok(format!("The price is {}\n", result))
+    } else {
+        Err(format!("{}", result.err().unwrap()))
+    }
 }
