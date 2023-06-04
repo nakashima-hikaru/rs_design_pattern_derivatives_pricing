@@ -1,24 +1,42 @@
-use crate::chapter10::payoff_constructible::ErrorType::DuplicateError;
-use crate::chapter10::payoff_constructible::RegistrationError;
-use crate::chapter10::payoff_factory::PayoffFactory;
-use crate::chapter4::payoff3::{Payoff, PayoffCall, PayoffPut};
-use std::sync::Arc;
+use std::error::Error;
+use std::fmt;
+use std::fmt::Debug;
+use std::sync::PoisonError;
 
-impl PayoffFactory {
-    fn register<T: Payoff + 'static>() -> Result<(), RegistrationError> {
-        let factory = PayoffFactory::instance()?.lock()?;
-        let payoff_id = T::name();
-        if factory.is_registered(&payoff_id) {
-            return Err(RegistrationError::new(DuplicateError(payoff_id)));
+#[derive(Debug)]
+pub struct RegistrationError {
+    _error_type: ErrorType,
+}
+
+impl Error for RegistrationError {}
+
+impl RegistrationError {
+    pub fn new(error_type: ErrorType) -> Self {
+        Self {
+            _error_type: error_type,
         }
-        let mut factory = factory;
-        factory.register_payoff(&payoff_id, Arc::new(|strike| Box::<T>::new(T::new(strike))));
-        Ok(())
     }
+}
 
-    pub fn register_all_payoffs() -> Result<(), RegistrationError> {
-        Self::register::<PayoffCall>()?;
-        Self::register::<PayoffPut>()?;
-        Ok(())
+#[derive(Debug)]
+pub enum ErrorType {
+    DuplicateError(String),
+    PoisonError(Box<dyn Error>),
+}
+
+impl<T: 'static> From<PoisonError<T>> for RegistrationError {
+    fn from(e: PoisonError<T>) -> Self {
+        RegistrationError::new(ErrorType::PoisonError(e.into()))
+    }
+}
+
+impl fmt::Display for RegistrationError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match &self._error_type {
+            ErrorType::DuplicateError(s) => {
+                write!(f, "The payoff {} is already registered", s)
+            }
+            ErrorType::PoisonError(e) => std::fmt::Display::fmt(&e, f),
+        }
     }
 }

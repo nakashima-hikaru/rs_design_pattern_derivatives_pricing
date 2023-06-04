@@ -1,4 +1,4 @@
-use crate::chapter10::payoff_constructible::RegistrationError;
+use crate::chapter10::payoff_registration_error::RegistrationError;
 use crate::chapter4::payoff3::Payoff;
 use std::{
     collections::HashMap,
