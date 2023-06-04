@@ -1,7 +1,8 @@
+use rust_design_pattern_derivative_pricing::chapter10::payoff_constructible::RegistrationError;
 use rust_design_pattern_derivative_pricing::chapter10::payoff_factory::PayoffFactory;
 use std::io;
 
-fn main() {
+fn main() -> Result<(), RegistrationError> {
     println!("strike");
     let mut strike = String::new();
     io::stdin().read_line(&mut strike).unwrap();
@@ -12,7 +13,7 @@ fn main() {
     io::stdin().read_line(&mut name).unwrap();
     let name = name.trim();
 
-    let payoff_factory = PayoffFactory::instance().lock().unwrap();
+    let payoff_factory = PayoffFactory::instance()?.lock()?;
     let payoff = payoff_factory.create_payoff(name, strike);
     if let Some(payoff) = payoff {
         println!("spot");
@@ -25,4 +26,5 @@ fn main() {
 
     let mut tmp = String::new();
     io::stdin().read_line(&mut tmp).unwrap();
+    Ok(())
 }

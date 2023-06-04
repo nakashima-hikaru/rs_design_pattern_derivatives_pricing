@@ -21,7 +21,7 @@ pub fn price(
     number_of_dates: usize,
     number_of_paths: usize,
 ) -> f64 {
-    let payoff_factory = PayoffFactory::instance().lock().unwrap();
+    let payoff_factory = PayoffFactory::instance().unwrap().lock().unwrap();
     let payoff = payoff_factory.create_payoff(option_type, strike);
     if let Some(the_payoff) = payoff {
         let times = (0..number_of_dates)
