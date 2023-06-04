@@ -23,7 +23,7 @@ impl PayoffFactory {
             Mutex::new(PayoffFactory::default())
         });
         if init {
-            PayoffFactory::register()?;
+            PayoffFactory::register_all_payoffs()?;
         }
         Ok(ret)
     }
