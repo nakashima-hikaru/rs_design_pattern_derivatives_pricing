@@ -69,7 +69,7 @@ pub fn test_main() {
     let d = 0.0;
     let number_of_dates = 1000;
     let number_of_paths = 1000;
-    let payoff_factory = PayoffFactory::instance().lock().unwrap();
+    let payoff_factory = PayoffFactory::instance().unwrap().lock().unwrap();
     let payoff = payoff_factory.create_payoff(option_type, strike);
     if let Some(the_payoff) = payoff {
         let times = (0..number_of_dates)
