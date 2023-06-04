@@ -1,5 +1,5 @@
 //! クラスごとにメソッド関数としてbisectionを定義するとvtableを参照する分遅いなど、いろいろ不便なのでテンプレートによって実装する。
-
+#[allow(unused)]
 pub fn bisection<T: Fn(f64) -> f64>(
     target: f64,
     low: f64,
