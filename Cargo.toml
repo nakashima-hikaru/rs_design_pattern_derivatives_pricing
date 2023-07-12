@@ -13,6 +13,8 @@ serde = { version = "1.0.162", features = ["derive"] }
 approx = "0.5.1"
 axum = "0.6.1"
 tokio = { version = "1.28.0", features = ["macros", "rt-multi-thread"] }
+anyhow = "1.0.71"
+thiserror = "1.0.40"
 
 [dev-dependencies]
 approx = "0.5.1"

@@ -1,46 +1,14 @@
-use std::error::Error;
-use std::fmt;
+use crate::chapter10::payoff_factory::PayoffFactory;
 use std::fmt::Debug;
-use std::sync::PoisonError;
+use std::sync::{MutexGuard, PoisonError};
+use thiserror::Error;
 
-#[derive(Debug)]
-pub struct RegistrationError {
-    _error_type: ErrorType,
-}
-
-impl Error for RegistrationError {}
-
-impl RegistrationError {
-    pub fn new(error_type: ErrorType) -> Self {
-        Self {
-            _error_type: error_type,
-        }
-    }
-}
-
-#[derive(Debug)]
-pub enum ErrorType {
+#[derive(Debug, Error)]
+pub enum RegistrationError {
+    #[error("The Payoff {0} is not found in the factory")]
     NotFound(String),
+    #[error("The payoff {0} is already registered")]
     DuplicateError(String),
-    PoisonError(Box<dyn Error>),
-}
-
-impl<T: 'static> From<PoisonError<T>> for RegistrationError {
-    fn from(e: PoisonError<T>) -> Self {
-        RegistrationError::new(ErrorType::PoisonError(e.into()))
-    }
-}
-
-impl fmt::Display for RegistrationError {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match &self._error_type {
-            ErrorType::NotFound(s) => {
-                write!(f, "The Payoff {} is not found in the factory", s)
-            }
-            ErrorType::DuplicateError(s) => {
-                write!(f, "The payoff {} is already registered", s)
-            }
-            ErrorType::PoisonError(e) => std::fmt::Display::fmt(&e, f),
-        }
-    }
+    #[error("some")]
+    PoisonError(#[from] PoisonError<MutexGuard<'static, PayoffFactory>>),
 }

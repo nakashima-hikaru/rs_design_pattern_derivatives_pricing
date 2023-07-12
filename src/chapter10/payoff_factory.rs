@@ -1,6 +1,7 @@
-use crate::chapter10::payoff_registration_error::ErrorType::NotFound;
 use crate::chapter10::payoff_registration_error::RegistrationError;
-use crate::chapter4::payoff3::Payoff;
+use crate::chapter10::payoff_registration_error::RegistrationError::{DuplicateError, NotFound};
+use crate::chapter4::payoff3::{Payoff, PayoffCall, PayoffPut};
+use anyhow::Result;
 use std::{
     collections::HashMap,
     sync::OnceLock,
@@ -46,11 +47,28 @@ impl PayoffFactory {
         if let Some(creator_function) = self.the_creator_functions.get(payoff_id) {
             Ok(creator_function(strike))
         } else {
-            Err(RegistrationError::new(NotFound(payoff_id.to_string())))
+            Err(NotFound(payoff_id.to_string()))
         }
     }
 
     pub fn is_registered(&self, payoff_id: &str) -> bool {
         self.the_creator_functions.contains_key(payoff_id)
+    }
+
+    fn register<T: Payoff + 'static>() -> Result<(), RegistrationError> {
+        let factory = PayoffFactory::instance()?.lock()?;
+        let payoff_id = T::name();
+        if factory.is_registered(&payoff_id) {
+            return Err(DuplicateError(payoff_id));
+        }
+        let mut factory = factory;
+        factory.register_payoff(&payoff_id, Arc::new(|strike| Box::<T>::new(T::new(strike))));
+        Ok(())
+    }
+
+    pub fn register_all_payoffs() -> Result<(), RegistrationError> {
+        Self::register::<PayoffCall>()?;
+        Self::register::<PayoffPut>()?;
+        Ok(())
     }
 }
