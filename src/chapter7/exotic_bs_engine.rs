@@ -4,7 +4,7 @@ use crate::chapter7::exotic_engine::ExoticEngine;
 use crate::chapter7::exotic_engine::ExoticEngineData;
 use crate::chapter7::path_dependent::PathDependent;
 
-pub struct ExoticBSEngine<'a, T: PathDependent, S: Parameters, R: Random> {
+pub struct ExoticBSEngine<'a, T: PathDependent + ?Sized, S: Parameters, R: Random> {
     exotic_engine_data: ExoticEngineData<'a, T, S>,
     /// A random number generator
     the_generator: &'a mut R,
@@ -20,7 +20,7 @@ pub struct ExoticBSEngine<'a, T: PathDependent, S: Parameters, R: Random> {
     variates: Vec<f64>,
 }
 
-impl<'a, T: PathDependent, S: Parameters, R: Random> ExoticBSEngine<'a, T, S, R> {
+impl<'a, T: PathDependent + ?Sized, S: Parameters, R: Random> ExoticBSEngine<'a, T, S, R> {
     /// Constructor.
     ///
     /// # Arguments

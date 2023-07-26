@@ -8,7 +8,7 @@ use rayon::iter::IntoParallelIterator;
 use rayon::iter::ParallelIterator;
 use std::sync::{Arc, RwLock};
 
-pub struct ExoticEngineData<'a, T: PathDependent, S: Parameters> {
+pub struct ExoticEngineData<'a, T: PathDependent + ?Sized, S: Parameters> {
     /// A path dependent product such as Asian option
     the_product: &'a T,
     /// Interest rates
@@ -19,7 +19,7 @@ pub struct ExoticEngineData<'a, T: PathDependent, S: Parameters> {
     these_cash_flows: Arc<RwLock<Vec<CashFlow>>>,
 }
 
-impl<'a, T: PathDependent, S: Parameters> ExoticEngineData<'a, T, S> {
+impl<'a, T: PathDependent + ?Sized, S: Parameters> ExoticEngineData<'a, T, S> {
     pub fn new(the_product: &'a T, r: &'a S) -> ExoticEngineData<'a, T, S> {
         let these_cash_flows = Arc::new(RwLock::new(vec![
             CashFlow::default();
@@ -47,7 +47,7 @@ impl<'a, T: PathDependent, S: Parameters> ExoticEngineData<'a, T, S> {
     }
 }
 
-pub trait ExoticEngine<T: PathDependent, S: Parameters> {
+pub trait ExoticEngine<T: PathDependent + ?Sized, S: Parameters> {
     /// Returns the pointer of `self.exotic_engine_data`.
     fn get_exotic_engine_data(&self) -> &ExoticEngineData<T, S>;
 

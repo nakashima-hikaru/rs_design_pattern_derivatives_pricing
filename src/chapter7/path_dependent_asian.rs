@@ -3,14 +3,14 @@ use crate::chapter7::path_dependent::CashFlow;
 use crate::chapter7::path_dependent::PathDependent;
 
 /// Payoff: \frac{1}{length of `look_at_times`} \sum_{t \in `look_at_times`} SpotValue(t)
-pub struct PathDependentAsian<'a, T: Payoff> {
+pub struct PathDependentAsian<'a, T: Payoff + ?Sized> {
     delivery_time: f64,
     the_payoff: &'a T,
     number_of_times: usize,
     look_at_times: Vec<f64>,
 }
 
-impl<'a, T: Payoff> PathDependentAsian<'a, T> {
+impl<'a, T: Payoff + ?Sized> PathDependentAsian<'a, T> {
     pub fn new(
         look_at_times: Vec<f64>,
         delivery_time: f64,
@@ -25,7 +25,7 @@ impl<'a, T: Payoff> PathDependentAsian<'a, T> {
     }
 }
 
-impl<'a, T: Payoff> PathDependent for PathDependentAsian<'a, T> {
+impl<'a, T: Payoff + ?Sized> PathDependent for PathDependentAsian<'a, T> {
     fn get_look_at_times(&self) -> &Vec<f64> {
         &self.look_at_times
     }
