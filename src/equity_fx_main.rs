@@ -27,9 +27,9 @@ pub fn price(
     let times = (0..number_of_dates)
         .map(|i| (i as f64 + 1.0) * expiry / number_of_dates as f64)
         .collect();
-    let vol_param = ParametersConstant::from(vol);
-    let r_param = ParametersConstant::from(r);
-    let d_param = ParametersConstant::from(d);
+    let vol_param: ParametersConstant = vol.into();
+    let r_param: ParametersConstant = r.into();
+    let d_param: ParametersConstant = d.into();
     let the_option = PathDependentAsian::new(times, expiry, the_payoff.as_ref());
     let mut gatherer = StatisticsMean::default();
     let mut gatherer_two = ConvergenceTable::new(&mut gatherer);
@@ -72,9 +72,9 @@ pub fn test_main() {
     let times = (0..number_of_dates)
         .map(|i| (i as f64 + 1.0) * expiry / number_of_dates as f64)
         .collect();
-    let vol_param = ParametersConstant::from(vol);
-    let r_param = ParametersConstant::from(r);
-    let d_param = ParametersConstant::from(d);
+    let vol_param: ParametersConstant = vol.into();
+    let r_param: ParametersConstant = r.into();
+    let d_param: ParametersConstant = d.into();
     let the_option = PathDependentAsian::new(times, expiry, the_payoff.as_ref());
     let mut gatherer = StatisticsMean::default();
     let mut gatherer_two = ConvergenceTable::new(&mut gatherer);

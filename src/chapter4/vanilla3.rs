@@ -4,13 +4,13 @@
 
 use crate::chapter4::payoff3::Payoff;
 
-pub struct VanillaOption<'a> {
+pub struct VanillaOption<'a, T: Payoff> {
     expiry: f64,
-    the_payoff: &'a dyn Payoff,
+    the_payoff: &'a T,
 }
 
-impl<'a> VanillaOption<'a> {
-    pub fn new(the_payoff: &'a impl Payoff, expiry: f64) -> VanillaOption<'a> {
+impl<'a, T: Payoff> VanillaOption<'a, T> {
+    pub fn new(the_payoff: &'a T, expiry: f64) -> VanillaOption<'a, T> {
         VanillaOption { expiry, the_payoff }
     }
     pub fn get_expiry(&self) -> f64 {

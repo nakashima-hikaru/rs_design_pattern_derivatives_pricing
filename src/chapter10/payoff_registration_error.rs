@@ -9,6 +9,6 @@ pub enum RegistrationError {
     NotFound(String),
     #[error("The payoff {0} is already registered")]
     DuplicateError(String),
-    #[error("some")]
+    #[error("Locking the factory failed")]
     PoisonError(#[from] PoisonError<MutexGuard<'static, PayoffFactory>>),
 }

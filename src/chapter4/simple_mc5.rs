@@ -1,8 +1,9 @@
 use crate::chapter1::random1::get_one_gaussian_by_box_muller;
+use crate::chapter4::payoff3::Payoff;
 use crate::chapter4::vanilla3::VanillaOption;
 
-pub fn simple_montecarlo3(
-    the_option: &VanillaOption,
+pub fn simple_montecarlo3<T: Payoff>(
+    the_option: &VanillaOption<T>,
     spot: f64,
     vol: f64,
     r: f64,

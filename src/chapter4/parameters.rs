@@ -1,4 +1,3 @@
-//! Bridgeパターンを利用する。
 use std::convert::From;
 
 pub trait Parameters: Send + Sync {
@@ -15,6 +14,7 @@ pub trait Parameters: Send + Sync {
     }
 }
 
+#[derive(Debug, Clone, Copy)]
 pub struct ParametersConstant {
     constant: f64,
     constant_square: f64,

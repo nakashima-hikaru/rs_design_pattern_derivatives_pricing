@@ -8,22 +8,19 @@ use rayon::iter::IntoParallelIterator;
 use rayon::iter::ParallelIterator;
 use std::sync::{Arc, RwLock};
 
-pub struct ExoticEngineData<'a> {
+pub struct ExoticEngineData<'a, T: PathDependent, S: Parameters> {
     /// A path dependent product such as Asian option
-    the_product: &'a dyn PathDependent,
+    the_product: &'a T,
     /// Interest rates
-    r: &'a dyn Parameters,
+    r: &'a S,
     /// Discount factors
     discounts: Vec<f64>,
     /// Cash flows simulated on paths
     these_cash_flows: Arc<RwLock<Vec<CashFlow>>>,
 }
 
-impl<'a> ExoticEngineData<'a> {
-    pub fn new(
-        the_product: &'a impl PathDependent,
-        r: &'a impl Parameters,
-    ) -> ExoticEngineData<'a> {
+impl<'a, T: PathDependent, S: Parameters> ExoticEngineData<'a, T, S> {
+    pub fn new(the_product: &'a T, r: &'a S) -> ExoticEngineData<'a, T, S> {
         let these_cash_flows = Arc::new(RwLock::new(vec![
             CashFlow::default();
             the_product.max_number_of_cash_flows()
@@ -41,18 +38,18 @@ impl<'a> ExoticEngineData<'a> {
         }
     }
     /// Returns the pointer of `self.the_product`.
-    pub fn get_the_product(&self) -> &'a dyn PathDependent {
+    pub fn get_the_product(&self) -> &'a T {
         self.the_product
     }
     /// Returns the pointer of `self.r`.
-    pub fn get_r(&self) -> &'a dyn Parameters {
+    pub fn get_r(&self) -> &'a S {
         self.r
     }
 }
 
-pub trait ExoticEngine {
+pub trait ExoticEngine<T: PathDependent, S: Parameters> {
     /// Returns the pointer of `self.exotic_engine_data`.
-    fn get_exotic_engine_data(&self) -> &ExoticEngineData;
+    fn get_exotic_engine_data(&self) -> &ExoticEngineData<T, S>;
 
     fn get_one_path(&mut self, variates: &mut [f64]);
 

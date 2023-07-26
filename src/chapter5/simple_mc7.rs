@@ -2,11 +2,12 @@
 //! 平均を求める処理が一行で済むようになり、可読性が向上した。
 use crate::chapter1::random1::get_one_gaussian_by_box_muller;
 use crate::chapter4::parameters::Parameters;
+use crate::chapter4::payoff3::Payoff;
 use crate::chapter4::vanilla3::VanillaOption;
 use crate::chapter5::mc_statistics::StatisticsMC;
 
-pub fn simple_montecarlo5(
-    the_option: &VanillaOption,
+pub fn simple_montecarlo5<T: Payoff>(
+    the_option: &VanillaOption<T>,
     spot: f64,
     vol: impl Parameters,
     r: impl Parameters,

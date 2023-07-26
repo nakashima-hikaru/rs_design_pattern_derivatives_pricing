@@ -1,7 +1,6 @@
 use crate::chapter10::payoff_registration_error::RegistrationError;
 use crate::chapter10::payoff_registration_error::RegistrationError::{DuplicateError, NotFound};
 use crate::chapter4::payoff3::{Payoff, PayoffCall, PayoffPut};
-use anyhow::Result;
 use std::{
     collections::HashMap,
     sync::OnceLock,
@@ -51,14 +50,10 @@ impl PayoffFactory {
         }
     }
 
-    pub fn is_registered(&self, payoff_id: &str) -> bool {
-        self.the_creator_functions.contains_key(payoff_id)
-    }
-
     fn register<T: Payoff + 'static>() -> Result<(), RegistrationError> {
         let factory = PayoffFactory::instance()?.lock()?;
         let payoff_id = T::name();
-        if factory.is_registered(&payoff_id) {
+        if factory.the_creator_functions.contains_key(&payoff_id) {
             return Err(DuplicateError(payoff_id));
         }
         let mut factory = factory;

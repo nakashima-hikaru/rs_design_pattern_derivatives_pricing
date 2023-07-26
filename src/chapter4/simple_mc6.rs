@@ -3,10 +3,11 @@
 //! Montecarloシミュレーションの収束に関する指標がない。
 use crate::chapter1::random1::get_one_gaussian_by_box_muller;
 use crate::chapter4::parameters::Parameters;
+use crate::chapter4::payoff3::Payoff;
 use crate::chapter4::vanilla3::VanillaOption;
 
-pub fn simple_montecarlo4(
-    the_option: &VanillaOption,
+pub fn simple_montecarlo4<T: Payoff>(
+    the_option: &VanillaOption<T>,
     spot: f64,
     vol: &impl Parameters,
     r: &impl Parameters,

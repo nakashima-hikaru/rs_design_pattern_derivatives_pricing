@@ -4,10 +4,10 @@ use crate::chapter7::exotic_engine::ExoticEngine;
 use crate::chapter7::exotic_engine::ExoticEngineData;
 use crate::chapter7::path_dependent::PathDependent;
 
-pub struct ExoticBSEngine<'a> {
-    exotic_engine_data: ExoticEngineData<'a>,
+pub struct ExoticBSEngine<'a, T: PathDependent, S: Parameters, R: Random> {
+    exotic_engine_data: ExoticEngineData<'a, T, S>,
     /// A random number generator
-    the_generator: &'a mut dyn Random,
+    the_generator: &'a mut R,
     /// Drifts
     drifts: Vec<f64>,
     /// The standard deviations of logarithm of the stock price
@@ -20,7 +20,7 @@ pub struct ExoticBSEngine<'a> {
     variates: Vec<f64>,
 }
 
-impl<'a> ExoticBSEngine<'a> {
+impl<'a, T: PathDependent, S: Parameters, R: Random> ExoticBSEngine<'a, T, S, R> {
     /// Constructor.
     ///
     /// # Arguments
@@ -31,13 +31,13 @@ impl<'a> ExoticBSEngine<'a> {
     /// * `the_generator` - A random number generator
     /// * `spot` - A spot value of a stock
     pub fn new(
-        the_product: &'a impl PathDependent,
-        r: &'a impl Parameters,
+        the_product: &'a T,
+        r: &'a S,
         d: impl Parameters,
         vol: impl Parameters,
-        the_generator: &'a mut impl Random,
+        the_generator: &'a mut R,
         spot: f64,
-    ) -> ExoticBSEngine<'a> {
+    ) -> ExoticBSEngine<'a, T, S, R> {
         let exotic_engine_data = ExoticEngineData::new(the_product, r);
         let times = exotic_engine_data.get_the_product().get_look_at_times();
         let number_of_times = times.len();
@@ -71,9 +71,11 @@ impl<'a> ExoticBSEngine<'a> {
     }
 }
 
-impl<'a> ExoticEngine for ExoticBSEngine<'a> {
+impl<'a, T: PathDependent, S: Parameters, R: Random> ExoticEngine<T, S>
+    for ExoticBSEngine<'a, T, S, R>
+{
     /// Returns the pointer of `self.exotic_engine_data`
-    fn get_exotic_engine_data(&self) -> &ExoticEngineData {
+    fn get_exotic_engine_data(&self) -> &ExoticEngineData<T, S> {
         &self.exotic_engine_data
     }
 

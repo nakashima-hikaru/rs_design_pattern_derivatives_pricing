@@ -24,8 +24,8 @@ pub fn main() {
     println!("\nNumber of paths\n");
     let number_of_paths = text_io::read!();
 
-    let vol_param = ParametersConstant::from(vol);
-    let r_param = ParametersConstant::from(r);
+    let vol_param: ParametersConstant = vol.into();
+    let r_param: ParametersConstant = r.into();
 
     let the_payoff = PayoffCall::new(strike);
     let the_option = VanillaOption::new(&the_payoff, expiry);
