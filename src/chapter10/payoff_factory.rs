@@ -1,11 +1,7 @@
 use crate::chapter10::payoff_registration_error::RegistrationError;
 use crate::chapter10::payoff_registration_error::RegistrationError::{DuplicateError, NotFound};
 use crate::chapter4::payoff3::{Payoff, PayoffCall, PayoffPut};
-use std::{
-    collections::HashMap,
-    sync::OnceLock,
-    sync::{Arc, Mutex},
-};
+use std::{collections::HashMap, sync::Mutex, sync::OnceLock};
 
 type CreatePayoffFunction = fn(f64) -> Box<dyn Payoff>;
 
@@ -13,7 +9,7 @@ static FACTORY: OnceLock<Mutex<PayoffFactory>> = OnceLock::new();
 
 #[derive(Default)]
 pub struct PayoffFactory {
-    the_creator_functions: HashMap<String, Arc<CreatePayoffFunction>>,
+    the_creator_functions: HashMap<String, CreatePayoffFunction>,
 }
 
 impl PayoffFactory {
@@ -29,11 +25,7 @@ impl PayoffFactory {
         Ok(ret)
     }
 
-    pub fn register_payoff(
-        &mut self,
-        payoff_id: &str,
-        creator_function: Arc<CreatePayoffFunction>,
-    ) {
+    fn register_payoff(&mut self, payoff_id: &str, creator_function: CreatePayoffFunction) {
         self.the_creator_functions
             .insert(payoff_id.to_string(), creator_function);
     }
@@ -46,7 +38,10 @@ impl PayoffFactory {
         if let Some(creator_function) = self.the_creator_functions.get(payoff_id) {
             Ok(creator_function(strike))
         } else {
-            Err(NotFound(payoff_id.to_string()))
+            Err(NotFound(format!(
+                "The payoff with id: {} not found.",
+                payoff_id
+            )))
         }
     }
 
@@ -57,7 +52,7 @@ impl PayoffFactory {
             return Err(DuplicateError(payoff_id.to_string()));
         }
         let mut factory = factory;
-        factory.register_payoff(payoff_id, Arc::new(|strike| Box::<T>::new(T::new(strike))));
+        factory.register_payoff(payoff_id, |strike| Box::<T>::new(T::new(strike)));
         Ok(())
     }
 
