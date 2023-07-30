@@ -22,7 +22,7 @@ pub fn price(
     number_of_dates: usize,
     number_of_paths: usize,
 ) -> Result<f64, RegistrationError> {
-    let payoff_factory = PayoffFactory::instance().unwrap().lock().unwrap();
+    let payoff_factory = PayoffFactory::instance()?.lock()?;
     let the_payoff = payoff_factory.create_payoff(option_type, strike)?;
     let times = (0..number_of_dates)
         .map(|i| (i as f64 + 1.0) * expiry / number_of_dates as f64)

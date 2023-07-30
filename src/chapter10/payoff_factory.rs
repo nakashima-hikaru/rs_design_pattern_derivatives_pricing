@@ -7,7 +7,7 @@ use std::{
     sync::{Arc, Mutex},
 };
 
-type CreatePayoffFunction = dyn Fn(f64) -> Box<dyn Payoff> + Send + Sync;
+type CreatePayoffFunction = fn(f64) -> Box<dyn Payoff>;
 
 static FACTORY: OnceLock<Mutex<PayoffFactory>> = OnceLock::new();
 
@@ -53,11 +53,11 @@ impl PayoffFactory {
     fn register<T: Payoff + 'static>() -> Result<(), RegistrationError> {
         let factory = PayoffFactory::instance()?.lock()?;
         let payoff_id = T::name();
-        if factory.the_creator_functions.contains_key(&payoff_id) {
-            return Err(DuplicateError(payoff_id));
+        if factory.the_creator_functions.contains_key(payoff_id) {
+            return Err(DuplicateError(payoff_id.to_string()));
         }
         let mut factory = factory;
-        factory.register_payoff(&payoff_id, Arc::new(|strike| Box::<T>::new(T::new(strike))));
+        factory.register_payoff(payoff_id, Arc::new(|strike| Box::<T>::new(T::new(strike))));
         Ok(())
     }
 
