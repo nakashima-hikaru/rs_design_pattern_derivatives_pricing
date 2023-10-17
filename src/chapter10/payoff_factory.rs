@@ -17,17 +17,12 @@ impl PayoffFactory {
         let mut init = false;
         let ret = FACTORY.get_or_init(|| {
             init = true;
-            Mutex::new(PayoffFactory::default())
+            PayoffFactory::default().into()
         });
         if init {
             PayoffFactory::register_all_payoffs()?;
         }
         Ok(ret)
-    }
-
-    fn register_payoff(&mut self, payoff_id: &str, creator_function: CreatePayoffFunction) {
-        self.the_creator_functions
-            .insert(payoff_id.to_string(), creator_function);
     }
 
     pub fn create_payoff(
@@ -52,11 +47,15 @@ impl PayoffFactory {
             return Err(DuplicateError(payoff_id.to_string()));
         }
         let mut factory = factory;
-        factory.register_payoff(payoff_id, |strike| Box::<T>::new(T::new(strike)));
+        factory
+            .the_creator_functions
+            .insert(payoff_id.to_string(), |strike| {
+                Box::<T>::new(T::new(strike))
+            });
         Ok(())
     }
 
-    pub fn register_all_payoffs() -> Result<(), RegistrationError> {
+    fn register_all_payoffs() -> Result<(), RegistrationError> {
         Self::register::<PayoffCall>()?;
         Self::register::<PayoffPut>()?;
         Ok(())

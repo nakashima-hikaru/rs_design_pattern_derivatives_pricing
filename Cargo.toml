@@ -8,13 +8,13 @@ edition = "2021"
 [dependencies]
 text_io = "0.1.12"
 rand = "0.8.5"
-rayon = "1.7.0"
-serde = { version = "1.0.162", features = ["derive"] }
+rayon = "1.8.0"
+serde = { version = "1.0.189", features = ["derive"] }
 approx = "0.5.1"
-axum = "0.6.1"
-tokio = { version = "1.28.0", features = ["macros", "rt-multi-thread"] }
-anyhow = "1.0.71"
-thiserror = "1.0.40"
+axum = "0.6.20"
+tokio = { version = "1.33.0", features = ["macros", "rt-multi-thread"] }
+anyhow = "1.0.75"
+thiserror = "1.0.49"
 
 [dev-dependencies]
 approx = "0.5.1"
