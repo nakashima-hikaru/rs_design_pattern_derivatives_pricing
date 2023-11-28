@@ -13,11 +13,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .route("/price", post(calculate_price));
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
+    let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
 
     println!("Serving on http://localhost:3000...");
-    axum::Server::bind(&addr)
-        .serve(app.into_make_service())
-        .await?;
+    axum::serve(listener, app.into_make_service()).await?;
 
     Ok(())
 }
