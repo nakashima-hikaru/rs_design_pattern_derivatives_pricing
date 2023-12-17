@@ -8,6 +8,7 @@ use crate::chapter6::random2::Random;
 /// See \[ParkMiller\] p.1196.
 ///
 /// \[ParkMiler\] Park, S. K. and Keith W. Miller. “Random number generators: good ones are hard to find.” Commun. ACM 31 (1988): 1192-1201.
+#[derive(Clone)]
 struct ParkMiller {
     seed: u64,
 }
@@ -47,6 +48,7 @@ impl ParkMiller {
     }
 }
 
+#[derive(Clone)]
 pub struct RandomParkMiller {
     dimensionality: usize,
     generator: ParkMiller,

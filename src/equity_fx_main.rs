@@ -32,15 +32,14 @@ pub fn price(
     let vol_param: ParametersConstant = vol.into();
     let r_param: ParametersConstant = r.into();
     let d_param: ParametersConstant = d.into();
-    let mut gatherer = StatisticsMean::default();
-    let mut gatherer_two = ConvergenceTable::new(&mut gatherer);
-    let mut generator = RandomParkMiller::new(number_of_dates, 1);
-    let mut gen_two = AntiThetic::new(&mut generator);
-    let mut the_engine =
-        ExoticBSEngine::new(&times, &r_param, d_param, vol_param, &mut gen_two, spot);
+    let gatherer = StatisticsMean::default();
+    let mut gatherer_two = ConvergenceTable::new(gatherer);
+    let generator = RandomParkMiller::new(number_of_dates, 1);
+    let gen_two = AntiThetic::new(generator);
+    let mut the_engine = ExoticBSEngine::new(&times, &r_param, d_param, vol_param, gen_two, spot);
     let the_option = PathDependentAsian::new(times, expiry, the_payoff.as_ref());
-    let mut exotic_engine_data = ExoticEngineData::new(&the_option, &r_param);
-    the_engine.do_simulation(&mut exotic_engine_data, &mut gatherer_two, number_of_paths);
+    let exotic_engine_data = ExoticEngineData::new(&the_option, &r_param);
+    the_engine.do_simulation(&exotic_engine_data, &mut gatherer_two, number_of_paths);
     let results = gatherer_two.get_results_so_far();
     println!("\nFor the Asian call price the results are \n");
     for result in &results {
@@ -72,15 +71,14 @@ pub fn test_main() {
     let vol_param: ParametersConstant = vol.into();
     let r_param: ParametersConstant = r.into();
     let d_param: ParametersConstant = d.into();
-    let mut gatherer = StatisticsMean::default();
-    let mut gatherer_two = ConvergenceTable::new(&mut gatherer);
-    let mut generator = RandomParkMiller::new(number_of_dates, 1);
-    let mut gen_two = AntiThetic::new(&mut generator);
-    let mut the_engine =
-        ExoticBSEngine::new(&times, &r_param, d_param, vol_param, &mut gen_two, spot);
+    let gatherer = StatisticsMean::default();
+    let mut gatherer_two = ConvergenceTable::new(gatherer);
+    let generator = RandomParkMiller::new(number_of_dates, 1);
+    let gen_two = AntiThetic::new(generator);
+    let mut the_engine = ExoticBSEngine::new(&times, &r_param, d_param, vol_param, gen_two, spot);
     let the_option = PathDependentAsian::new(times, expiry, the_payoff.as_ref());
-    let mut exotic_engine_data = ExoticEngineData::new(&the_option, &r_param);
-    the_engine.do_simulation(&mut exotic_engine_data, &mut gatherer_two, number_of_paths);
+    let exotic_engine_data = ExoticEngineData::new(&the_option, &r_param);
+    the_engine.do_simulation(&exotic_engine_data, &mut gatherer_two, number_of_paths);
     let results = gatherer_two.get_results_so_far();
     assert_eq!(
         results,

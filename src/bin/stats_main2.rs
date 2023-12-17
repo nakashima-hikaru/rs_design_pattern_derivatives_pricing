@@ -31,8 +31,8 @@ pub fn main() {
     let the_option = VanillaOption::new(&the_payoff, expiry);
     let vol_param = ParametersConstant::new(vol);
     let r_param = ParametersConstant::new(r);
-    let mut gatherer = StatisticsMean::default();
-    let mut gatherer_two = ConvergenceTable::new(&mut gatherer);
+    let gatherer = StatisticsMean::default();
+    let mut gatherer_two = ConvergenceTable::new(gatherer);
     simple_montecarlo5(
         &the_option,
         spot,

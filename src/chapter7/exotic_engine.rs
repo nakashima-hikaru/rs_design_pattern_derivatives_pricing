@@ -53,10 +53,12 @@ impl<'a, T: PathDependent + ?Sized, S: Parameters> ExoticEngineData<'a, T, S> {
     }
 }
 
-pub trait ExoticEngine<T: PathDependent + ?Sized, S: Parameters> {
+pub trait ExoticEngine<T: PathDependent + ?Sized, S: Parameters>: Clone {
     /// Returns the pointer of `self.exotic_engine_data`.
 
     fn get_one_path(&mut self, variates: &mut [f64]);
+
+    fn set_seed(&mut self, seed: u64);
 
     fn do_simulation(
         &mut self,
@@ -69,17 +71,17 @@ pub trait ExoticEngine<T: PathDependent + ?Sized, S: Parameters> {
     {
         let length_of_times = data.the_product.get_look_at_times().len();
         let max_number_of_cash_flows = data.the_product.max_number_of_cash_flows();
-        let self_ptr = Arc::new(Mutex::new(self));
-        let the_gatherer_ptr = Arc::new(Mutex::new(the_gatherer));
+        let the_gatherer_ptr = Arc::new(Mutex::new(the_gatherer)); // todo: this should be cloned per-thread
         (0..number_of_paths).into_par_iter().for_each_init(
             || {
                 (
                     vec![0.0; length_of_times],
                     vec![CashFlow::default(); max_number_of_cash_flows],
+                    self.clone(),
                 )
             },
-            |(spot_values, these_cash_flows), _| {
-                (*self_ptr.lock().unwrap()).get_one_path(spot_values);
+            |(spot_values, these_cash_flows, cloned_self), _| {
+                cloned_self.get_one_path(spot_values);
                 let this_value = data.do_one_path(spot_values, these_cash_flows);
                 (*the_gatherer_ptr.lock().unwrap()).dump_one_result(this_value);
             },

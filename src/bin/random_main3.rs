@@ -34,10 +34,10 @@ pub fn main() {
     let the_option = VanillaOption::new(&the_payoff, expiry);
     let vol_param = ParametersConstant::new(vol);
     let r_param = ParametersConstant::new(r);
-    let mut gatherer = StatisticsMean::default();
-    let mut gatherer_two = ConvergenceTable::new(&mut gatherer);
-    let mut generator = RandomParkMiller::new(1, 1);
-    let mut gen_two = AntiThetic::new(&mut generator);
+    let gatherer = StatisticsMean::default();
+    let mut gatherer_two = ConvergenceTable::new(gatherer);
+    let generator = RandomParkMiller::new(1, 1);
+    let mut gen_two = AntiThetic::new(generator);
     simple_montecarlo6(
         &the_option,
         spot,

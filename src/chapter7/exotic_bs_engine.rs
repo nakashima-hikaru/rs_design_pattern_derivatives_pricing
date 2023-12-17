@@ -3,9 +3,10 @@ use crate::chapter6::random2::Random;
 use crate::chapter7::exotic_engine::ExoticEngine;
 use crate::chapter7::path_dependent::PathDependent;
 
-pub struct ExoticBSEngine<'a, R: Random> {
+#[derive(Clone)]
+pub struct ExoticBSEngine<R: Random> {
     /// A random number generator
-    the_generator: &'a mut R,
+    the_generator: R,
     /// Drifts
     drifts: Vec<f64>,
     /// The standard deviations of logarithm of the stock price
@@ -18,7 +19,7 @@ pub struct ExoticBSEngine<'a, R: Random> {
     variates: Vec<f64>,
 }
 
-impl<'a, R: Random> ExoticBSEngine<'a, R> {
+impl<R: Random> ExoticBSEngine<R> {
     /// Constructor.
     ///
     /// # Arguments
@@ -33,9 +34,9 @@ impl<'a, R: Random> ExoticBSEngine<'a, R> {
         r: &impl Parameters,
         d: impl Parameters,
         vol: impl Parameters,
-        the_generator: &'a mut R,
+        mut the_generator: R,
         spot: f64,
-    ) -> ExoticBSEngine<'a, R> {
+    ) -> ExoticBSEngine<R> {
         let number_of_times = look_at_times.len();
 
         the_generator.reset_dimensionality(number_of_times);
@@ -65,7 +66,7 @@ impl<'a, R: Random> ExoticBSEngine<'a, R> {
     }
 }
 
-impl<'a, T: PathDependent, S: Parameters, R: Random> ExoticEngine<T, S> for ExoticBSEngine<'a, R> {
+impl<T: PathDependent, S: Parameters, R: Random> ExoticEngine<T, S> for ExoticBSEngine<R> {
     /// Stores spot values on a path.
     ///
     /// # Arguments
@@ -82,5 +83,9 @@ impl<'a, T: PathDependent, S: Parameters, R: Random> ExoticEngine<T, S> for Exot
             current_log_spot += self.drifts[j] + self.standard_deviations[j] * self.variates[j];
             *spot_value = current_log_spot.exp();
         }
+    }
+
+    fn set_seed(&mut self, seed: u64) {
+        self.the_generator.set_seed(seed);
     }
 }

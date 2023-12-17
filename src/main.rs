@@ -58,7 +58,7 @@ async fn calculate_price(form: axum::extract::Form<PriceParameters>) -> Result<S
         );
         times.push(now.elapsed());
         if let Ok(result) = result {
-            // Release: Duration { seconds: 2, nanoseconds: 770814229 } x1000000
+            // Release: Duration { seconds: 0, nanoseconds: 793484946 } x1000000
             ret = Ok(format!("The price is {}\n", result));
         } else {
             ret = Err(format!("{}", result.err().unwrap()));

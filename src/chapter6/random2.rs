@@ -11,8 +11,7 @@
 //! 累積関数の逆関数を通して一様乱数を正規乱数に変換するため、[[0,1]]区間から0,1は除いてサンプリングする。
 
 use crate::chapter6::normals::inverse_cumulative_normal;
-// 11.89s -> 10.42s
-pub trait Random: Send + Sync {
+pub trait Random: Send + Sync + Clone {
     fn get_dimensionality(&self) -> usize;
     fn get_uniforms(&mut self, variates: &mut [f64]);
     fn skip(&mut self, number_of_paths: u64);

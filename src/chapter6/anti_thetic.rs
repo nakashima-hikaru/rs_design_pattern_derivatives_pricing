@@ -3,15 +3,16 @@
 use crate::chapter6::random2::Random;
 
 /// Implemented in the decorator pattern.
-pub struct AntiThetic<'a, T: Random> {
+#[derive(Clone)]
+pub struct AntiThetic<T: Random> {
     dimensionality: usize,
-    generator: &'a mut T,
+    generator: T,
     odd_even: bool,
     next_variates: Vec<f64>,
 }
 
-impl<'a, T: Random> AntiThetic<'a, T> {
-    pub fn new(generator: &'a mut T) -> AntiThetic<'a, T> {
+impl<T: Random> AntiThetic<T> {
+    pub fn new(generator: T) -> AntiThetic<T> {
         let dimensionality = generator.get_dimensionality();
         AntiThetic {
             dimensionality,
@@ -22,7 +23,7 @@ impl<'a, T: Random> AntiThetic<'a, T> {
     }
 }
 
-impl<'a, T: Random> Random for AntiThetic<'a, T> {
+impl<T: Random> Random for AntiThetic<T> {
     fn get_dimensionality(&self) -> usize {
         self.dimensionality
     }

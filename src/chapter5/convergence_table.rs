@@ -1,14 +1,14 @@
 use crate::chapter5::mc_statistics::StatisticsMC;
 
-pub struct ConvergenceTable<'a, T: StatisticsMC> {
-    inner: &'a mut T,
+pub struct ConvergenceTable<T: StatisticsMC> {
+    inner: T,
     results_so_far: Vec<Vec<f64>>,
     stopping_point: u64,
     paths_done: u64,
 }
 
-impl<'a, T: StatisticsMC> ConvergenceTable<'a, T> {
-    pub fn new(inner: &'a mut T) -> ConvergenceTable<'a, T> {
+impl<T: StatisticsMC> ConvergenceTable<T> {
+    pub fn new(inner: T) -> ConvergenceTable<T> {
         ConvergenceTable {
             inner,
             results_so_far: Vec::<Vec<f64>>::default(),
@@ -18,7 +18,7 @@ impl<'a, T: StatisticsMC> ConvergenceTable<'a, T> {
     }
 }
 
-impl<'a, T: StatisticsMC> StatisticsMC for ConvergenceTable<'a, T> {
+impl<T: StatisticsMC> StatisticsMC for ConvergenceTable<T> {
     fn dump_one_result(&mut self, result: f64) {
         self.inner.dump_one_result(result);
         self.paths_done += 1;
@@ -65,10 +65,10 @@ mod tests {
 
     #[test]
     fn test_convergence_table() {
-        let mut stats = MockStats {
+        let stats = MockStats {
             results: Vec::new(),
         };
-        let mut conv_table = ConvergenceTable::new(&mut stats);
+        let mut conv_table = ConvergenceTable::new(stats);
 
         let num_paths = 1024u32;
         let expected_results = (2..=num_paths)
