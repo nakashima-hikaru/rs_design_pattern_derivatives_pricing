@@ -15,13 +15,10 @@ pub struct ExoticEngineData<'a, T: PathDependent + ?Sized, S: Parameters> {
     r: &'a S,
     /// Discount factors
     discounts: Vec<f64>,
-    /// Cash flows simulated on paths
-    these_cash_flows: Vec<CashFlow>,
 }
 
 impl<'a, T: PathDependent + ?Sized, S: Parameters> ExoticEngineData<'a, T, S> {
     pub fn new(the_product: &'a T, r: &'a S) -> ExoticEngineData<'a, T, S> {
-        let these_cash_flows = vec![CashFlow::default(); the_product.max_number_of_cash_flows()];
         let discounts = the_product
             .possible_cash_flow_times()
             .iter_mut()
@@ -31,7 +28,6 @@ impl<'a, T: PathDependent + ?Sized, S: Parameters> ExoticEngineData<'a, T, S> {
             the_product,
             r,
             discounts,
-            these_cash_flows,
         }
     }
     /// Returns the pointer of `self.the_product`.
@@ -43,16 +39,14 @@ impl<'a, T: PathDependent + ?Sized, S: Parameters> ExoticEngineData<'a, T, S> {
         self.r
     }
 
-    fn do_one_path(&mut self, spot_values: &[f64]) -> f64 {
-        // self.these_cash_flows.clear();
-        self.these_cash_flows.resize_with(
+    fn do_one_path(&mut self, spot_values: &[f64], these_cash_flows: &mut Vec<CashFlow>) -> f64 {
+        these_cash_flows.resize_with(
             self.the_product.max_number_of_cash_flows(),
             CashFlow::default,
         );
-        self.the_product
-            .cash_flows(spot_values, &mut self.these_cash_flows);
+        self.the_product.cash_flows(spot_values, these_cash_flows);
         let discounts = &self.discounts;
-        self.these_cash_flows
+        these_cash_flows
             .iter()
             .map(|cash_flow| cash_flow.amount * discounts[cash_flow.time_index])
             .sum()
@@ -74,17 +68,23 @@ pub trait ExoticEngine<T: PathDependent + ?Sized, S: Parameters> {
         Self: Send,
     {
         let length_of_times = data.the_product.get_look_at_times().len();
+        let max_number_of_cash_flows = data.the_product.max_number_of_cash_flows();
         let self_ptr = Arc::new(Mutex::new(self));
         let the_gatherer_ptr = Arc::new(Mutex::new(the_gatherer));
         let data_ptr = Arc::new(Mutex::new(data));
         (0..number_of_paths).into_par_iter().for_each_init(
-            || vec![0.0; length_of_times],
-            |spot_values, _| {
+            || {
+                (
+                    vec![0.0; length_of_times],
+                    vec![CashFlow::default(); max_number_of_cash_flows],
+                )
+            },
+            |(spot_values, these_cash_flows), _| {
                 let mut locked_self_ptr = self_ptr.lock().unwrap();
                 let mut locked_the_gatherer_ptr = the_gatherer_ptr.lock().unwrap();
                 let mut locked_data_ptr = data_ptr.lock().unwrap();
                 (*locked_self_ptr).get_one_path(spot_values);
-                let this_value = (*locked_data_ptr).do_one_path(spot_values);
+                let this_value = (*locked_data_ptr).do_one_path(spot_values, these_cash_flows);
                 (*locked_the_gatherer_ptr).dump_one_result(this_value);
             },
         );
