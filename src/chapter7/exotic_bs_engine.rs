@@ -29,27 +29,26 @@ impl<'a, R: Random> ExoticBSEngine<'a, R> {
     /// * `the_generator` - A random number generator
     /// * `spot` - A spot value of a stock
     pub fn new(
-        the_product: &impl PathDependent,
+        look_at_times: &Vec<f64>,
         r: &impl Parameters,
         d: impl Parameters,
         vol: impl Parameters,
         the_generator: &'a mut R,
         spot: f64,
     ) -> ExoticBSEngine<'a, R> {
-        let times = the_product.get_look_at_times();
-        let number_of_times = times.len();
+        let number_of_times = look_at_times.len();
 
         the_generator.reset_dimensionality(number_of_times);
         let mut drifts = vec![0.0; number_of_times];
         let mut standard_deviations = vec![0.0; number_of_times];
 
-        let variance = vol.integral_square(0.0, times[0]);
-        drifts[0] = r.integral(0.0, times[0]) - d.integral(0.0, times[0]) - 0.5 * variance;
+        let variance = vol.integral_square(0.0, look_at_times[0]);
+        drifts[0] = r.integral(0.0, look_at_times[0]) - d.integral(0.0, look_at_times[0]) - 0.5 * variance;
         standard_deviations[0] = variance.sqrt();
         for j in 1..number_of_times {
-            let this_variance = vol.integral_square(times[j - 1], times[j]);
-            drifts[j] = r.integral(times[j - 1], times[j])
-                - d.integral(times[j - 1], times[j])
+            let this_variance = vol.integral_square(look_at_times[j - 1], look_at_times[j]);
+            drifts[j] = r.integral(look_at_times[j - 1], look_at_times[j])
+                - d.integral(look_at_times[j - 1], look_at_times[j])
                 - 0.5 * this_variance;
             standard_deviations[j] = this_variance.sqrt();
         }
