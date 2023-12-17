@@ -39,7 +39,7 @@ impl<'a, T: PathDependent + ?Sized, S: Parameters> ExoticEngineData<'a, T, S> {
         self.r
     }
 
-    fn do_one_path(&mut self, spot_values: &[f64], these_cash_flows: &mut Vec<CashFlow>) -> f64 {
+    fn do_one_path(&self, spot_values: &[f64], these_cash_flows: &mut Vec<CashFlow>) -> f64 {
         these_cash_flows.resize_with(
             self.the_product.max_number_of_cash_flows(),
             CashFlow::default,
@@ -60,7 +60,7 @@ pub trait ExoticEngine<T: PathDependent + ?Sized, S: Parameters> {
 
     fn do_simulation(
         &mut self,
-        data: &mut ExoticEngineData<T, S>,
+        data: &ExoticEngineData<T, S>,
         the_gatherer: &mut impl StatisticsMC,
         number_of_paths: usize,
     ) where
@@ -71,7 +71,6 @@ pub trait ExoticEngine<T: PathDependent + ?Sized, S: Parameters> {
         let max_number_of_cash_flows = data.the_product.max_number_of_cash_flows();
         let self_ptr = Arc::new(Mutex::new(self));
         let the_gatherer_ptr = Arc::new(Mutex::new(the_gatherer));
-        let data_ptr = Arc::new(Mutex::new(data));
         (0..number_of_paths).into_par_iter().for_each_init(
             || {
                 (
@@ -80,12 +79,9 @@ pub trait ExoticEngine<T: PathDependent + ?Sized, S: Parameters> {
                 )
             },
             |(spot_values, these_cash_flows), _| {
-                let mut locked_self_ptr = self_ptr.lock().unwrap();
-                let mut locked_the_gatherer_ptr = the_gatherer_ptr.lock().unwrap();
-                let mut locked_data_ptr = data_ptr.lock().unwrap();
-                (*locked_self_ptr).get_one_path(spot_values);
-                let this_value = (*locked_data_ptr).do_one_path(spot_values, these_cash_flows);
-                (*locked_the_gatherer_ptr).dump_one_result(this_value);
+                (*self_ptr.lock().unwrap()).get_one_path(spot_values);
+                let this_value = data.do_one_path(spot_values, these_cash_flows);
+                (*the_gatherer_ptr.lock().unwrap()).dump_one_result(this_value);
             },
         );
     }
