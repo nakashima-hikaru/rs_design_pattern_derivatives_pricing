@@ -44,7 +44,7 @@ impl<'a, T: PathDependent + ?Sized, S: Parameters> ExoticEngineData<'a, T, S> {
     }
 
     fn do_one_path(&mut self, spot_values: &[f64]) -> f64 {
-        self.these_cash_flows.clear();
+        // self.these_cash_flows.clear();
         self.these_cash_flows.resize_with(
             self.the_product.max_number_of_cash_flows(),
             CashFlow::default,
@@ -73,19 +73,20 @@ pub trait ExoticEngine<T: PathDependent + ?Sized, S: Parameters> {
         Self: Sync,
         Self: Send,
     {
-        let spot_values = vec![0.0; data.the_product.get_look_at_times().len()];
+        let length_of_times = data.the_product.get_look_at_times().len();
         let self_ptr = Arc::new(Mutex::new(self));
         let the_gatherer_ptr = Arc::new(Mutex::new(the_gatherer));
-        let spot_values_ptr = Arc::new(Mutex::new(spot_values));
         let data_ptr = Arc::new(Mutex::new(data));
-        (0..number_of_paths).into_par_iter().for_each(|_| {
-            let mut locked_self_ptr = self_ptr.lock().unwrap();
-            let mut locked_the_gatherer_ptr = the_gatherer_ptr.lock().unwrap();
-            let mut locked_spot_values_ptr = spot_values_ptr.lock().unwrap();
-            let mut locked_data_ptr = data_ptr.lock().unwrap();
-            (*locked_self_ptr).get_one_path(&mut locked_spot_values_ptr);
-            let this_value = (*locked_data_ptr).do_one_path(&locked_spot_values_ptr);
-            (*locked_the_gatherer_ptr).dump_one_result(this_value);
-        });
+        (0..number_of_paths).into_par_iter().for_each_init(
+            || vec![0.0; length_of_times],
+            |spot_values, _| {
+                let mut locked_self_ptr = self_ptr.lock().unwrap();
+                let mut locked_the_gatherer_ptr = the_gatherer_ptr.lock().unwrap();
+                let mut locked_data_ptr = data_ptr.lock().unwrap();
+                (*locked_self_ptr).get_one_path(spot_values);
+                let this_value = (*locked_data_ptr).do_one_path(spot_values);
+                (*locked_the_gatherer_ptr).dump_one_result(this_value);
+            },
+        );
     }
 }

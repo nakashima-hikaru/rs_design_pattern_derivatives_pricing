@@ -43,7 +43,8 @@ impl<'a, R: Random> ExoticBSEngine<'a, R> {
         let mut standard_deviations = vec![0.0; number_of_times];
 
         let variance = vol.integral_square(0.0, look_at_times[0]);
-        drifts[0] = r.integral(0.0, look_at_times[0]) - d.integral(0.0, look_at_times[0]) - 0.5 * variance;
+        drifts[0] =
+            r.integral(0.0, look_at_times[0]) - d.integral(0.0, look_at_times[0]) - 0.5 * variance;
         standard_deviations[0] = variance.sqrt();
         for j in 1..number_of_times {
             let this_variance = vol.integral_square(look_at_times[j - 1], look_at_times[j]);
