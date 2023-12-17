@@ -7,7 +7,9 @@ use rust_design_pattern_derivative_pricing::chapter5::mc_statistics::StatisticsM
 use rust_design_pattern_derivative_pricing::chapter6::anti_thetic::AntiThetic;
 use rust_design_pattern_derivative_pricing::chapter6::park_miller::RandomParkMiller;
 use rust_design_pattern_derivative_pricing::chapter7::exotic_bs_engine::ExoticBSEngine;
-use rust_design_pattern_derivative_pricing::chapter7::exotic_engine::ExoticEngine;
+use rust_design_pattern_derivative_pricing::chapter7::exotic_engine::{
+    ExoticEngine, ExoticEngineData,
+};
 use rust_design_pattern_derivative_pricing::chapter7::path_dependent_asian::PathDependentAsian;
 
 #[allow(clippy::too_many_arguments)]
@@ -43,7 +45,9 @@ pub fn price(
         &mut gen_two,
         spot,
     );
-    the_engine.do_simulation(&mut gatherer_two, number_of_paths);
+    let temp = ParametersConstant::new(r);
+    let mut exotic_engine_data = ExoticEngineData::new(&the_option, &temp);
+    the_engine.do_simulation(&mut exotic_engine_data, &mut gatherer_two, number_of_paths);
     let results = gatherer_two.get_results_so_far();
     println!("\nFor the Asian call price the results are \n");
     for result in &results {

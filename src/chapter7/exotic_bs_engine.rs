@@ -1,11 +1,9 @@
 use crate::chapter4::parameters::Parameters;
 use crate::chapter6::random2::Random;
 use crate::chapter7::exotic_engine::ExoticEngine;
-use crate::chapter7::exotic_engine::ExoticEngineData;
 use crate::chapter7::path_dependent::PathDependent;
 
-pub struct ExoticBSEngine<'a, T: PathDependent + ?Sized, S: Parameters, R: Random> {
-    exotic_engine_data: ExoticEngineData<'a, T, S>,
+pub struct ExoticBSEngine<'a, R: Random> {
     /// A random number generator
     the_generator: &'a mut R,
     /// Drifts
@@ -20,7 +18,7 @@ pub struct ExoticBSEngine<'a, T: PathDependent + ?Sized, S: Parameters, R: Rando
     variates: Vec<f64>,
 }
 
-impl<'a, T: PathDependent + ?Sized, S: Parameters, R: Random> ExoticBSEngine<'a, T, S, R> {
+impl<'a, R: Random> ExoticBSEngine<'a, R> {
     /// Constructor.
     ///
     /// # Arguments
@@ -31,15 +29,14 @@ impl<'a, T: PathDependent + ?Sized, S: Parameters, R: Random> ExoticBSEngine<'a,
     /// * `the_generator` - A random number generator
     /// * `spot` - A spot value of a stock
     pub fn new(
-        the_product: &'a T,
-        r: &'a S,
+        the_product: &impl PathDependent,
+        r: &impl Parameters,
         d: impl Parameters,
         vol: impl Parameters,
         the_generator: &'a mut R,
         spot: f64,
-    ) -> ExoticBSEngine<'a, T, S, R> {
-        let exotic_engine_data = ExoticEngineData::new(the_product, r);
-        let times = exotic_engine_data.get_the_product().get_look_at_times();
+    ) -> ExoticBSEngine<'a, R> {
+        let times = the_product.get_look_at_times();
         let number_of_times = times.len();
 
         the_generator.reset_dimensionality(number_of_times);
@@ -47,20 +44,17 @@ impl<'a, T: PathDependent + ?Sized, S: Parameters, R: Random> ExoticBSEngine<'a,
         let mut standard_deviations = vec![0.0; number_of_times];
 
         let variance = vol.integral_square(0.0, times[0]);
-        drifts[0] = exotic_engine_data.get_r().integral(0.0, times[0])
-            - d.integral(0.0, times[0])
-            - 0.5 * variance;
+        drifts[0] = r.integral(0.0, times[0]) - d.integral(0.0, times[0]) - 0.5 * variance;
         standard_deviations[0] = variance.sqrt();
         for j in 1..number_of_times {
             let this_variance = vol.integral_square(times[j - 1], times[j]);
-            drifts[j] = exotic_engine_data.get_r().integral(times[j - 1], times[j])
+            drifts[j] = r.integral(times[j - 1], times[j])
                 - d.integral(times[j - 1], times[j])
                 - 0.5 * this_variance;
             standard_deviations[j] = this_variance.sqrt();
         }
         let variates = vec![0.0; number_of_times];
         ExoticBSEngine {
-            exotic_engine_data,
             the_generator,
             drifts,
             standard_deviations,
@@ -71,14 +65,7 @@ impl<'a, T: PathDependent + ?Sized, S: Parameters, R: Random> ExoticBSEngine<'a,
     }
 }
 
-impl<'a, T: PathDependent, S: Parameters, R: Random> ExoticEngine<T, S>
-    for ExoticBSEngine<'a, T, S, R>
-{
-    /// Returns the pointer of `self.exotic_engine_data`
-    fn get_exotic_engine_data(&self) -> &ExoticEngineData<T, S> {
-        &self.exotic_engine_data
-    }
-
+impl<'a, T: PathDependent, S: Parameters, R: Random> ExoticEngine<T, S> for ExoticBSEngine<'a, R> {
     /// Stores spot values on a path.
     ///
     /// # Arguments

@@ -39,6 +39,7 @@ struct PriceParameters {
 }
 
 async fn calculate_price(form: axum::extract::Form<PriceParameters>) -> Result<String, String> {
+    let now = time::Instant::now();
     let result = equity_fx_main::price(
         form.option_type.as_str(),
         form.expiry,
@@ -51,6 +52,7 @@ async fn calculate_price(form: axum::extract::Form<PriceParameters>) -> Result<S
         form.number_of_paths,
     );
     if let Ok(result) = result {
+        println!("{:?}", now.elapsed()); // Duration { seconds: 1, nanoseconds: 428925000 }
         Ok(format!("The price is {}\n", result))
     } else {
         Err(format!("{}", result.err().unwrap()))
