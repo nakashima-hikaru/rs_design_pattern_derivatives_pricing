@@ -7,7 +7,10 @@ pub fn normal_density(x: f64) -> f64 {
 #[inline(always)]
 pub fn inverse_cumulative_normal(u: f64) -> f64 {
     if !(-1.0..=1.0).contains(&u) {
-        panic!("Parameters of inverse_cumulative must be within the interval [-1, 1].");
+        panic!(
+            "Parameters of inverse_cumulative must be within the interval [-1, 1], but got {value}.",
+            value = u
+        );
     }
     if (0.5..=0.92).contains(&u) {
         const A: [f64; 4] = [
