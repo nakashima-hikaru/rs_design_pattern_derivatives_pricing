@@ -87,7 +87,7 @@ impl Random for RandomParkMiller {
     /// # Arguments
     ///
     /// * `number_of_paths` - The number of paths to skip.
-    fn skip(&mut self, number_of_paths: u64) {
+    fn skip(&mut self, number_of_paths: usize) {
         let mut tmp = vec![0.0; self.get_dimensionality()];
         for _j in 0..number_of_paths {
             self.get_uniforms(&mut tmp);

@@ -37,7 +37,7 @@ impl<T: Random> Random for AntiThetic<T> {
             self.odd_even = true;
         }
     }
-    fn skip(&mut self, mut number_of_paths: u64) {
+    fn skip(&mut self, mut number_of_paths: usize) {
         if number_of_paths == 0 {
             return;
         }

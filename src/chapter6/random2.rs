@@ -14,7 +14,7 @@ use crate::chapter6::normals::inverse_cumulative_normal;
 pub trait Random: Send + Sync + Clone {
     fn get_dimensionality(&self) -> usize;
     fn get_uniforms(&mut self, variates: &mut [f64]);
-    fn skip(&mut self, number_of_paths: u64);
+    fn skip(&mut self, number_of_paths: usize);
     fn set_seed(&mut self, seed: u64);
     fn reset(&mut self);
     fn get_gaussians(&mut self, variates: &mut [f64]) {

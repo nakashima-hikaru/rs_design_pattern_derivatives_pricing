@@ -88,4 +88,8 @@ impl<T: PathDependent, S: Parameters, R: Random> ExoticEngine<T, S> for ExoticBS
     fn set_seed(&mut self, seed: u64) {
         self.the_generator.set_seed(seed);
     }
+
+    fn skip(&mut self, number_of_paths: usize) {
+        self.the_generator.skip(number_of_paths);
+    }
 }

@@ -4,6 +4,7 @@ use crate::chapter4::parameters::Parameters;
 use crate::chapter5::mc_statistics::StatisticsMC;
 use crate::chapter7::path_dependent::CashFlow;
 use crate::chapter7::path_dependent::PathDependent;
+use rayon::current_thread_index;
 use rayon::iter::IntoParallelIterator;
 use rayon::iter::ParallelIterator;
 use std::sync::{Arc, Mutex};
@@ -60,6 +61,8 @@ pub trait ExoticEngine<T: PathDependent + ?Sized, S: Parameters>: Clone {
 
     fn set_seed(&mut self, seed: u64);
 
+    fn skip(&mut self, number_of_paths: usize);
+
     fn do_simulation(
         &mut self,
         data: &ExoticEngineData<T, S>,
@@ -72,12 +75,19 @@ pub trait ExoticEngine<T: PathDependent + ?Sized, S: Parameters>: Clone {
         let length_of_times = data.the_product.get_look_at_times().len();
         let max_number_of_cash_flows = data.the_product.max_number_of_cash_flows();
         let the_gatherer_ptr = Arc::new(Mutex::new(the_gatherer)); // todo: this should be cloned per-thread
+                                                                   // println!("{}", current_num_threads());
         (0..number_of_paths).into_par_iter().for_each_init(
             || {
                 (
                     vec![0.0; length_of_times],
                     vec![CashFlow::default(); max_number_of_cash_flows],
-                    self.clone(),
+                    {
+                        let num_skip = current_thread_index().unwrap() * length_of_times;
+                        let mut ret = self.clone();
+                        ret.skip(num_skip);
+                        // ret
+                        self.clone()
+                    },
                 )
             },
             |(spot_values, these_cash_flows, cloned_self), _| {
@@ -86,5 +96,6 @@ pub trait ExoticEngine<T: PathDependent + ?Sized, S: Parameters>: Clone {
                 (*the_gatherer_ptr.lock().unwrap()).dump_one_result(this_value);
             },
         );
+        // process::exit(0);
     }
 }
