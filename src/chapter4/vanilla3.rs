@@ -10,7 +10,7 @@ pub struct VanillaOption<'a, T: Payoff> {
 }
 
 impl<'a, T: Payoff> VanillaOption<'a, T> {
-    pub fn new(the_payoff: &'a T, expiry: f64) -> VanillaOption<'a, T> {
+    pub fn new(the_payoff: &'a T, expiry: f64) -> Self {
         VanillaOption { expiry, the_payoff }
     }
     pub fn get_expiry(&self) -> f64 {

@@ -22,7 +22,7 @@ pub struct Payoff {
 }
 
 impl Payoff {
-    pub fn new(strike: f64, the_option_type: OptionType) -> Payoff {
+    pub fn new(strike: f64, the_option_type: OptionType) -> Self {
         Payoff {
             strike,
             the_option_type,

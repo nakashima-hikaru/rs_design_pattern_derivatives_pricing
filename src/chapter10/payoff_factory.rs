@@ -1,28 +1,31 @@
 use crate::chapter10::payoff_registration_error::RegistrationError;
 use crate::chapter10::payoff_registration_error::RegistrationError::{DuplicateError, NotFound};
 use crate::chapter4::payoff3::{Payoff, PayoffCall, PayoffPut};
-use std::{collections::HashMap, sync::Mutex, sync::OnceLock};
+use std::{collections::HashMap, sync::OnceLock};
 
 type CreatePayoffFunction = fn(f64) -> Box<dyn Payoff>;
 
-static FACTORY: OnceLock<Mutex<PayoffFactory>> = OnceLock::new();
+static FACTORY: OnceLock<PayoffFactory> = OnceLock::new();
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct PayoffFactory {
     the_creator_functions: HashMap<String, CreatePayoffFunction>,
 }
 
 impl PayoffFactory {
-    pub fn instance() -> Result<&'static Mutex<PayoffFactory>, RegistrationError> {
-        let mut init = false;
-        let ret = FACTORY.get_or_init(|| {
-            init = true;
-            PayoffFactory::default().into()
-        });
-        if init {
-            PayoffFactory::register_all_payoffs()?;
+    pub fn instance() -> Result<&'static PayoffFactory, RegistrationError> {
+        let factory = FACTORY.get();
+        match factory {
+            Some(x) => {
+                return Ok(x);
+            }
+            None => {
+                let mut val = Self::default();
+                val.register_all_payoffs()?;
+                FACTORY.set(val).unwrap();
+            }
         }
-        Ok(ret)
+        Ok(FACTORY.get().unwrap())
     }
 
     pub fn create_payoff(
@@ -40,24 +43,21 @@ impl PayoffFactory {
         }
     }
 
-    fn register<T: Payoff + 'static>() -> Result<(), RegistrationError> {
-        let factory = PayoffFactory::instance()?.lock()?;
+    fn register<T: Payoff + 'static>(&mut self) -> Result<(), RegistrationError> {
         let payoff_id = T::name();
-        if factory.the_creator_functions.contains_key(payoff_id) {
+        if self.the_creator_functions.contains_key(payoff_id) {
             return Err(DuplicateError(payoff_id.to_string()));
         }
-        let mut factory = factory;
-        factory
-            .the_creator_functions
+        self.the_creator_functions
             .insert(payoff_id.to_string(), |strike| {
                 Box::<T>::new(T::new(strike))
             });
         Ok(())
     }
 
-    fn register_all_payoffs() -> Result<(), RegistrationError> {
-        Self::register::<PayoffCall>()?;
-        Self::register::<PayoffPut>()?;
+    fn register_all_payoffs(&mut self) -> Result<(), RegistrationError> {
+        self.register::<PayoffCall>()?;
+        self.register::<PayoffPut>()?;
         Ok(())
     }
 }

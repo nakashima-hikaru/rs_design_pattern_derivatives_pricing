@@ -19,7 +19,7 @@ pub struct ExoticEngineData<'a, T: PathDependent + ?Sized, S: Parameters> {
 }
 
 impl<'a, T: PathDependent + ?Sized, S: Parameters> ExoticEngineData<'a, T, S> {
-    pub fn new(the_product: &'a T, r: &'a S) -> ExoticEngineData<'a, T, S> {
+    pub fn new(the_product: &'a T, r: &'a S) -> Self {
         let discounts = the_product
             .possible_cash_flow_times()
             .iter_mut()

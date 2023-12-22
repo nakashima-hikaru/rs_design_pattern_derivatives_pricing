@@ -10,12 +10,10 @@ text_io = "0.1.12"
 rand = "0.8.5"
 rayon = "1.8.0"
 serde = { version = "1.0.193", features = ["derive"] }
-approx = "0.5.1"
-axum = "0.7.1"
-tokio = { version = "1.34.0", features = ["macros", "rt-multi-thread"] }
+axum = "0.7.2"
+tokio = { version = "1.35.1", features = ["macros", "rt-multi-thread"] }
 anyhow = "1.0.75"
-thiserror = "1.0.50"
-time = "0.3.30"
+thiserror = "1.0.51"
 
 [dev-dependencies]
 approx = "0.5.1"

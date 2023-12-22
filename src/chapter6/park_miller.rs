@@ -58,7 +58,7 @@ pub struct RandomParkMiller {
 }
 
 impl RandomParkMiller {
-    pub fn new(dimensionality: usize, seed: u64) -> RandomParkMiller {
+    pub fn new(dimensionality: usize, seed: u64) -> Self {
         let generator = ParkMiller::new(seed);
         let reciprocal = 1.0 / (1.0 + generator.max() as f64);
         RandomParkMiller {

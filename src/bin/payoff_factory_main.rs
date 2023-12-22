@@ -13,7 +13,7 @@ fn main() -> Result<(), RegistrationError> {
     io::stdin().read_line(&mut name).unwrap();
     let name = name.trim();
 
-    let payoff_factory = PayoffFactory::instance()?.lock()?;
+    let payoff_factory = PayoffFactory::instance()?;
     let payoff = payoff_factory.create_payoff(name, strike)?;
 
     println!("spot");

@@ -11,11 +11,7 @@ pub struct PathDependentAsian<'a, T: Payoff + ?Sized> {
 }
 
 impl<'a, T: Payoff + ?Sized> PathDependentAsian<'a, T> {
-    pub fn new(
-        look_at_times: Vec<f64>,
-        delivery_time: f64,
-        the_payoff: &'a T,
-    ) -> PathDependentAsian<'a, T> {
+    pub fn new(look_at_times: Vec<f64>, delivery_time: f64, the_payoff: &'a T) -> Self {
         PathDependentAsian {
             delivery_time,
             the_payoff,
