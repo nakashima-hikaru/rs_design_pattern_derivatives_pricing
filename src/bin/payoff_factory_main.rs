@@ -1,8 +1,8 @@
 use rust_design_pattern_derivative_pricing::chapter10::payoff_factory::PayoffFactory;
-use rust_design_pattern_derivative_pricing::chapter10::payoff_registration_error::RegistrationError;
+use rust_design_pattern_derivative_pricing::chapter10::payoff_registration_error::FactoryError;
 use std::io;
 
-fn main() -> Result<(), RegistrationError> {
+fn main() -> Result<(), FactoryError> {
     println!("strike");
     let mut strike = String::new();
     io::stdin().read_line(&mut strike).unwrap();

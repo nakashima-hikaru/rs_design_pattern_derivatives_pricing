@@ -1,5 +1,5 @@
 use rust_design_pattern_derivative_pricing::chapter10::payoff_factory::PayoffFactory;
-use rust_design_pattern_derivative_pricing::chapter10::payoff_registration_error::RegistrationError;
+use rust_design_pattern_derivative_pricing::chapter10::payoff_registration_error::FactoryError;
 use rust_design_pattern_derivative_pricing::chapter4::parameters::ParametersConstant;
 use rust_design_pattern_derivative_pricing::chapter5::convergence_table::ConvergenceTable;
 use rust_design_pattern_derivative_pricing::chapter5::mc_statistics::StatisticsMC;
@@ -23,7 +23,7 @@ pub fn price(
     d: f64,
     number_of_dates: usize,
     number_of_paths: usize,
-) -> Result<f64, RegistrationError> {
+) -> Result<f64, FactoryError> {
     let payoff_factory = PayoffFactory::instance()?;
     let the_payoff = payoff_factory.create_payoff(option_type, strike)?;
     let times = (0..number_of_dates)
@@ -66,7 +66,7 @@ pub fn test_main() {
     let d = 0.0;
     let number_of_dates = 1000;
     let number_of_paths = 1000;
-    let payoff_factory = PayoffFactory::instance().unwrap().lock().unwrap();
+    let payoff_factory = PayoffFactory::instance().unwrap();
     let the_payoff = payoff_factory.create_payoff(option_type, strike).unwrap();
 
     let times = (0..number_of_dates)

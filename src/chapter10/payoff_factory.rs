@@ -1,5 +1,5 @@
-use crate::chapter10::payoff_registration_error::RegistrationError;
-use crate::chapter10::payoff_registration_error::RegistrationError::{DuplicateError, NotFound};
+use crate::chapter10::payoff_registration_error::FactoryError;
+use crate::chapter10::payoff_registration_error::FactoryError::{DuplicateError, NotFound};
 use crate::chapter4::payoff3::{Payoff, PayoffCall, PayoffPut};
 use std::{collections::HashMap, sync::OnceLock};
 
@@ -13,19 +13,26 @@ pub struct PayoffFactory {
 }
 
 impl PayoffFactory {
-    pub fn instance() -> Result<&'static PayoffFactory, RegistrationError> {
-        Ok(FACTORY.get_or_init(|| {
-            let mut val = Self::default();
-            val.register_all_payoffs().unwrap();
-            val
-        }))
+    pub fn instance() -> Result<&'static PayoffFactory, FactoryError> {
+        let factory = FACTORY.get();
+        match factory {
+            Some(x) => {
+                return Ok(x);
+            }
+            None => {
+                let mut val = Self::default();
+                val.register_all_payoffs()?;
+                FACTORY.set(val).unwrap();
+            }
+        }
+        Ok(FACTORY.get().unwrap())
     }
 
     pub fn create_payoff(
         &self,
         payoff_id: &str,
         strike: f64,
-    ) -> Result<Box<dyn Payoff>, RegistrationError> {
+    ) -> Result<Box<dyn Payoff>, FactoryError> {
         if let Some(creator_function) = self.the_creator_functions.get(payoff_id) {
             Ok(creator_function(strike))
         } else {
@@ -36,7 +43,7 @@ impl PayoffFactory {
         }
     }
 
-    fn register<T: Payoff + 'static>(&mut self) -> Result<(), RegistrationError> {
+    fn register<T: Payoff + 'static>(&mut self) -> Result<(), FactoryError> {
         let payoff_id = T::name();
         if self.the_creator_functions.contains_key(payoff_id) {
             return Err(DuplicateError(payoff_id.to_string()));
@@ -46,7 +53,7 @@ impl PayoffFactory {
         Ok(())
     }
 
-    fn register_all_payoffs(&mut self) -> Result<(), RegistrationError> {
+    fn register_all_payoffs(&mut self) -> Result<(), FactoryError> {
         self.register::<PayoffCall>()?;
         self.register::<PayoffPut>()?;
         Ok(())
