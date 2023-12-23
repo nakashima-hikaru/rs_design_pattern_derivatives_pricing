@@ -9,23 +9,16 @@ static FACTORY: OnceLock<PayoffFactory> = OnceLock::new();
 
 #[derive(Default, Debug)]
 pub struct PayoffFactory {
-    the_creator_functions: HashMap<String, CreatePayoffFunction>,
+    the_creator_functions: HashMap<&'static str, CreatePayoffFunction>,
 }
 
 impl PayoffFactory {
     pub fn instance() -> Result<&'static PayoffFactory, RegistrationError> {
-        let factory = FACTORY.get();
-        match factory {
-            Some(x) => {
-                return Ok(x);
-            }
-            None => {
-                let mut val = Self::default();
-                val.register_all_payoffs()?;
-                FACTORY.set(val).unwrap();
-            }
-        }
-        Ok(FACTORY.get().unwrap())
+        Ok(FACTORY.get_or_init(|| {
+            let mut val = Self::default();
+            val.register_all_payoffs().unwrap();
+            val
+        }))
     }
 
     pub fn create_payoff(
@@ -49,9 +42,7 @@ impl PayoffFactory {
             return Err(DuplicateError(payoff_id.to_string()));
         }
         self.the_creator_functions
-            .insert(payoff_id.to_string(), |strike| {
-                Box::<T>::new(T::new(strike))
-            });
+            .insert(payoff_id, |strike| Box::<T>::new(T::new(strike)));
         Ok(())
     }
 
