@@ -66,7 +66,7 @@ impl<R: Random> ExoticBSEngine<R> {
     }
 }
 
-impl<T: PathDependent, S: Parameters, R: Random> ExoticEngine<T, S> for ExoticBSEngine<R> {
+impl<T: PathDependent, R: Random> ExoticEngine<T> for ExoticBSEngine<R> {
     /// Stores spot values on a path.
     ///
     /// # Arguments

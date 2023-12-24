@@ -9,17 +9,15 @@ use rayon::iter::IntoParallelIterator;
 use rayon::iter::ParallelIterator;
 use std::sync::{Arc, Mutex};
 
-pub struct ExoticEngineData<'a, T: PathDependent + ?Sized, S: Parameters> {
+pub struct ExoticEngineData<'a, T: PathDependent + ?Sized> {
     /// A path dependent product such as Asian option
     the_product: &'a T,
-    /// Interest rates
-    interest_rates: &'a S,
     /// Discount factors
     discount_factors: Vec<f64>,
 }
 
-impl<'a, T: PathDependent + ?Sized, S: Parameters> ExoticEngineData<'a, T, S> {
-    pub fn new(the_product: &'a T, r: &'a S) -> Self {
+impl<'a, T: PathDependent + ?Sized> ExoticEngineData<'a, T> {
+    pub fn new(the_product: &'a T, r: &impl Parameters) -> Self {
         let discounts = the_product
             .possible_cash_flow_times()
             .iter_mut()
@@ -27,19 +25,9 @@ impl<'a, T: PathDependent + ?Sized, S: Parameters> ExoticEngineData<'a, T, S> {
             .collect();
         ExoticEngineData {
             the_product,
-            interest_rates: r,
             discount_factors: discounts,
         }
     }
-    /// Returns the pointer of `self.the_product`.
-    pub fn get_the_product(&self) -> &'a T {
-        self.the_product
-    }
-    /// Returns the pointer of `self.r`.
-    pub fn get_r(&self) -> &'a S {
-        self.interest_rates
-    }
-
     fn do_one_path(&self, spot_values: &[f64], these_cash_flows: &mut Vec<CashFlow>) -> f64 {
         these_cash_flows.resize_with(
             self.the_product.max_number_of_cash_flows(),
@@ -53,9 +41,7 @@ impl<'a, T: PathDependent + ?Sized, S: Parameters> ExoticEngineData<'a, T, S> {
     }
 }
 
-pub trait ExoticEngine<T: PathDependent + ?Sized, S: Parameters>: Clone {
-    /// Returns the pointer of `self.exotic_engine_data`.
-
+pub trait ExoticEngine<T: PathDependent + ?Sized>: Clone {
     fn get_one_path(&mut self, variates: &mut [f64]);
 
     fn set_seed(&mut self, seed: u64);
@@ -64,7 +50,7 @@ pub trait ExoticEngine<T: PathDependent + ?Sized, S: Parameters>: Clone {
 
     fn do_simulation(
         &mut self,
-        data: &ExoticEngineData<T, S>,
+        data: &ExoticEngineData<T>,
         the_gatherer: &mut impl StatisticsMC,
         number_of_paths: usize,
     ) where
