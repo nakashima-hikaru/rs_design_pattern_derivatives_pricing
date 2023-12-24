@@ -42,21 +42,22 @@ impl CashFlow {
     }
 }
 
-/// An product such that its payoff is path-dependent.
+/// A path-dependent product.
+/// The product's payoff depends on the entire path of underlying asset prices.
 pub trait PathDependent: Send + Sync {
-    /// Returns times that will be used in pricing of the product.
+    /// Returns a reference to a `Vec<f64>` that represents the look at times.
     fn get_look_at_times(&self) -> &Vec<f64>;
-    /// Returns the number of elements reserved by a cash-flow-vector.
+    /// Returns the maximum number of cash flows.
     fn max_number_of_cash_flows(&self) -> usize;
 
     /// Returns times of cash flows to calculate its discount factor.
     fn possible_cash_flow_times(&self) -> Vec<f64>;
 
-    /// Returns the number of cash flows generated in one simulation.
+    /// Calculates cash flows based on given spot values and updates the provided `generated_flows` with the results.
     ///
     /// # Arguments
     ///
-    /// * `spot_values` - Spot values collected through simulation using the Monte Carlo method.
-    /// * `generated_flows` - The forward values of cash flows generated in simulation with `spot_values`.
+    /// * `spot_values` - A slice of `f64` values representing the spot values.
+    /// * `generated_flows` - A mutable slice of `CashFlow` objects where the generated cash flows will be updated.
     fn cash_flows(&self, spot_values: &[f64], generated_flows: &mut [CashFlow]) -> u64;
 }

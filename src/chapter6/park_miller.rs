@@ -40,7 +40,7 @@ impl ParkMiller {
     pub fn get_one_random_integer(&mut self) -> u64 {
         let k = self.seed as i64 / ParkMiller::Q;
         let mut seed = ParkMiller::A * (self.seed as i64 - k * ParkMiller::Q) - k * ParkMiller::R;
-        if seed < 0 {
+        if seed.is_negative() {
             seed += ParkMiller::M;
         }
         self.seed = seed as u64;
@@ -60,7 +60,7 @@ pub struct RandomParkMiller {
 impl RandomParkMiller {
     pub fn new(dimensionality: usize, seed: u64) -> Self {
         let generator = ParkMiller::new(seed);
-        let reciprocal = 1.0 / (1.0 + generator.max() as f64);
+        let reciprocal = (1.0 + generator.max() as f64).recip();
         RandomParkMiller {
             dimensionality,
             generator,

@@ -51,7 +51,6 @@ async fn calculate_price(form: axum::extract::Form<PriceParameters>) -> Result<S
         form.number_of_paths,
     );
     if let Ok(result) = result {
-        // Release: Duration { seconds: 0, nanoseconds: 793484946 } x1000000
         Ok(format!("The price is {}\n", result))
     } else {
         Err(format!("{}", result.err().unwrap()))

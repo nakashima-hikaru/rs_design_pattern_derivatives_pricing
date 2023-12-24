@@ -44,11 +44,11 @@ pub fn price(
     println!("\nFor the Asian call price the results are \n");
     for result in &results {
         for data in result {
-            print!("{} ", data);
+            print!("{},", data);
         }
-        println!("\n");
+        println!();
     }
-    Ok(results[0][0])
+    Ok(results.last().unwrap()[0])
 }
 
 #[test]

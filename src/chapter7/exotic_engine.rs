@@ -13,9 +13,9 @@ pub struct ExoticEngineData<'a, T: PathDependent + ?Sized, S: Parameters> {
     /// A path dependent product such as Asian option
     the_product: &'a T,
     /// Interest rates
-    r: &'a S,
+    interest_rates: &'a S,
     /// Discount factors
-    discounts: Vec<f64>,
+    discount_factors: Vec<f64>,
 }
 
 impl<'a, T: PathDependent + ?Sized, S: Parameters> ExoticEngineData<'a, T, S> {
@@ -27,8 +27,8 @@ impl<'a, T: PathDependent + ?Sized, S: Parameters> ExoticEngineData<'a, T, S> {
             .collect();
         ExoticEngineData {
             the_product,
-            r,
-            discounts,
+            interest_rates: r,
+            discount_factors: discounts,
         }
     }
     /// Returns the pointer of `self.the_product`.
@@ -37,7 +37,7 @@ impl<'a, T: PathDependent + ?Sized, S: Parameters> ExoticEngineData<'a, T, S> {
     }
     /// Returns the pointer of `self.r`.
     pub fn get_r(&self) -> &'a S {
-        self.r
+        self.interest_rates
     }
 
     fn do_one_path(&self, spot_values: &[f64], these_cash_flows: &mut Vec<CashFlow>) -> f64 {
@@ -46,10 +46,9 @@ impl<'a, T: PathDependent + ?Sized, S: Parameters> ExoticEngineData<'a, T, S> {
             CashFlow::default,
         );
         self.the_product.cash_flows(spot_values, these_cash_flows);
-        let discounts = &self.discounts;
         these_cash_flows
             .iter()
-            .map(|cash_flow| cash_flow.amount * discounts[cash_flow.time_index])
+            .map(|cash_flow| cash_flow.amount * self.discount_factors[cash_flow.time_index])
             .sum()
     }
 }
@@ -74,8 +73,7 @@ pub trait ExoticEngine<T: PathDependent + ?Sized, S: Parameters>: Clone {
     {
         let length_of_times = data.the_product.get_look_at_times().len();
         let max_number_of_cash_flows = data.the_product.max_number_of_cash_flows();
-        let the_gatherer_ptr = Arc::new(Mutex::new(the_gatherer)); // todo: this should be cloned per-thread
-                                                                   // println!("{}", current_num_threads());
+        let the_gatherer_ptr = Arc::new(Mutex::new(the_gatherer));
         (0..number_of_paths).into_par_iter().for_each_init(
             || {
                 (
@@ -85,8 +83,7 @@ pub trait ExoticEngine<T: PathDependent + ?Sized, S: Parameters>: Clone {
                         let num_skip = current_thread_index().unwrap() * length_of_times;
                         let mut ret = self.clone();
                         ret.skip(num_skip);
-                        // ret
-                        self.clone()
+                        ret
                     },
                 )
             },
@@ -96,6 +93,5 @@ pub trait ExoticEngine<T: PathDependent + ?Sized, S: Parameters>: Clone {
                 (*the_gatherer_ptr.lock().unwrap()).dump_one_result(this_value);
             },
         );
-        // process::exit(0);
     }
 }
