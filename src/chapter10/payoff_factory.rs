@@ -14,18 +14,11 @@ pub struct PayoffFactory {
 
 impl PayoffFactory {
     pub fn instance() -> Result<&'static PayoffFactory, FactoryError> {
-        let factory = FACTORY.get();
-        match factory {
-            Some(x) => {
-                return Ok(x);
-            }
-            None => {
-                let mut val = Self::default();
-                val.register_all_payoffs()?;
-                FACTORY.set(val).unwrap();
-            }
-        }
-        Ok(FACTORY.get().unwrap())
+        FACTORY.get_or_try_init(|| {
+            let mut val = Self::default();
+            val.register_all_payoffs()?;
+            Ok(val)
+        })
     }
 
     pub fn create_payoff(

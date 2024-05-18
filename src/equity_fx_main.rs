@@ -26,7 +26,7 @@ pub fn price(
 ) -> Result<f64, FactoryError> {
     let payoff_factory = PayoffFactory::instance()?;
     let the_payoff = payoff_factory.create_payoff(option_type, strike)?;
-    let times = (0..number_of_dates)
+    let times: Vec<f64> = (0..number_of_dates)
         .map(|i| (i as f64 + 1.0) * expiry / number_of_dates as f64)
         .collect();
     let vol_param: ParametersConstant = vol.into();
@@ -69,7 +69,7 @@ pub fn test_main() {
     let payoff_factory = PayoffFactory::instance().unwrap();
     let the_payoff = payoff_factory.create_payoff(option_type, strike).unwrap();
 
-    let times = (0..number_of_dates)
+    let times: Vec<f64> = (0..number_of_dates)
         .map(|i| (i as f64 + 1.0) * expiry / number_of_dates as f64)
         .collect();
     let vol_param: ParametersConstant = vol.into();

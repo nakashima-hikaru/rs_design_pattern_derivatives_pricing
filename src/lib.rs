@@ -1,3 +1,5 @@
+#![feature(once_cell_try)]
+
 pub mod chapter1;
 pub mod chapter10;
 pub mod chapter2;

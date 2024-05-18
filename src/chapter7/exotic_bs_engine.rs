@@ -30,7 +30,7 @@ impl<R: Random> ExoticBSEngine<R> {
     /// * `the_generator` - A random number generator
     /// * `spot` - A spot value of a stock
     pub fn new(
-        look_at_times: &Vec<f64>,
+        look_at_times: &[f64],
         r: &impl Parameters,
         d: impl Parameters,
         vol: impl Parameters,
