@@ -19,7 +19,7 @@ jobs:
         # https://github.com/dtolnay/rust-toolchain
         uses: dtolnay/rust-toolchain@master
         with:
-          toolchain: stable
+          toolchain: nightly
           components: rustfmt, clippy
       - name: Run check
         run: cargo check
@@ -34,6 +34,6 @@ jobs:
       - name: Checkout Crate
         uses: actions/checkout@v3
       - name: Set Toolchain
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@nightly
       - name: Run test
         run: cargo test
